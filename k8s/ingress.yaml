@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k3-app-ingress
+  namespace: k3-waste-management
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/client-max-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+spec:
+  tls:
+  - hosts:
+    - k3-waste.example.com
+    secretName: k3-app-tls
+  rules:
+  - host: k3-waste.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: k3-app-service
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k3-app-ingress-http
+  namespace: k3-waste-management
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://k3-waste.example.com$request_uri"
+spec:
+  rules:
+  - host: k3-waste.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: k3-app-service
+            port:
+              number: 80

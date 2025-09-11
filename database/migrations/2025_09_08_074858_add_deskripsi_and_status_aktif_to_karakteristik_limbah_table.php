@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('karakteristik_limbah', function (Blueprint $table) {
+            $table->text('deskripsi')->nullable()->after('nama_karakteristik');
+            $table->boolean('status_aktif')->default(true)->after('deskripsi');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('karakteristik_limbah', function (Blueprint $table) {
+            $table->dropColumn(['deskripsi', 'status_aktif']);
+        });
+    }
+};

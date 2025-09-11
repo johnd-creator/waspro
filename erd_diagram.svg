@@ -1,0 +1,197 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .table-box { fill: #f8f9fa; stroke: #343a40; stroke-width: 2; }
+      .table-header { fill: #007bff; }
+      .table-title { fill: white; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+      .field-text { fill: #343a40; font-family: Arial, sans-serif; font-size: 11px; }
+      .pk-field { fill: #dc3545; font-weight: bold; }
+      .fk-field { fill: #28a745; }
+      .relation-line { stroke: #6c757d; stroke-width: 2; fill: none; }
+      .relation-arrow { fill: #6c757d; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="table-title" font-size="18">ERD Diagram - Sistem Manajemen Limbah K3</text>
+  
+  <!-- Unit Pembangkit Table -->
+  <g id="unit_pembangkit">
+    <rect x="50" y="60" width="200" height="180" class="table-box"/>
+    <rect x="50" y="60" width="200" height="25" class="table-header"/>
+    <text x="150" y="78" text-anchor="middle" class="table-title">unit_pembangkit</text>
+    <text x="60" y="100" class="field-text pk-field">unit_id (PK)</text>
+    <text x="60" y="115" class="field-text">nama_unit</text>
+    <text x="60" y="130" class="field-text">alamat_unit</text>
+    <text x="60" y="145" class="field-text">kota</text>
+    <text x="60" y="160" class="field-text">kode_pos</text>
+    <text x="60" y="175" class="field-text">telepon_unit</text>
+    <text x="60" y="190" class="field-text">keterangan</text>
+    <text x="60" y="205" class="field-text">status_aktif</text>
+    <text x="60" y="220" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Pengguna Sistem Table -->
+  <g id="pengguna_sistem">
+    <rect x="300" y="60" width="200" height="200" class="table-box"/>
+    <rect x="300" y="60" width="200" height="25" class="table-header"/>
+    <text x="400" y="78" text-anchor="middle" class="table-title">pengguna_sistem</text>
+    <text x="310" y="100" class="field-text pk-field">user_id (PK)</text>
+    <text x="310" y="115" class="field-text">email_address</text>
+    <text x="310" y="130" class="field-text">nama_lengkap</text>
+    <text x="310" y="145" class="field-text">kata_sandi_hash</text>
+    <text x="310" y="160" class="field-text">aktif</text>
+    <text x="310" y="175" class="field-text fk-field">unit_id (FK)</text>
+    <text x="310" y="190" class="field-text">email_verified_at</text>
+    <text x="310" y="205" class="field-text">remember_token</text>
+    <text x="310" y="220" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Peran Pengguna Table -->
+  <g id="peran_pengguna">
+    <rect x="550" y="60" width="200" height="140" class="table-box"/>
+    <rect x="550" y="60" width="200" height="25" class="table-header"/>
+    <text x="650" y="78" text-anchor="middle" class="table-title">peran_pengguna</text>
+    <text x="560" y="100" class="field-text pk-field">peran_id (PK)</text>
+    <text x="560" y="115" class="field-text">nama_peran</text>
+    <text x="560" y="130" class="field-text">deskripsi</text>
+    <text x="560" y="145" class="field-text">is_active</text>
+    <text x="560" y="160" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Pengguna Peran Junction Table -->
+  <g id="pengguna_peran">
+    <rect x="400" y="300" width="200" height="120" class="table-box"/>
+    <rect x="400" y="300" width="200" height="25" class="table-header"/>
+    <text x="500" y="318" text-anchor="middle" class="table-title">pengguna_peran</text>
+    <text x="410" y="340" class="field-text pk-field fk-field">user_id (PK,FK)</text>
+    <text x="410" y="355" class="field-text pk-field fk-field">peran_id (PK,FK)</text>
+    <text x="410" y="370" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Perusahaan Penghasil Table -->
+  <g id="perusahaan_penghasil">
+    <rect x="800" y="60" width="200" height="220" class="table-box"/>
+    <rect x="800" y="60" width="200" height="25" class="table-header"/>
+    <text x="900" y="78" text-anchor="middle" class="table-title">perusahaan_penghasil</text>
+    <text x="810" y="100" class="field-text pk-field">perusahaan_id (PK)</text>
+    <text x="810" y="115" class="field-text">nama_perusahaan</text>
+    <text x="810" y="130" class="field-text">jenis_perusahaan</text>
+    <text x="810" y="145" class="field-text">npwp</text>
+    <text x="810" y="160" class="field-text">telepon</text>
+    <text x="810" y="175" class="field-text">email</text>
+    <text x="810" y="190" class="field-text">kota</text>
+    <text x="810" y="205" class="field-text">alamat_perusahaan</text>
+    <text x="810" y="220" class="field-text">person_in_charge</text>
+    <text x="810" y="235" class="field-text">status_aktif</text>
+    <text x="810" y="250" class="field-text">keterangan</text>
+    <text x="810" y="265" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Kategori Kegiatan Sumber Table -->
+  <g id="kategori_kegiatan_sumber">
+    <rect x="50" y="300" width="200" height="100" class="table-box"/>
+    <rect x="50" y="300" width="200" height="25" class="table-header"/>
+    <text x="150" y="318" text-anchor="middle" class="table-title">kategori_kegiatan_sumber</text>
+    <text x="60" y="340" class="field-text pk-field">kategori_id (PK)</text>
+    <text x="60" y="355" class="field-text">nama_kategori</text>
+    <text x="60" y="370" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Karakteristik Limbah Table -->
+  <g id="karakteristik_limbah">
+    <rect x="50" y="450" width="200" height="120" class="table-box"/>
+    <rect x="50" y="450" width="200" height="25" class="table-header"/>
+    <text x="150" y="468" text-anchor="middle" class="table-title">karakteristik_limbah</text>
+    <text x="60" y="490" class="field-text pk-field">karakteristik_id (PK)</text>
+    <text x="60" y="505" class="field-text">nama_karakteristik</text>
+    <text x="60" y="520" class="field-text">status_aktif</text>
+    <text x="60" y="535" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Jenis Limbah Table -->
+  <g id="jenis_limbah">
+    <rect x="300" y="450" width="200" height="180" class="table-box"/>
+    <rect x="300" y="450" width="200" height="25" class="table-header"/>
+    <text x="400" y="468" text-anchor="middle" class="table-title">jenis_limbah</text>
+    <text x="310" y="490" class="field-text pk-field">kode_limbah (PK)</text>
+    <text x="310" y="505" class="field-text">nama_limbah</text>
+    <text x="310" y="520" class="field-text">kemasan</text>
+    <text x="310" y="535" class="field-text">jumlah_ton_per_tahun</text>
+    <text x="310" y="550" class="field-text">waktu_penyimpanan_hari</text>
+    <text x="310" y="565" class="field-text fk-field">karakteristik_id (FK)</text>
+    <text x="310" y="580" class="field-text fk-field">kategori_id (FK)</text>
+    <text x="310" y="595" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Log Penyimpanan Limbah Table -->
+  <g id="log_penyimpanan_limbah">
+    <rect x="650" y="400" width="220" height="280" class="table-box"/>
+    <rect x="650" y="400" width="220" height="25" class="table-header"/>
+    <text x="760" y="418" text-anchor="middle" class="table-title">log_penyimpanan_limbah</text>
+    <text x="660" y="440" class="field-text pk-field">log_id (PK)</text>
+    <text x="660" y="455" class="field-text">timestamp_input</text>
+    <text x="660" y="470" class="field-text">tanggal_limbah_masuk</text>
+    <text x="660" y="485" class="field-text">detail_sumber_limbah</text>
+    <text x="660" y="500" class="field-text">jumlah_limbah_masuk</text>
+    <text x="660" y="515" class="field-text">maksimal_penyimpanan_tanggal</text>
+    <text x="660" y="530" class="field-text">status_log</text>
+    <text x="660" y="545" class="field-text">tanggal_pengangkutan</text>
+    <text x="660" y="560" class="field-text">jumlah_diangkut</text>
+    <text x="660" y="575" class="field-text fk-field">user_id (FK)</text>
+    <text x="660" y="590" class="field-text fk-field">kode_limbah (FK)</text>
+    <text x="660" y="605" class="field-text fk-field">perusahaan_id (FK)</text>
+    <text x="660" y="620" class="field-text fk-field">unit_id (FK)</text>
+    <text x="660" y="635" class="field-text">timestamps</text>
+  </g>
+  
+  <!-- Relationships -->
+  
+  <!-- unit_pembangkit -> pengguna_sistem -->
+  <line x1="250" y1="150" x2="300" y2="175" class="relation-line"/>
+  <polygon points="300,175 295,170 295,180" class="relation-arrow"/>
+  
+  <!-- pengguna_sistem -> pengguna_peran -->
+  <line x1="400" y1="260" x2="500" y2="300" class="relation-line"/>
+  <polygon points="500,300 495,295 505,295" class="relation-arrow"/>
+  
+  <!-- peran_pengguna -> pengguna_peran -->
+  <line x1="650" y1="200" x2="550" y2="340" class="relation-line"/>
+  <polygon points="550,340 555,335 555,345" class="relation-arrow"/>
+  
+  <!-- kategori_kegiatan_sumber -> jenis_limbah -->
+  <line x1="250" y1="350" x2="300" y2="580" class="relation-line"/>
+  <polygon points="300,580 295,575 295,585" class="relation-arrow"/>
+  
+  <!-- karakteristik_limbah -> jenis_limbah -->
+  <line x1="250" y1="510" x2="300" y2="565" class="relation-line"/>
+  <polygon points="300,565 295,560 295,570" class="relation-arrow"/>
+  
+  <!-- pengguna_sistem -> log_penyimpanan_limbah -->
+  <line x1="500" y1="160" x2="650" y2="575" class="relation-line"/>
+  <polygon points="650,575 645,570 645,580" class="relation-arrow"/>
+  
+  <!-- jenis_limbah -> log_penyimpanan_limbah -->
+  <line x1="500" y1="540" x2="650" y2="590" class="relation-line"/>
+  <polygon points="650,590 645,585 645,595" class="relation-arrow"/>
+  
+  <!-- perusahaan_penghasil -> log_penyimpanan_limbah -->
+  <line x1="800" y1="280" x2="760" y2="605" class="relation-line"/>
+  <polygon points="760,605 765,600 765,610" class="relation-arrow"/>
+  
+  <!-- unit_pembangkit -> log_penyimpanan_limbah -->
+  <line x1="150" y1="240" x2="650" y2="620" class="relation-line"/>
+  <polygon points="650,620 645,615 645,625" class="relation-arrow"/>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="700" width="300" height="80" fill="#f8f9fa" stroke="#343a40" stroke-width="1"/>
+    <text x="60" y="720" class="table-title" font-size="12">Legend:</text>
+    <text x="60" y="740" class="pk-field" font-size="10">PK = Primary Key</text>
+    <text x="60" y="755" class="fk-field" font-size="10">FK = Foreign Key</text>
+    <line x1="200" y1="740" x2="230" y2="740" class="relation-line"/>
+    <polygon points="230,740 225,735 225,745" class="relation-arrow"/>
+    <text x="240" y="745" class="field-text" font-size="10">Relationship</text>
+  </g>
+  
+</svg>
