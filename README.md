@@ -1,61 +1,178 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏭 WASPRO - Sistem Manajemen Limbah K3
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/images/logo.png" width="200" alt="WASPRO Logo">
 </p>
 
-## About Laravel
+<p align="center">
+  <strong>Waste Management System for Occupational Health and Safety</strong>
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-11.x-red.svg" alt="Laravel Version">
+  <img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Tailwind-3.x-cyan.svg" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Tentang WASPRO
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+WASPRO (Waste Management System for Occupational Health and Safety) adalah sistem informasi berbasis web yang dirancang khusus untuk mengelola limbah industri dengan standar Keselamatan dan Kesehatan Kerja (K3). Sistem ini membantu perusahaan dalam:
 
-## Learning Laravel
+- 📊 **Monitoring Real-time** - Pemantauan status limbah secara real-time
+- 🗂️ **Manajemen Data Limbah** - Pencatatan dan kategorisasi jenis limbah
+- ⚠️ **Sistem Peringatan** - Notifikasi otomatis untuk limbah mendekati expired
+- 📈 **Laporan Komprehensif** - Generate laporan bulanan, tahunan, dan custom
+- 🚛 **Tracking Pengangkutan** - Monitoring proses pengangkutan limbah
+- 👥 **Multi-User Management** - Sistem role-based access control
+- 🏢 **Multi-Unit Support** - Mendukung multiple unit pembangkit
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Fitur Utama
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🎯 Dashboard Interaktif
+- Statistik real-time limbah per kategori
+- Grafik trend penyimpanan limbah
+- Alert limbah mendekati expired
+- Quick actions untuk operasi harian
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📝 Manajemen Limbah
+- **Jenis Limbah**: Kategorisasi berdasarkan karakteristik dan bahaya
+- **Log Penyimpanan**: Pencatatan detail setiap aktivitas penyimpanan
+- **Tracking Expired**: Monitoring otomatis tanggal kadaluarsa
+- **Pengangkutan**: Manajemen proses pengangkutan dan disposal
 
-## Laravel Sponsors
+### 📊 Sistem Pelaporan
+- Laporan bulanan per unit/perusahaan
+- Export ke Excel/PDF
+- Laporan compliance K3
+- Analytics dan insights
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🔐 Keamanan & Akses
+- Role-based permissions (Super Admin, Admin Unit, Operator)
+- Audit trail untuk semua aktivitas
+- Session management yang aman
+- Data encryption
 
-### Premium Partners
+## 🚀 Teknologi
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **Backend**: Laravel 11.x dengan PHP 8.2+
+- **Frontend**: Tailwind CSS 3.x + Alpine.js
+- **Database**: MySQL 8.0+
+- **Build Tool**: Vite
+- **Authentication**: Laravel Sanctum
+- **Export**: Laravel Excel, DomPDF
 
-## Contributing
+## 📦 Instalasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Persyaratan Sistem
+- PHP 8.2 atau lebih tinggi
+- Composer
+- Node.js & NPM
+- MySQL 8.0+
+- Web server (Apache/Nginx)
 
-## Code of Conduct
+### Langkah Instalasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/johnd-creator/waspro.git
+   cd waspro
+   ```
 
-## Security Vulnerabilities
+2. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## License
+4. **Database Configuration**
+   ```bash
+   # Edit .env file dengan konfigurasi database
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. **Build Assets**
+   ```bash
+   npm run build
+   # atau untuk development
+   npm run dev
+   ```
+
+6. **Start Server**
+   ```bash
+   php artisan serve
+   ```
+
+## 🔧 Konfigurasi
+
+### Database
+Edit file `.env` untuk konfigurasi database:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=waspro_db
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### Email (Opsional)
+Untuk fitur notifikasi email:
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=your_smtp_host
+MAIL_PORT=587
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_password
+```
+
+## 👥 Default Users
+
+Setelah seeding, gunakan akun berikut:
+
+| Role | Username | Password |
+|------|----------|----------|
+| Super Admin | superadmin | password |
+| Admin Unit | admin | password |
+| Operator | operator | password |
+
+## 📚 Dokumentasi
+
+- [User Manual](docs/user-manual.md)
+- [API Documentation](docs/api.md)
+- [Deployment Guide](docs/deployment.md)
+- [Changelog](CHANGELOG.md)
+
+## 🤝 Kontribusi
+
+Kami menerima kontribusi dari komunitas! Silakan:
+
+1. Fork repository ini
+2. Buat feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+## 📞 Support
+
+Jika Anda membutuhkan bantuan:
+- 📧 Email: support@waspro.com
+- 📱 WhatsApp: +62-xxx-xxxx-xxxx
+- 🐛 Issues: [GitHub Issues](https://github.com/johnd-creator/waspro/issues)
+
+---
+
+<p align="center">
+  Made with ❤️ for better waste management and occupational safety
+</p>
