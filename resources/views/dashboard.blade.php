@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-2">
+<div class="min-h-screen px-2" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
     <!-- Professional Header Section -->
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-8">
+    <div class="rounded-2xl shadow-sm mb-8" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
         <div class="px-6 py-8 lg:px-8">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
                 <!-- Dashboard Title Section -->
@@ -14,12 +14,12 @@
                         </div>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <h1 class="text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
+                        <h1 class="text-3xl lg:text-4xl font-bold tracking-tight" style="color: var(--text-primary);">
                             Dashboard
                         </h1>
                         <div class="flex items-center mt-2">
                             <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                            <p class="ml-2 text-sm font-medium text-slate-600">
+                            <p class="ml-2 text-sm font-medium" style="color: var(--text-secondary);">
                                 Sistem Manajemen Limbah Terintegrasi
                             </p>
                         </div>
@@ -29,7 +29,7 @@
                 <!-- Date & Time Cards Section -->
                 <div class="flex flex-col sm:flex-row gap-4">
                     <!-- Calendar Card -->
-                    <div class="group relative bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/50 rounded-2xl p-5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-0.5">
+                    <div class="group relative rounded-2xl p-5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-0.5" style="background: linear-gradient(to bottom right, var(--bg-tertiary), var(--bg-secondary)); border: 1px solid var(--border-primary);">
                         <div class="flex items-center space-x-4">
                             <div class="flex-shrink-0">
                                 <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
@@ -39,15 +39,15 @@
                             <div class="min-w-0 flex-1">
                                 <p class="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-1">Tanggal</p>
                                 <div class="flex flex-col">
-                                    <p class="text-lg font-bold text-slate-900" id="currentDate">{{ now()->format('d M Y') }}</p>
-                                    <p class="text-xs text-slate-600" id="currentDay">{{ now()->format('l') }}</p>
+                                    <p class="text-lg font-bold" id="currentDate" style="color: var(--text-primary);">{{ now()->format('d M Y') }}</p>
+                                    <p class="text-xs" id="currentDay" style="color: var(--text-secondary);">{{ now()->format('l') }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Clock Card -->
-                    <div class="group relative bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200/50 rounded-2xl p-5 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-0.5">
+                    <div class="group relative rounded-2xl p-5 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-0.5" style="background: linear-gradient(to bottom right, var(--bg-tertiary), var(--bg-secondary)); border: 1px solid var(--border-primary);">
                         <div class="flex items-center space-x-4">
                             <div class="flex-shrink-0">
                                 <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
@@ -57,8 +57,8 @@
                             <div class="min-w-0 flex-1">
                                 <p class="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">Waktu</p>
                                 <div class="flex flex-col">
-                                    <p class="text-lg font-bold text-slate-900 font-mono" id="currentTime">--:--:--</p>
-                                    <p class="text-xs text-slate-600">WIB</p>
+                                    <p class="text-lg font-bold font-mono" id="currentTime" style="color: var(--text-primary);">--:--:--</p>
+                                    <p class="text-xs" style="color: var(--text-secondary);">WIB</p>
                                 </div>
                             </div>
                         </div>
@@ -71,14 +71,14 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3 mb-4">
         <!-- Total Log Card -->
-        <div class="group bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center justify-between mb-3">
                 <div class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-clipboard-list text-lg text-white"></i>
                 </div>
                 <div class="text-right">
-                    <div class="text-2xl font-bold text-slate-800">{{ number_format($totalLogs) }}</div>
-                    <div class="text-slate-600 font-medium text-sm">Total Log</div>
+                    <div style="color: var(--text-primary);" class="text-2xl font-bold">{{ number_format($totalLogs) }}</div>
+                    <div style="color: var(--text-secondary);" class="font-medium text-sm">Total Log</div>
                 </div>
             </div>
             <div class="flex items-center gap-1 text-emerald-600">
@@ -88,14 +88,14 @@
         </div>
 
         <!-- Waste Types Card -->
-        <div class="group bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center justify-between mb-3">
                 <div class="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-recycle text-lg text-white"></i>
                 </div>
                 <div class="text-right">
-                    <div class="text-2xl font-bold text-slate-800">{{ number_format($totalWasteTypes) }}</div>
-                    <div class="text-slate-600 font-medium text-sm">Jenis Limbah</div>
+                    <div style="color: var(--text-primary);" class="text-2xl font-bold">{{ number_format($totalWasteTypes) }}</div>
+                    <div style="color: var(--text-secondary);" class="font-medium text-sm">Jenis Limbah</div>
                 </div>
             </div>
             <div class="flex items-center gap-1 text-emerald-600">
@@ -105,14 +105,14 @@
         </div>
 
         <!-- Stored Logs Card -->
-        <div class="group bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-cyan-500/10 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-cyan-500/10 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
             <div class="flex items-center justify-between mb-3">
                 <div class="p-3 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-archive text-lg text-white"></i>
                 </div>
                 <div class="text-right">
-                    <div class="text-2xl font-bold text-slate-800">{{ number_format($totalStoredLogs) }}</div>
-                    <div class="text-slate-600 font-medium text-sm">Limbah Tersimpan</div>
+                    <div style="color: var(--text-primary);" class="text-2xl font-bold">{{ number_format($totalStoredLogs) }}</div>
+                    <div style="color: var(--text-secondary);" class="font-medium text-sm">Limbah Tersimpan</div>
                 </div>
             </div>
             <div class="flex items-center gap-1 text-emerald-600">
@@ -122,14 +122,14 @@
         </div>
 
         <!-- Transported Waste Card -->
-        <div class="group bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-amber-500/10 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="400">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-amber-500/10 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="400">
             <div class="flex items-center justify-between mb-3">
                 <div class="p-3 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-truck text-lg text-white"></i>
                 </div>
                 <div class="text-right">
-                    <div class="text-2xl font-bold text-slate-800">{{ number_format($totalTransported) }}</div>
-                    <div class="text-slate-600 font-medium text-sm">Limbah Diangkut</div>
+                    <div style="color: var(--text-primary);" class="text-2xl font-bold">{{ number_format($totalTransported) }}</div>
+                    <div style="color: var(--text-secondary);" class="font-medium text-sm">Limbah Diangkut</div>
                 </div>
             </div>
             <div class="flex items-center gap-1 text-emerald-600">
@@ -139,14 +139,14 @@
         </div>
 
         <!-- Near Expiry Waste Card -->
-        <div class="group bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-red-500/10 hover:shadow-xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 cursor-pointer" data-aos="fade-up" data-aos-delay="500" data-href="{{ route('dashboard.near-expiry') }}">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-red-500/10 hover:shadow-xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 cursor-pointer" data-aos="fade-up" data-aos-delay="500" data-href="{{ route('dashboard.near-expiry') }}">
             <div class="flex items-center justify-between mb-3">
             <div class="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                     <i class="fas fa-exclamation-triangle text-lg text-white"></i>
                 </div>
                 <div class="text-right">
-                    <div class="text-2xl font-bold text-slate-800">{{ number_format($totalNearExpiry) }}</div>
-                    <div class="text-slate-600 font-medium text-sm">Akan Kadaluarsa</div>
+                    <div style="color: var(--text-primary);" class="text-2xl font-bold">{{ number_format($totalNearExpiry) }}</div>
+                    <div style="color: var(--text-secondary);" class="font-medium text-sm">Akan Kadaluarsa</div>
                 </div>
             </div>
             <div class="flex items-center gap-1 text-red-600">
@@ -159,17 +159,17 @@
     <!-- Charts Section -->
     <div class="mb-4">
         <div class="text-center mb-4 transition-all duration-300 hover:transform hover:-translate-y-1">
-            <h2 class="text-2xl font-bold text-slate-800 mb-1 transition-colors duration-200 hover:text-blue-600">Analisis Data</h2>
-            <p class="text-slate-600 text-sm transition-colors duration-200 hover:text-slate-800">Visualisasi data limbah dan tren penyimpanan</p>
+            <h2 style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Analisis Data</h2>
+            <p style="color: var(--text-secondary);" class="text-sm transition-colors duration-200">Visualisasi data limbah dan tren penyimpanan</p>
         </div>
         
         <div class="grid grid-cols-1 xl:grid-cols-5 gap-4">
             <!-- Monthly Chart -->
-            <div class="xl:col-span-3 bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-blue-500/10" data-aos="fade-up" data-aos-delay="500">
+            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="xl:col-span-3 backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-blue-500/10" data-aos="fade-up" data-aos-delay="500">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-800 mb-1">Penyimpanan Limbah Bulanan</h3>
-                        <p class="text-slate-600 text-sm">Tren penyimpanan limbah sepanjang tahun</p>
+                        <h3 style="color: var(--text-primary);" class="text-lg font-bold mb-1">Penyimpanan Limbah Bulanan</h3>
+                        <p style="color: var(--text-secondary);" class="text-sm">Tren penyimpanan limbah sepanjang tahun</p>
                     </div>
                     <div class="flex gap-2">
                         <button class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors" data-period="month">Bulan</button>
@@ -182,33 +182,33 @@
             </div>
 
             <!-- Status Chart -->
-            <div class="xl:col-span-2 bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-lg shadow-purple-500/10" data-aos="fade-up" data-aos-delay="600">
+            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="xl:col-span-2 backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-purple-500/10" data-aos="fade-up" data-aos-delay="600">
                 <div class="mb-4">
-                    <h3 class="text-lg font-bold text-slate-800 mb-1">Status Limbah</h3>
-                    <p class="text-slate-600 text-sm">Distribusi status limbah saat ini</p>
+                    <h3 style="color: var(--text-primary);" class="text-lg font-bold mb-1">Status Limbah</h3>
+                    <p style="color: var(--text-secondary);" class="text-sm">Distribusi status limbah saat ini</p>
                 </div>
                 <div class="relative h-48 mb-4">
                     <canvas id="statusChart"></canvas>
                 </div>
                 <div class="space-y-2">
-                    <div class="flex items-center justify-between p-2 bg-blue-50 rounded-lg">
+                    <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <span class="font-medium text-slate-700 text-sm">Tersimpan</span>
+                            <span style="color: var(--text-primary);" class="font-medium text-sm">Tersimpan</span>
                         </div>
                         <span class="font-bold text-blue-600 text-sm">65%</span>
                     </div>
-                    <div class="flex items-center justify-between p-2 bg-emerald-50 rounded-lg">
+                    <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                            <span class="font-medium text-slate-700 text-sm">Diangkut</span>
+                            <span style="color: var(--text-primary);" class="font-medium text-sm">Diangkut</span>
                         </div>
                         <span class="font-bold text-emerald-600 text-sm">25%</span>
                     </div>
-                    <div class="flex items-center justify-between p-2 bg-red-50 rounded-lg">
+                    <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span class="font-medium text-slate-700 text-sm">Kadaluarsa</span>
+                            <span style="color: var(--text-primary);" class="font-medium text-sm">Kadaluarsa</span>
                         </div>
                         <span class="font-bold text-red-600 text-sm">10%</span>
                     </div>
@@ -226,12 +226,12 @@
             <section class="flex flex-col space-y-4 transition-all duration-300 hover:transform hover:-translate-y-1" aria-labelledby="data-teratas-heading">
                 <!-- Section Header -->
                 <header class="text-center mb-2 transition-all duration-300 hover:transform hover:-translate-y-1">
-                    <h2 id="data-teratas-heading" class="text-2xl font-bold text-slate-900 mb-1 transition-colors duration-200 hover:text-blue-600">Data Teratas</h2>
-                    <p class="text-slate-600 text-sm leading-relaxed transition-colors duration-200 hover:text-slate-800">Peringkat limbah berdasarkan volume penyimpanan</p>
+                    <h2 id="data-teratas-heading" style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Data Teratas</h2>
+                    <p style="color: var(--text-secondary);" class="text-sm leading-relaxed transition-colors duration-200">Peringkat limbah berdasarkan volume penyimpanan</p>
                 </header>
                 
                 <!-- Main Card -->
-                <article class="bg-white rounded-2xl border border-slate-200/60 shadow-xl shadow-slate-900/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10" data-aos="fade-up" data-aos-delay="700">
+                <article style="background: var(--card-bg); border-color: var(--border-primary);" class="rounded-2xl border shadow-xl shadow-slate-900/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10">
                     <!-- Card Header -->
                     <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-6 pb-4 bg-green-600 border-b border-green-700">
                         <div class="flex-1">
@@ -252,27 +252,27 @@
                     <div class="overflow-x-auto">
                         <table class="w-full" role="table" aria-label="Top 10 jenis limbah">
                             <!-- Table Header -->
-                            <thead class="bg-slate-50/80">
+                            <thead style="background: var(--card-secondary-bg);">
                                 <tr>
-                                    <th scope="col" class="px-6 py-2 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th scope="col" style="color: var(--text-primary);" class="px-6 py-2 text-left text-xs font-semibold uppercase tracking-wider">
                                         <span class="flex items-center gap-2">
                                             <span class="w-6 text-center">#</span>
                                             <span>Nama Limbah</span>
                                         </span>
                                     </th>
-                                    <th scope="col" class="px-6 py-2 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th scope="col" style="color: var(--text-primary);" class="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wider">
                                         Total (Ton)
                                     </th>
-                                    <th scope="col" class="px-6 py-2 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th scope="col" style="color: var(--text-primary);" class="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wider">
                                         Jumlah Log
                                     </th>
                                 </tr>
                             </thead>
                             
                             <!-- Table Body -->
-                            <tbody class="bg-white divide-y divide-slate-100">
+                            <tbody style="background: var(--card-bg);" class="divide-y" style="border-color: var(--border-primary);">
                                 @forelse($topWasteTypes as $index => $waste)
-                                <tr class="group hover:bg-slate-50/50 transition-colors duration-200">
+                                <tr class="group transition-colors duration-200" onmouseover="this.style.background='var(--hover-bg)'" onmouseout="this.style.background='transparent'">
                                     <!-- Rank & Name -->
                                     <td class="px-6 py-2">
                                         <div class="flex items-center gap-3">
@@ -284,7 +284,7 @@
                                             </div>
                                             <!-- Waste Name -->
                                             <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors duration-200">
+                                                <p style="color: var(--text-primary);" class="text-sm font-semibold truncate group-hover:text-blue-600 transition-colors duration-200">
                                                     {{ $waste->nama_limbah }}
                                                 </p>
                                             </div>
@@ -293,14 +293,14 @@
                                     
                                     <!-- Total Quantity -->
                                     <td class="px-6 py-2 text-center">
-                                        <span class="text-sm font-bold text-slate-900">
+                                        <span style="color: var(--text-primary);" class="text-sm font-bold">
                                             {{ number_format($waste->total_quantity, 2) }}
                                         </span>
                                     </td>
                                     
                                     <!-- Log Count -->
                                     <td class="px-6 py-2 text-center">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                                        <span style="background: var(--accent-bg); color: var(--accent-primary); border-color: var(--border-primary);" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border">
                                             {{ number_format($waste->total_logs) }}
                                         </span>
                                     </td>
@@ -309,12 +309,12 @@
                                 <tr>
                                     <td colspan="3" class="px-6 py-12 text-center">
                                         <div class="flex flex-col items-center gap-3">
-                                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-inbox text-slate-400 text-lg" aria-hidden="true"></i>
+                                            <div style="background: var(--card-secondary-bg);" class="w-12 h-12 rounded-full flex items-center justify-center">
+                                                <i style="color: var(--text-tertiary);" class="fas fa-inbox text-lg" aria-hidden="true"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-slate-900">Tidak ada data</p>
-                                                <p class="text-xs text-slate-500 mt-1">Belum ada data limbah yang tersimpan</p>
+                                                <p style="color: var(--text-primary);" class="text-sm font-medium">Tidak ada data</p>
+                                                <p style="color: var(--text-secondary);" class="text-xs mt-1">Belum ada data limbah yang tersimpan</p>
                                             </div>
                                         </div>
                                     </td>
@@ -329,11 +329,11 @@
             <!-- Aktivitas Terbaru -->
             <div class="space-y-6 transition-all duration-300 hover:transform hover:-translate-y-1">
                 <header class="text-center mb-2 transition-all duration-300 hover:transform hover:-translate-y-1">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-1 transition-colors duration-200 hover:text-blue-600">Aktivitas Terbaru</h2>
-                    <p class="text-slate-600 text-sm leading-relaxed transition-colors duration-200 hover:text-slate-800">10 log aktivitas terbaru dalam sistem</p>
+                    <h2 style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Aktivitas Terbaru</h2>
+                    <p style="color: var(--text-secondary);" class="text-sm leading-relaxed transition-colors duration-200">10 log aktivitas terbaru dalam sistem</p>
                 </header>
                 
-                <div class="bg-white/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg shadow-blue-500/10 overflow-hidden h-fit">
+                <div style="background: var(--card-bg); border-color: var(--border-primary);" class="backdrop-blur-xl border rounded-xl shadow-lg shadow-blue-500/10 overflow-hidden h-fit">
                     <!-- Header -->
                     <header class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 pb-4">
                         <div class="flex items-center justify-between">
@@ -353,12 +353,12 @@
                     <div class="divide-y divide-gray-100">
                         @if($recentActivities->count() > 0)
                             @foreach($recentActivities as $activity)
-                            <div class="p-4 hover:bg-blue-50 transition-colors duration-200 cursor-pointer" data-href="{{ route('log-penyimpanan.show', $activity) }}">
+                            <div class="p-4 transition-colors duration-200 cursor-pointer" onmouseover="this.style.background='var(--hover-bg)'" onmouseout="this.style.background='transparent'" data-href="{{ route('log-penyimpanan.show', $activity) }}">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-4">
                                         <!-- Status Icon -->
                                         <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 rounded-full flex items-center justify-center @if($activity->status_log == 'Tersimpan') bg-blue-100 text-blue-600 @elseif($activity->status_log == 'Diangkut') bg-green-100 text-green-600 @elseif($activity->status_log == 'Diproses') bg-yellow-100 text-yellow-600 @else bg-gray-100 text-gray-600 @endif">
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="@if($activity->status_log == 'Tersimpan') background: var(--accent-bg); color: var(--accent-primary); @elseif($activity->status_log == 'Diangkut') background: var(--accent-bg-secondary); color: var(--accent-secondary); @elseif($activity->status_log == 'Diproses') background: #fef3c7; color: #d97706; @else background: var(--card-secondary-bg); color: var(--text-secondary); @endif">
                                                 @if($activity->status_log == 'Tersimpan')
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
@@ -383,18 +383,14 @@
                                         <!-- Activity Info -->
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <p class="text-sm font-medium text-gray-900 truncate">
+                                                <p style="color: var(--text-primary);" class="text-sm font-medium truncate">
                                                     {{ $activity->jenisLimbah->nama_limbah ?? 'N/A' }}
                                                 </p>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
-                                                    @if($activity->status_log == 'Tersimpan') bg-blue-100 text-blue-800
-                                                    @elseif($activity->status_log == 'Diangkut') bg-green-100 text-green-800
-                                                    @elseif($activity->status_log == 'Diproses') bg-yellow-100 text-yellow-800
-                                                    @else bg-gray-100 text-gray-800 @endif">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style="@if($activity->status_log == 'Tersimpan') background: var(--accent-bg); color: var(--accent-primary); @elseif($activity->status_log == 'Diangkut') background: var(--accent-bg-secondary); color: var(--accent-secondary); @elseif($activity->status_log == 'Diproses') background: #fef3c7; color: #d97706; @else background: var(--card-secondary-bg); color: var(--text-secondary); @endif">
                                                     {{ $activity->status_log }}
                                                 </span>
                                             </div>
-                                            <div class="flex items-center text-xs text-gray-500 space-x-4">
+                                            <div style="color: var(--text-secondary);" class="flex items-center text-xs space-x-4">
                                                 <span><i class="fas fa-building mr-1"></i>{{ $activity->unitPembangkit->nama_unit ?? 'N/A' }}</span>
                                                 <span><i class="fas fa-weight mr-1"></i>{{ number_format($activity->jumlah_limbah_masuk, 2) }} Kg</span>
                                             </div>
@@ -403,20 +399,20 @@
 
                                     <!-- Time -->
                                     <div class="text-right">
-                                        <p class="text-xs text-gray-500">{{ $activity->created_at->diffForHumans() }}</p>
-                                        <p class="text-xs text-gray-400">{{ $activity->created_at->format('d/m/Y H:i') }}</p>
+                                        <p style="color: var(--text-secondary);" class="text-xs">{{ $activity->created_at->diffForHumans() }}</p>
+                                        <p style="color: var(--text-tertiary);" class="text-xs">{{ $activity->created_at->format('d/m/Y H:i') }}</p>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                         @else
                             <div class="p-8 text-center">
-                                <div class="text-gray-400 mb-2">
+                                <div style="color: var(--text-tertiary);" class="mb-2">
                                     <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
                                 </div>
-                                <p class="text-gray-500 text-sm">Belum ada aktivitas log</p>
+                                <p style="color: var(--text-secondary);" class="text-sm">Belum ada aktivitas log</p>
                             </div>
                         @endif
                     </div>
@@ -428,14 +424,14 @@
     <!-- Near Expiry Alert -->
     @if($nearExpiryWaste->count() > 0)
     <div class="mb-8">
-        <div class="bg-white/80 backdrop-blur-xl border border-red-200/50 rounded-3xl p-8 shadow-xl shadow-red-500/10" data-aos="fade-up" data-aos-delay="900">
+        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="backdrop-blur-xl border rounded-3xl p-8 shadow-xl shadow-red-500/10" data-aos="fade-up" data-aos-delay="900">
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
                 <div class="p-4 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg">
                     <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-1">Peringatan Limbah Kritis</h3>
-                    <p class="text-slate-600">{{ $nearExpiryWaste->count() }} limbah mendekati atau melewati batas penyimpanan</p>
+                    <h3 style="color: var(--text-primary);" class="text-2xl font-bold mb-1">Peringatan Limbah Kritis</h3>
+                    <p style="color: var(--text-secondary);">{{ $nearExpiryWaste->count() }} limbah mendekati atau melewati batas penyimpanan</p>
                 </div>
                 <button class="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-2xl font-semibold hover:bg-red-600 transition-colors shadow-lg">
                     <i class="fas fa-bell"></i>
@@ -449,22 +445,22 @@
                     $daysRemaining = $waste->getDaysUntilExpiry();
                     $isExpired = $daysRemaining !== null && $daysRemaining < 0;
                 @endphp
-                <div class="p-6 rounded-2xl border-l-4 {{ $isExpired ? 'bg-red-50 border-red-500' : 'bg-amber-50 border-amber-500' }} transition-all hover:shadow-lg">
+                <div class="p-6 rounded-2xl border-l-4 transition-all hover:shadow-lg {{ $isExpired ? 'border-l-red-500' : 'border-l-amber-500' }}" style="background: var(--card-secondary-bg);">
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                         <div class="space-y-2">
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                                <h4 class="font-bold text-slate-800 text-lg">{{ $waste->jenisLimbah->nama_limbah }}</h4>
-                                <span class="text-slate-600">{{ $waste->perusahaanPenghasil->nama_perusahaan ?? '-' }}</span>
+                                <h4 style="color: var(--text-primary);" class="font-bold text-lg">{{ $waste->jenisLimbah->nama_limbah }}</h4>
+                                <span style="color: var(--text-secondary);">{{ $waste->perusahaanPenghasil->nama_perusahaan ?? '-' }}</span>
                             </div>
-                            <div class="flex flex-col sm:flex-row gap-4 text-sm text-slate-600">
+                            <div style="color: var(--text-secondary);" class="flex flex-col sm:flex-row gap-4 text-sm">
                                 <span><i class="fas fa-building mr-2"></i>{{ $waste->unitPembangkit->nama_unit }}</span>
                                 <span><i class="fas fa-weight mr-2"></i>{{ number_format($waste->jumlah_limbah_masuk, 2) }} Kg</span>
                             </div>
                         </div>
                         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                             <div class="text-right">
-                                <div class="text-sm text-slate-600">Batas Penyimpanan</div>
-                                <div class="font-bold text-slate-800">{{ \Carbon\Carbon::parse($waste->maksimal_penyimpanan_tanggal)->format('d/m/Y') }}</div>
+                                <div style="color: var(--text-secondary);" class="text-sm">Batas Penyimpanan</div>
+                                <div style="color: var(--text-primary);" class="font-bold">{{ \Carbon\Carbon::parse($waste->maksimal_penyimpanan_tanggal)->format('d/m/Y') }}</div>
                             </div>
                             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold {{ $isExpired ? 'bg-red-500 text-white' : 'bg-amber-500 text-white' }}">
                                 @if($isExpired)

@@ -21,6 +21,84 @@
 
     <!-- Custom Styles -->
     <style>
+        /* CSS Variables for Dark Mode */
+        :root {
+            /* Light theme colors */
+            --bg-primary: #f9fafb;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border-primary: #e5e7eb;
+            --border-secondary: #d1d5db;
+            --shadow-primary: rgba(0, 0, 0, 0.1);
+            --shadow-secondary: rgba(0, 0, 0, 0.05);
+            --input-bg: #ffffff;
+            --input-text: #374151;
+            --input-placeholder: #9ca3af;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a);
+            --sidebar-bg-start: #0f172a;
+            --sidebar-bg-via: #1e3a8a;
+            --sidebar-bg-end: #0f172a;
+            --card-bg: #ffffff;
+            --card-secondary-bg: #f8fafc;
+            --hover-bg: #f3f4f6;
+            --gradient-start: #dbeafe;
+            --gradient-end: #e0e7ff;
+            --accent-primary: #2563eb;
+            --accent-secondary: #059669;
+            --accent-bg: #dbeafe;
+            --accent-bg-secondary: #d1fae5;
+            --danger-primary: #dc2626;
+            --danger-bg: #fef2f2;
+            --danger-bg-light: #fee2e2;
+            --danger-hover: #b91c1c;
+        }
+        
+        /* Dark theme colors */
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --border-primary: #374151;
+            --border-secondary: #4b5563;
+            --shadow-primary: rgba(0, 0, 0, 0.3);
+            --shadow-secondary: rgba(0, 0, 0, 0.2);
+            --input-bg: #374151;
+            --input-text: #f9fafb;
+            --input-placeholder: #9ca3af;
+            --navbar-bg: rgba(31, 41, 55, 0.95);
+            --sidebar-bg: linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a);
+            --sidebar-bg-start: #030712;
+            --sidebar-bg-via: #1e40af;
+            --sidebar-bg-end: #030712;
+            --card-bg: #1f2937;
+            --card-secondary-bg: #374151;
+            --hover-bg: #374151;
+            --gradient-start: #374151;
+            --gradient-end: #4b5563;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #10b981;
+            --accent-bg: #1e3a8a;
+            --accent-bg-secondary: #065f46;
+            --danger-primary: #ef4444;
+            --danger-bg: #450a0a;
+            --danger-bg-light: #7f1d1d;
+            --danger-hover: #dc2626;
+        }
+        
+        /* Apply theme variables */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
         /* Custom styles */
         
         /* Safari input text color fix */
@@ -100,11 +178,11 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100">
+<body style="background-color: var(--bg-primary);">
     <div class="flex h-screen">
         @auth
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out shadow-2xl" id="sidebar">
+        <div class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out shadow-2xl" id="sidebar" style="background: linear-gradient(to bottom right, var(--sidebar-bg-start), var(--sidebar-bg-via), var(--sidebar-bg-end));">
             <nav class="h-full flex flex-col">
                 <div class="flex items-center justify-center h-16 px-4 border-b border-slate-700/50 bg-slate-800/50 backdrop-blur-sm">
                     <div class="flex items-center space-x-3">
@@ -331,28 +409,54 @@
         </div>
 
 
-        <!-- Main Content -->        <div class="flex-1 flex flex-col overflow-hidden md:ml-64 transition-all duration-300 ease-in-out">            <!-- Top Navbar -->            <nav class="bg-white/95 backdrop-blur-sm border-b border-gray-200/50 shadow-sm sticky top-0 z-40">                <div class="flex items-center justify-between px-6 py-4">                    <!-- Left side -->                    <div class="flex items-center space-x-4">                        <button class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" id="sidebarToggle">                            <i class="fas fa-bars text-lg"></i>                        </button>                        <div class="flex items-center">
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden md:ml-64 transition-all duration-300 ease-in-out">
+            <!-- Top Navbar -->
+            <nav class="backdrop-blur-sm border-b shadow-sm sticky top-0 z-40" style="background-color: var(--navbar-bg); border-color: var(--border-primary);">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <!-- Left side -->
+                    <div class="flex items-center space-x-4">
+                        <button class="md:hidden focus:outline-none p-2 rounded-lg transition-colors duration-200" id="sidebarToggle" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent'">
+                            <i class="fas fa-bars text-lg"></i>
+                         </button>
+                         <div class="flex items-center">
                             <div class="w-32 h-16 rounded-lg flex items-center justify-center">
                                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-32 h-16 object-contain">
                             </div>
                         </div>                    </div>
                     
-                    <!-- Right side -->                    <div class="flex items-center space-x-4">                        <!-- Search -->                        <div class="hidden md:flex items-center">                            <div class="relative group">                                <input class="w-64 pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all duration-200 text-sm" type="text" placeholder="Cari data...">                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">                                    <i class="fas fa-search text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200"></i>                                </div>                            </div>                        </div>
-                        
-                        <!-- Notifications -->                        <div class="relative">
-                            <button class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-gray-900 focus:outline-none rounded-xl hover:bg-gray-50 transition-all duration-200 relative" id="notification-bell" onclick="toggleNotificationDropdown()">
-                                <i class="far fa-bell text-lg"></i>
-                                <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold" id="notification-count" style="display: none;">0</span>
-                            </button>
-                            <div class="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 hidden overflow-hidden" id="notification-dropdown">
-                                <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-bold text-gray-900" id="notification-header">0 Notifikasi</h3>
-                                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="refreshNotifications()">
-                                            <i class="fas fa-sync-alt mr-1"></i>Refresh
-                                        </button>
-                                    </div>
+                    <!-- Right side -->                    <div class="flex items-center space-x-4">                        <!-- Search -->
+                        <div class="hidden md:flex items-center">
+                            <div class="relative group">
+                                <input class="w-64 pl-10 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 text-sm" type="text" placeholder="Cari data..." style="background-color: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text);">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search transition-colors duration-200" style="color: var(--text-tertiary);"></i>
                                 </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dark Mode Toggle -->
+                         <div class="relative">
+                             <button class="flex items-center justify-center w-10 h-10 focus:outline-none rounded-xl transition-all duration-200" id="darkModeToggle" onclick="toggleDarkMode()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent'">
+                                 <i class="fas fa-sun text-lg" id="darkModeIcon"></i>
+                             </button>
+                         </div>
+                         
+                         <!-- Notifications -->
+                         <div class="relative">
+                             <button class="flex items-center justify-center w-10 h-10 focus:outline-none rounded-xl transition-all duration-200 relative" id="notification-bell" onclick="toggleNotificationDropdown()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent'">
+                                 <i class="far fa-bell text-lg"></i>
+                                 <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold" id="notification-count" style="display: none;">0</span>
+                             </button>
+                            <div class="absolute right-0 mt-3 w-96 rounded-2xl shadow-2xl z-50 hidden overflow-hidden" id="notification-dropdown" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
+                                 <div class="px-6 py-4 border-b" style="background: linear-gradient(to right, var(--bg-tertiary), var(--bg-tertiary)); border-color: var(--border-primary);">
+                                     <div class="flex items-center justify-between">
+                                         <h3 class="font-bold" id="notification-header" style="color: var(--text-primary);">0 Notifikasi</h3>
+                                         <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="refreshNotifications()">
+                                             <i class="fas fa-sync-alt mr-1"></i>Refresh
+                                         </button>
+                                     </div>
+                                 </div>
                                 <div class="max-h-80 overflow-y-auto" id="notification-list">
                                     <!-- Notifications will be loaded here -->
                                 </div>
@@ -364,14 +468,55 @@
                             </div>
                         </div>
                         
-                        <!-- User Dropdown -->                        <div class="relative">                            <button class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none p-2 rounded-xl hover:bg-gray-50 transition-all duration-200" id="userDropdown" onclick="toggleUserDropdown()">                                <div class="flex items-center space-x-3">                                    <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-lg">                                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                    </div>                                    <div class="hidden md:block text-left">                                        <div class="font-semibold text-gray-900 text-sm">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>                                        <div class="text-xs text-gray-500">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>                                    </div>                                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>                                </div>                            </button>
-                            <div class="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 hidden overflow-hidden" id="userDropdownMenu">                                <div class="px-6 py-5 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">                                    <div class="flex items-center space-x-4">                                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg">                                            {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                        </div>                                        <div class="flex-1">                                            <div class="font-bold text-gray-900 text-lg">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>                                            <div class="text-sm text-gray-600">{{ Auth::user()->email_address ?? Auth::user()->email }}</div>                                            <div class="text-sm text-blue-600 font-medium mt-1">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>                                        </div>                                    </div>                                </div>                                <div class="py-3">                                    <a class="flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group" href="{{ route('profile.show') }}">                                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors duration-200">                                            <i class="fas fa-user text-blue-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Lihat Profile</span>                                    </a>                                    <a class="flex items-center px-6 py-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 group" href="{{ route('pengguna-sistem.index') }}">                                        <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-emerald-200 transition-colors duration-200">                                            <i class="fas fa-users text-emerald-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Kelola Users</span>                                    </a>                                </div>                                <div class="border-t border-gray-100 bg-gray-50">                                    <form method="POST" action="{{ route('logout') }}" class="hidden" id="logout-form">                                        @csrf                                    </form>                                    <button class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group" onclick="handleLogout(event); return false;">                                        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-red-200 transition-colors duration-200">                                            <i class="fas fa-sign-out-alt text-red-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Logout</span>                                    </button>                                </div>                            </div>
+                        <!-- User Dropdown -->                        <div class="relative">                            <button class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl transition-all duration-200" id="userDropdown" onclick="toggleUserDropdown()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent';">                                <div class="flex items-center space-x-3">                                    <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-lg">                                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                    </div>                                    <div class="hidden md:block text-left">
+                                        <div class="font-semibold text-sm" style="color: var(--text-primary);">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>
+                                        <div class="text-xs" style="color: var(--text-secondary);">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>
+                                    </div>
+                                    <i class="fas fa-chevron-down text-xs" style="color: var(--text-secondary);"></i>
+                                </div>
+                            </button>
+                            <div class="absolute right-0 mt-3 w-80 rounded-2xl shadow-2xl z-50 hidden overflow-hidden" id="userDropdownMenu" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
+                                <div class="px-6 py-5 border-b" style="background: linear-gradient(135deg, var(--gradient-start, #dbeafe) 0%, var(--gradient-end, #e0e7ff) 100%); border-color: var(--border-primary);">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg">
+                                            {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-bold text-lg" style="color: var(--text-primary);">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>
+                                            <div class="text-sm" style="color: var(--text-secondary);">{{ Auth::user()->email_address ?? Auth::user()->email }}</div>
+                                            <div class="text-sm font-medium mt-1" style="color: var(--accent-primary, #2563eb);">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                </div>                                <div class="py-3">
+                                    <a class="flex items-center px-6 py-3 transition-all duration-200 group" href="{{ route('profile.show') }}" style="color: var(--text-secondary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--accent-primary)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-secondary)';">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors duration-200" style="background-color: var(--accent-bg, #dbeafe);">
+                                            <i class="fas fa-user text-sm" style="color: var(--accent-primary, #2563eb);"></i>
+                                        </div>
+                                        <span class="font-medium">Lihat Profile</span>
+                                    </a>
+                                    <a class="flex items-center px-6 py-3 transition-all duration-200 group" href="{{ route('pengguna-sistem.index') }}" style="color: var(--text-secondary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--accent-secondary, #059669)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-secondary)';">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors duration-200" style="background-color: var(--accent-bg-secondary, #d1fae5);">
+                                            <i class="fas fa-users text-sm" style="color: var(--accent-secondary, #059669);"></i>
+                                        </div>
+                                        <span class="font-medium">Kelola Users</span>
+                                    </a>
+                                </div>                                <div class="border-t" style="border-color: var(--border-primary); background-color: var(--bg-secondary, #f9fafb);">
+                                    <form method="POST" action="{{ route('logout') }}" class="hidden" id="logout-form">
+                                        @csrf
+                                    </form>
+                                    <button class="flex items-center w-full px-6 py-3 transition-all duration-200 group" style="color: var(--danger-primary, #dc2626);" onmouseover="this.style.backgroundColor='var(--danger-bg, #fef2f2)'; this.style.color='var(--danger-hover, #b91c1c)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--danger-primary, #dc2626)';" onclick="handleLogout(event); return false;">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-colors duration-200" style="background-color: var(--danger-bg-light, #fee2e2);">
+                                            <i class="fas fa-sign-out-alt text-sm" style="color: var(--danger-primary, #dc2626);"></i>
+                                        </div>
+                                        <span class="font-medium">Logout</span>
+                                    </button>
+                                </div>                            </div>
                         </div>
                     </div>
                 </div>
             </nav>
 
-            <!-- Page Content -->            <main class="flex-1 overflow-y-auto bg-gray-50/50">                <div class="py-4">
+            <!-- Page Content -->            <main class="flex-1 overflow-y-auto" style="background-color: var(--bg-primary);">                <div class="py-4">
                     @if(session('success'))
                         <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
                             <div class="flex items-center">
@@ -424,7 +569,24 @@
                 </div>
             </main>
             
-            <!-- Footer -->            <footer class="bg-white border-t border-gray-200/50 py-6 mt-auto">                <div class="px-4">                    <div class="flex items-center justify-between text-sm text-gray-500">                        <div class="flex items-center space-x-2">                            <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">                                <i class="fas fa-recycle text-white text-xs"></i>                            </div>                            <span>Copyright &copy; WASPRO {{ date('Y') }}</span>                        </div>                        <div class="flex items-center space-x-6">                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Privacy Policy</a>                            <span class="text-gray-300">&middot;</span>                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Terms &amp; Conditions</a>                        </div>                    </div>                </div>            </footer>
+            <!-- Footer -->
+            <footer class="py-6 mt-auto" style="background-color: var(--card-bg); border-top: 1px solid var(--border-primary);">
+                <div class="px-4">
+                    <div class="flex items-center justify-between text-sm" style="color: var(--text-secondary);">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-recycle text-white text-xs"></i>
+                            </div>
+                            <span>Copyright &copy; WASPRO {{ date('Y') }}</span>
+                        </div>
+                        <div class="flex items-center space-x-6">
+                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Privacy Policy</a>
+                            <span style="color: var(--border-primary);">&middot;</span>
+                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
         @else
         <!-- Guest Layout -->
@@ -668,6 +830,49 @@
                  notificationDropdown.classList.add('hidden');
              }
          });
+
+        // Dark Mode Functions
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateDarkModeIcon(newTheme);
+        }
+        
+        function updateDarkModeIcon(theme) {
+            const icon = document.getElementById('darkModeIcon');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-moon text-lg';
+            } else {
+                icon.className = 'fas fa-sun text-lg';
+            }
+        }
+        
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            updateDarkModeIcon(theme);
+        }
+        
+        // Initialize dark mode on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+        });
+        
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                const theme = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                updateDarkModeIcon(theme);
+            }
+        });
 
         // Auto-hide alerts after 5 seconds
         setTimeout(function() {
