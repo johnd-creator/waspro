@@ -94,9 +94,23 @@
         
         /* Apply theme variables */
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Force CSS variables application */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Ensure div elements use CSS variables */
+        div[style*="var(--card-bg)"] {
+            background: var(--card-bg) !important;
+        }
+        
+        div[style*="var(--border-primary)"] {
+            border-color: var(--border-primary) !important;
         }
         
         /* Custom styles */
@@ -114,8 +128,8 @@
         input[type="datetime-local"],
         textarea,
         select {
-            color: #374151 !important;
-            -webkit-text-fill-color: #374151 !important;
+            color: var(--input-text) !important;
+            -webkit-text-fill-color: var(--input-text) !important;
             opacity: 1 !important;
             -webkit-opacity: 1 !important;
         }
@@ -125,14 +139,14 @@
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px white inset !important;
-            -webkit-text-fill-color: #374151 !important;
+            -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
+            -webkit-text-fill-color: var(--input-text) !important;
         }
         
         /* Placeholder text color for Safari */
         input::placeholder,
         textarea::placeholder {
-            color: #9ca3af !important;
+            color: var(--input-placeholder) !important;
             opacity: 1 !important;
         }
         
@@ -837,9 +851,22 @@
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            html.setAttribute('data-theme', newTheme);
+            if (newTheme === 'light') {
+                html.removeAttribute('data-theme');
+            } else {
+                html.setAttribute('data-theme', newTheme);
+            }
+            
+            // Force reflow to apply CSS variables
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = '';
+            
             localStorage.setItem('theme', newTheme);
             updateDarkModeIcon(newTheme);
+            
+            // Debug: Log theme change
+            console.log('Theme changed to:', newTheme, 'Data-theme attribute:', html.getAttribute('data-theme'));
         }
         
         function updateDarkModeIcon(theme) {
@@ -856,9 +883,36 @@
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const theme = savedTheme || (prefersDark ? 'dark' : 'light');
             
-            document.documentElement.setAttribute('data-theme', theme);
+            // Ensure theme is applied immediately
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            
+            // Force reflow to apply CSS variables
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = '';
+            
             updateDarkModeIcon(theme);
+            
+            // Debug: Log current theme
+            console.log('Current theme:', theme, 'Data-theme attribute:', document.documentElement.getAttribute('data-theme'));
         }
+        
+        // Initialize theme immediately (before DOM load)
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            if (theme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        })();
         
         // Initialize dark mode on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -869,8 +923,21 @@
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!localStorage.getItem('theme')) {
                 const theme = e.matches ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+                
+                // Force reflow to apply CSS variables
+                document.body.style.display = 'none';
+                document.body.offsetHeight; // Trigger reflow
+                document.body.style.display = '';
+                
                 updateDarkModeIcon(theme);
+                
+                // Debug: Log system theme change
+                console.log('System theme changed to:', theme, 'Data-theme attribute:', document.documentElement.getAttribute('data-theme'));
             }
         });
 
