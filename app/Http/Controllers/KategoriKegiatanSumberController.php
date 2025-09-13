@@ -12,7 +12,7 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function index()
     {
-        $kategoriKegiatanSumber = KategoriKegiatanSumber::withCount('jenisLimbah')
+        $kategoriKegiatanSumber = KategoriKegiatanSumber::withCount('logPenyimpananLimbah')
             ->orderBy('nama_kategori')
             ->paginate(15);
 
@@ -47,7 +47,8 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function show(KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
-        $kategoriKegiatanSumber->load('jenisLimbah');
+        $kategoriKegiatanSumber->load('logPenyimpananLimbah');
+
         return view('kategori-kegiatan-sumber.show', compact('kategoriKegiatanSumber'));
     }
 
@@ -65,7 +66,7 @@ class KategoriKegiatanSumberController extends Controller
     public function update(Request $request, KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
         $validated = $request->validate([
-            'nama_kategori' => 'required|string|max:255|unique:kategori_kegiatan_sumber,nama_kategori,' . $kategoriKegiatanSumber->kategori_id,
+            'nama_kategori' => 'required|string|max:255|unique:kategori_kegiatan_sumber,nama_kategori,'.$kategoriKegiatanSumber->kategori_id,
         ]);
 
         $kategoriKegiatanSumber->update($validated);
@@ -79,10 +80,10 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function destroy(KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
-        // Check if this category is being used by any waste types
-        if ($kategoriKegiatanSumber->jenisLimbah()->count() > 0) {
+        // Check if this category is being used by any log penyimpanan
+        if ($kategoriKegiatanSumber->logPenyimpananLimbah()->count() > 0) {
             return redirect()->route('kategori-kegiatan-sumber.index')
-                ->with('error', 'Kategori kegiatan sumber tidak dapat dihapus karena masih digunakan oleh jenis limbah.');
+                ->with('error', 'Kategori kegiatan sumber tidak dapat dihapus karena masih digunakan dalam log penyimpanan limbah.');
         }
 
         $kategoriKegiatanSumber->delete();

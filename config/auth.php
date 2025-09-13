@@ -64,7 +64,7 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-        
+
         'pengguna_sistem' => [
             'driver' => 'eloquent',
             'model' => App\Models\PenggunaSistem::class,

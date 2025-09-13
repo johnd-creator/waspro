@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\CabangPerusahaan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CabangPerusahaanSeeder extends Seeder
@@ -21,7 +20,7 @@ class CabangPerusahaanSeeder extends Seeder
                 'kode_pos' => '10110',
             ]
         );
-        
+
         CabangPerusahaan::firstOrCreate(
             ['nama_cabang' => 'Cabang Surabaya'],
             [
@@ -30,7 +29,7 @@ class CabangPerusahaanSeeder extends Seeder
                 'kode_pos' => '60271',
             ]
         );
-        
+
         CabangPerusahaan::firstOrCreate(
             ['nama_cabang' => 'Cabang Bandung'],
             [

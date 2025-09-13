@@ -1,39 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Tambah Peran Pengguna</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('peran-pengguna.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Tambah Peran Pengguna</h1>
+                    <p class="text-slate-600">Buat peran baru untuk pengguna sistem</p>
                 </div>
+                <div>
+                    <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="px-8 py-6 border-b border-slate-200">
+                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                    <i class="fas fa-user-plus mr-2"></i>Form Tambah Peran
+                </h6>
+            </div>
+            <div class="px-8 py-6">
+                <x-session-messages />
                 
                 <form action="{{ route('peran-pengguna.store') }}" method="POST">
-                    @csrf
-                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nama_peran">Nama Peran <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                           class="form-control @error('nama_peran') is-invalid @enderror" 
-                                           id="nama_peran" 
-                                           name="nama_peran" 
-                                           value="{{ old('nama_peran') }}" 
-                                           placeholder="Masukkan nama peran"
-                                           required>
-                                    @error('nama_peran')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                                <x-form-input 
+                                    name="nama_peran" 
+                                    label="Nama Peran" 
+                                    placeholder="Masukkan nama peran" 
+                                    :required="true" 
+                                    maxlength="255" 
+                                />
                             </div>
                             
                             <div class="col-md-6">
@@ -56,31 +62,27 @@
                         
                         <div class="row">
                             <div class="col-12">
-                                <div class="form-group">
-                                    <label for="deskripsi">Deskripsi</label>
-                                    <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                              id="deskripsi" 
-                                              name="deskripsi" 
-                                              rows="4" 
-                                              placeholder="Masukkan deskripsi peran (opsional)">{{ old('deskripsi') }}</textarea>
-                                    @error('deskripsi')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
+                            <x-form-input 
+                                type="textarea" 
+                                name="deskripsi" 
+                                label="Deskripsi" 
+                                placeholder="Masukkan deskripsi peran (opsional)" 
+                                rows="4" 
+                                maxlength="1000" 
+                            />
                         </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Simpan
-                        </button>
-                        <a href="{{ route('peran-pengguna.index') }}" class="btn btn-secondary ml-2">
-                            <i class="fas fa-times"></i> Batal
-                        </a>
-                    </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                                <i class="fas fa-times mr-2"></i>Batal
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-save mr-2"></i>Simpan
+                            </button>
+                        </div>
+                    @csrf
                 </form>
             </div>
         </div>

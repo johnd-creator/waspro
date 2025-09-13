@@ -11,8 +11,9 @@ class PerusahaanPenghasil extends Model
     use HasFactory;
 
     protected $table = 'perusahaan_penghasil';
+
     protected $primaryKey = 'perusahaan_id';
-    
+
     protected $fillable = [
         'nama_perusahaan',
         'jenis_perusahaan',

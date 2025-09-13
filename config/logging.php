@@ -105,6 +105,27 @@ return [
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
+        'k3_audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/k3-audit.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'replace_placeholders' => true,
+        ],
+
+        'k3_error' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/k3-error.log'),
+            'level' => env('LOG_LEVEL', 'error'),
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'replace_placeholders' => true,
+            'handler_with' => [
+                'stream' => 'php://stderr',
+            ],
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'processors' => [PsrLogMessageProcessor::class],
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),

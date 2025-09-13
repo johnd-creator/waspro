@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisLimbah;
 use App\Models\KarakteristikLimbah;
-use App\Models\KategoriKegiatanSumber;
 use Illuminate\Http\Request;
 
 class JenisLimbahController extends Controller
@@ -14,7 +13,7 @@ class JenisLimbahController extends Controller
      */
     public function index()
     {
-        $jenisLimbah = JenisLimbah::with(['karakteristik', 'kategori'])
+        $jenisLimbah = JenisLimbah::with(['karakteristik'])
             ->orderBy('kode_limbah')
             ->paginate(15);
 
@@ -27,9 +26,8 @@ class JenisLimbahController extends Controller
     public function create()
     {
         $karakteristikLimbah = KarakteristikLimbah::all();
-        $kategoriKegiatanSumber = KategoriKegiatanSumber::all();
 
-        return view('jenis-limbah.create', compact('karakteristikLimbah', 'kategoriKegiatanSumber'));
+        return view('jenis-limbah.create', compact('karakteristikLimbah'));
     }
 
     /**
@@ -40,12 +38,14 @@ class JenisLimbahController extends Controller
         $validated = $request->validate([
             'kode_limbah' => 'required|string|max:10|unique:jenis_limbah,kode_limbah',
             'nama_limbah' => 'required|string|max:255',
-            'kemasan' => 'required|string|max:100',
-            'jumlah_ton_per_tahun' => 'required|numeric|min:0',
+            'deskripsi_limbah' => 'nullable|string|max:500',
             'waktu_penyimpanan_hari' => 'required|integer|min:1|max:365',
-            'karakteristik_id' => 'required|exists:karakteristik_limbah,karakteristik_id',
-            'kategori_id' => 'required|exists:kategori_kegiatan_sumber,kategori_id',
+            'karakteristik_id' => 'nullable|exists:karakteristik_limbah,karakteristik_id',
+            'status_aktif' => 'required|boolean',
         ]);
+
+        // Sinkronkan waktu_penyimpanan_hari dengan batas_penyimpanan_hari
+        $validated['batas_penyimpanan_hari'] = $validated['waktu_penyimpanan_hari'];
 
         JenisLimbah::create($validated);
 
@@ -58,7 +58,8 @@ class JenisLimbahController extends Controller
      */
     public function show(JenisLimbah $jenisLimbah)
     {
-        $jenisLimbah->load(['karakteristik', 'kategori', 'logPenyimpanan']);
+        $jenisLimbah->load(['karakteristik', 'logPenyimpanan']);
+
         return view('jenis-limbah.show', compact('jenisLimbah'));
     }
 
@@ -68,9 +69,8 @@ class JenisLimbahController extends Controller
     public function edit(JenisLimbah $jenisLimbah)
     {
         $karakteristikLimbah = KarakteristikLimbah::all();
-        $kategoriKegiatanSumber = KategoriKegiatanSumber::all();
 
-        return view('jenis-limbah.edit', compact('jenisLimbah', 'karakteristikLimbah', 'kategoriKegiatanSumber'));
+        return view('jenis-limbah.edit', compact('jenisLimbah', 'karakteristikLimbah'));
     }
 
     /**
@@ -79,18 +79,20 @@ class JenisLimbahController extends Controller
     public function update(Request $request, JenisLimbah $jenisLimbah)
     {
         $validated = $request->validate([
-            'kode_limbah' => 'required|string|max:10|unique:jenis_limbah,kode_limbah,' . $jenisLimbah->kode_limbah . ',kode_limbah',
+            'kode_limbah' => 'required|string|max:10|unique:jenis_limbah,kode_limbah,'.$jenisLimbah->kode_limbah.',kode_limbah',
             'nama_limbah' => 'required|string|max:255',
-            'kemasan' => 'required|string|max:100',
-            'jumlah_ton_per_tahun' => 'required|numeric|min:0',
+            'deskripsi_limbah' => 'nullable|string|max:500',
             'waktu_penyimpanan_hari' => 'required|integer|min:1|max:365',
-            'karakteristik_id' => 'required|exists:karakteristik_limbah,karakteristik_id',
-            'kategori_id' => 'required|exists:kategori_kegiatan_sumber,kategori_id',
+            'karakteristik_id' => 'nullable|exists:karakteristik_limbah,karakteristik_id',
+            'status_aktif' => 'required|boolean',
         ]);
+
+        // Sinkronkan waktu_penyimpanan_hari dengan batas_penyimpanan_hari
+        $validated['batas_penyimpanan_hari'] = $validated['waktu_penyimpanan_hari'];
 
         $jenisLimbah->update($validated);
 
-        return redirect()->route('jenis-limbah.index')
+        return redirect()->route('jenis-limbah.show', $jenisLimbah)
             ->with('success', 'Jenis limbah berhasil diperbarui.');
     }
 

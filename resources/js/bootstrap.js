@@ -1,4 +1,7 @@
-import 'bootstrap';
+// Bootstrap JavaScript has been removed - using Tailwind CSS instead
+
+import _ from 'lodash';
+window._ = _;
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

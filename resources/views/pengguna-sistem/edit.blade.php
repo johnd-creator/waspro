@@ -3,33 +3,36 @@
 @section('title', 'Edit Pengguna Sistem')
 
 @section('content')
-<div class="container-fluid">
+<div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Edit Pengguna Sistem</h1>
-            <p class="text-muted mb-0">Perbarui informasi pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" class="btn btn-info">
-                <i class="fas fa-eye me-2"></i>Lihat Detail
-            </a>
-            <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Kembali
-            </a>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Pengguna Sistem</h1>
+                    <p class="text-slate-600">Perbarui informasi pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
+                </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-eye mr-2"></i>Lihat Detail
+                    </a>
+                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Form Card -->
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-user-edit me-2"></i>Form Edit Pengguna
-                    </h6>
-                </div>
-                <div class="card-body">
+    <!-- Form Section -->
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="px-8 py-6 border-b border-slate-200">
+                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                    <i class="fas fa-user-edit mr-2"></i>Form Edit Pengguna
+                </h6>
+            </div>
+            <div class="px-8 py-6">
                     <form action="{{ route('pengguna-sistem.update', $penggunaSistem) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -200,20 +203,15 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-times me-2"></i>Batal
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Perbarui Pengguna
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                                <i class="fas fa-times mr-2"></i>Batal
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-save mr-2"></i>Perbarui Pengguna
+                            </button>
                         </div>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -275,7 +273,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     
     if (!isAnyChecked) {
         e.preventDefault();
-        alert('Silakan pilih minimal satu peran untuk pengguna.');
+        showNotification('Silakan pilih minimal satu peran untuk pengguna.', 'warning');
         return false;
     }
     
@@ -285,9 +283,62 @@ document.querySelector('form').addEventListener('submit', function(e) {
     
     if (password && password !== passwordConfirmation) {
         e.preventDefault();
-        alert('Konfirmasi kata sandi tidak cocok.');
+        showNotification('Konfirmasi kata sandi tidak cocok.', 'error');
         return false;
     }
 });
+
+// Simple notification function
+function showNotification(message, type = 'info') {
+    // Create notification container if it doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.className = 'fixed top-4 right-4 z-50 space-y-2';
+        document.body.appendChild(container);
+    }
+
+    const notification = document.createElement('div');
+    const typeClasses = {
+        success: 'bg-green-500 border-green-600',
+        error: 'bg-red-500 border-red-600',
+        warning: 'bg-yellow-500 border-yellow-600',
+        info: 'bg-blue-500 border-blue-600'
+    };
+
+    notification.className = `
+        ${typeClasses[type] || typeClasses.info}
+        text-white px-6 py-4 rounded-lg shadow-lg border-l-4
+        transform transition-all duration-300 ease-in-out
+        max-w-sm
+    `;
+
+    const icon = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-times-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info: 'fas fa-info-circle'
+    };
+
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="${icon[type] || icon.info} mr-3"></i>
+            <span class="flex-1">${message}</span>
+            <button class="ml-4 text-white hover:text-gray-200 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
 </script>
 @endsection

@@ -11,8 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global middleware
+        $middleware->web(append: [
+            \App\Http\Middleware\LogRequests::class,
+        ]);
+
+        // Middleware aliases
         $middleware->alias([
             'unit.access' => \App\Http\Middleware\UnitAccessMiddleware::class,
+            'log.requests' => \App\Http\Middleware\LogRequests::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

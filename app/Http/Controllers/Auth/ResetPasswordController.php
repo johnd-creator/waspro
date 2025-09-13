@@ -28,11 +28,10 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
-    
+
     /**
      * Get the password reset credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     protected function credentials(Request $request)
@@ -41,7 +40,7 @@ class ResetPasswordController extends Controller
             'email_address', 'password', 'password_confirmation', 'token'
         );
     }
-    
+
     /**
      * Get the password reset validation rules.
      *
@@ -55,7 +54,7 @@ class ResetPasswordController extends Controller
             'password' => 'required|confirmed|min:8',
         ];
     }
-    
+
     /**
      * Get the broker to be used during password reset.
      *

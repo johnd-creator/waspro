@@ -38,7 +38,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
-    
+
     /**
      * Get the login username to be used by the controller.
      *
@@ -48,24 +48,23 @@ class LoginController extends Controller
     {
         return 'email_address';
     }
-    
+
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     protected function credentials(Request $request)
     {
         $credentials = $request->only($this->username(), 'password');
         $credentials['aktif'] = 1;
+
         return $credentials;
     }
-    
+
     /**
      * Attempt to log the user into the application.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     protected function attemptLogin(Request $request)
@@ -74,11 +73,10 @@ class LoginController extends Controller
             $this->credentials($request), $request->boolean('remember')
         );
     }
-    
+
     /**
      * The user has been authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
      * @return mixed
      */

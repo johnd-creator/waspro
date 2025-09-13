@@ -28,7 +28,7 @@ class LogPenyimpananPolicy
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // User lain hanya bisa melihat log dari unit sendiri
         return $user->unit_id === $logPenyimpanan->unit_id;
     }
@@ -39,7 +39,7 @@ class LogPenyimpananPolicy
     public function create(PenggunaSistem $user): bool
     {
         // Viewer tidak bisa membuat log
-        return !$user->isViewer();
+        return ! $user->isViewer();
     }
 
     /**
@@ -51,12 +51,12 @@ class LogPenyimpananPolicy
         if ($user->isViewer()) {
             return false;
         }
-        
+
         // Super Admin bisa mengupdate semua
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // User lain hanya bisa mengupdate log dari unit sendiri
         return $user->unit_id === $logPenyimpanan->unit_id;
     }
@@ -67,15 +67,15 @@ class LogPenyimpananPolicy
     public function delete(PenggunaSistem $user, LogPenyimpananLimbah $logPenyimpanan): bool
     {
         // Hanya Administrator dan Super Admin yang bisa menghapus
-        if (!$user->isAdministrator() && !$user->isSuperAdmin()) {
+        if (! $user->isAdministrator() && ! $user->isSuperAdmin()) {
             return false;
         }
-        
+
         // Super Admin bisa menghapus semua
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa menghapus log dari unit sendiri
         return $user->unit_id === $logPenyimpanan->unit_id;
     }
@@ -103,7 +103,7 @@ class LogPenyimpananPolicy
     public function export(PenggunaSistem $user): bool
     {
         // Semua role kecuali Viewer bisa export (dengan filter unit masing-masing)
-        return !$user->isViewer();
+        return ! $user->isViewer();
     }
 
     /**

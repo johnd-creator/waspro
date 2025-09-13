@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Models\Scopes\UnitScope;
-use App\Models\UnitPembangkit;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LogPenyimpananLimbah extends Model
@@ -15,11 +14,11 @@ class LogPenyimpananLimbah extends Model
     use HasFactory;
 
     protected $table = 'log_penyimpanan_limbah';
+
     protected $primaryKey = 'log_id';
-    
+
     protected $fillable = [
         'kode_identitas',
-        'timestamp_input',
         'tanggal_limbah_masuk',
         'detail_sumber_limbah',
         'jumlah_limbah_masuk',
@@ -48,14 +47,14 @@ class LogPenyimpananLimbah extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new UnitScope);
-        
+
         static::creating(function ($log) {
             if (empty($log->kode_identitas)) {
                 $log->kode_identitas = self::generateKodeIdentitas($log->unit_id);
             }
         });
     }
-    
+
     /**
      * Generate unique waste identification code
      */
@@ -64,15 +63,15 @@ class LogPenyimpananLimbah extends Model
         $unit = UnitPembangkit::find($unitId);
         $unitCode = $unit ? strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $unit->nama_unit), 0, 4)) : 'UNIT';
         $yearMonth = date('Ym');
-        
+
         $lastSequence = self::withoutGlobalScope(UnitScope::class)
-                           ->where('kode_identitas', 'LIKE', "LMB-{$unitCode}-{$yearMonth}-%")
-                           ->orderBy('kode_identitas', 'desc')
-                           ->first();
-        
+            ->where('kode_identitas', 'LIKE', "LMB-{$unitCode}-{$yearMonth}-%")
+            ->orderBy('kode_identitas', 'desc')
+            ->first();
+
         $sequence = $lastSequence ? intval(substr($lastSequence->kode_identitas, -3)) + 1 : 1;
-        
-        return "LMB-{$unitCode}-{$yearMonth}-" . str_pad($sequence, 3, '0', STR_PAD_LEFT);
+
+        return "LMB-{$unitCode}-{$yearMonth}-".str_pad($sequence, 3, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -124,15 +123,16 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Calculate expiry date based on entry date and expiry days setting
+     * Calculate expiry date based on entry date and waste type storage days
      */
     public function calculateExpiryDate(): ?Carbon
     {
-        if (!$this->tanggal_limbah_masuk) {
+        if (! $this->tanggal_limbah_masuk) {
             return null;
         }
 
         $expiryDays = $this->getExpiryDaysSetting();
+
         return Carbon::parse($this->tanggal_limbah_masuk)->addDays($expiryDays);
     }
 
@@ -142,7 +142,7 @@ class LogPenyimpananLimbah extends Model
     public function updateExpiryStatus(): void
     {
         $expiryDate = $this->calculateExpiryDate();
-        if (!$expiryDate) {
+        if (! $expiryDate) {
             return;
         }
 
@@ -161,7 +161,7 @@ class LogPenyimpananLimbah extends Model
 
         $this->update([
             'tanggal_kadaluarsa' => $expiryDate,
-            'expiry_status' => $status
+            'expiry_status' => $status,
         ]);
     }
 
@@ -171,7 +171,7 @@ class LogPenyimpananLimbah extends Model
     public function getDaysUntilExpiry(): ?int
     {
         $expiryDate = $this->tanggal_kadaluarsa ? Carbon::parse($this->tanggal_kadaluarsa) : $this->calculateExpiryDate();
-        if (!$expiryDate) {
+        if (! $expiryDate) {
             return null;
         }
 
@@ -179,10 +179,16 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get expiry days setting from app_settings
+     * Get expiry days from waste type or fallback to app_settings
      */
     private function getExpiryDaysSetting(): int
     {
+        // First, try to get from jenis limbah waktu_penyimpanan_hari
+        if ($this->jenisLimbah && $this->jenisLimbah->waktu_penyimpanan_hari) {
+            return (int) $this->jenisLimbah->waktu_penyimpanan_hari;
+        }
+
+        // Fallback to global setting
         $setting = DB::table('app_settings')
             ->where('key', 'limbah_expiry_days')
             ->first();
@@ -227,7 +233,7 @@ class LogPenyimpananLimbah extends Model
      */
     public function getExpiryStatusBadgeClass(): string
     {
-        return match($this->expiry_status) {
+        return match ($this->expiry_status) {
             'Normal' => 'badge-success',
             'Warning' => 'badge-warning',
             'Critical' => 'badge-danger',
@@ -242,12 +248,12 @@ class LogPenyimpananLimbah extends Model
     public function getExpiryStatusText(): string
     {
         $daysLeft = $this->getDaysUntilExpiry();
-        
-        return match($this->expiry_status) {
+
+        return match ($this->expiry_status) {
             'Normal' => $daysLeft > 0 ? "Sisa {$daysLeft} hari" : 'Normal',
             'Warning' => $daysLeft > 0 ? "Peringatan: {$daysLeft} hari lagi" : 'Peringatan',
             'Critical' => $daysLeft > 0 ? "Kritis: {$daysLeft} hari lagi" : 'Kritis',
-            'Expired' => $daysLeft < 0 ? "Kadaluarsa " . abs($daysLeft) . " hari" : 'Kadaluarsa',
+            'Expired' => $daysLeft < 0 ? 'Kadaluarsa '.abs($daysLeft).' hari' : 'Kadaluarsa',
             default => 'Unknown'
         };
     }

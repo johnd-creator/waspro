@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\ApplicationSetting;
+use Illuminate\Database\Seeder;
 
 class ApplicationSettingSeeder extends Seeder
 {
@@ -47,7 +46,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Timezone default aplikasi',
                 'is_active' => true,
             ],
-            
+
             // User Management Settings
             [
                 'key' => 'user.max_login_attempts',
@@ -81,7 +80,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Wajibkan verifikasi email untuk pengguna baru',
                 'is_active' => true,
             ],
-            
+
             // File Upload Settings
             [
                 'key' => 'upload.max_file_size',
@@ -99,7 +98,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Ekstensi file yang diizinkan untuk upload',
                 'is_active' => true,
             ],
-            
+
             // Notification Settings
             [
                 'key' => 'notification.email_enabled',
@@ -117,7 +116,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Email administrator untuk notifikasi sistem',
                 'is_active' => true,
             ],
-            
+
             // Data Management Settings
             [
                 'key' => 'data.pagination_limit',
@@ -143,7 +142,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Lama penyimpanan backup data dalam hari',
                 'is_active' => true,
             ],
-            
+
             // Waste Management Specific Settings
             [
                 'key' => 'waste.default_unit',
@@ -169,7 +168,7 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Kategori limbah yang tersedia',
                 'is_active' => true,
             ],
-            
+
             // Report Settings
             [
                 'key' => 'report.auto_generate',

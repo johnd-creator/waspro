@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable()->comment('Description of the setting');
             $table->boolean('is_active')->default(true)->comment('Whether the setting is active');
             $table->timestamps();
-            
+
             // Indexes
             $table->index(['category', 'is_active']);
             $table->index('key');

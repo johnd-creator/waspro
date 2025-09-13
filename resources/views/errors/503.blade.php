@@ -224,11 +224,6 @@
             setTimeout(function() {
                 window.location.reload();
             }, 30000);
-            
-            // Tampilkan waktu terakhir refresh
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('id-ID');
-            console.log('Halaman dimuat pada: ' + timeString);
         </script>
     </div>
 </body>

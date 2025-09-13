@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PenggunaSistem;
+use App\Models\UnitPembangkit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use App\Models\UnitPembangkit;
-use App\Models\PenggunaSistem;
 
 class ProfileController extends Controller
 {
@@ -30,23 +30,22 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $unitList = UnitPembangkit::all();
-        
+
         return view('profile.show', compact('user', 'unitList'));
     }
 
     /**
      * Update the user's profile information.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request)
     {
         $user = Auth::user();
-        
+
         $request->validate([
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'email_address' => ['required', 'string', 'email', 'max:255', 'unique:pengguna_sistem,email_address,' . $user->user_id . ',user_id'],
+            'email_address' => ['required', 'string', 'email', 'max:255', 'unique:pengguna_sistem,email_address,'.$user->user_id.',user_id'],
             'unit_id' => ['required', 'exists:unit_pembangkit,unit_id'],
         ]);
 
@@ -62,7 +61,6 @@ class ProfileController extends Controller
     /**
      * Update the user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function updatePassword(Request $request)
@@ -74,7 +72,7 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        if (!Hash::check($request->current_password, $user->kata_sandi_hash)) {
+        if (! Hash::check($request->current_password, $user->kata_sandi_hash)) {
             return back()->withErrors([
                 'current_password' => 'The provided password does not match your current password.',
             ]);

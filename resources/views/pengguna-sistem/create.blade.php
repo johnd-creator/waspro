@@ -3,21 +3,26 @@
 @section('title', 'Tambah Pengguna Sistem')
 
 @section('content')
-<div class="container-fluid">
+<div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Tambah Pengguna Sistem</h1>
-            <p class="text-muted mb-0">Buat pengguna sistem baru untuk unit pembangkit</p>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Tambah Pengguna Sistem</h1>
+                    <p class="text-slate-600">Buat pengguna sistem baru untuk unit pembangkit</p>
+                </div>
+                <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                </a>
+            </div>
         </div>
-        <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
-        </a>
     </div>
 
-    <!-- Form Card -->
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+    <!-- Form Section -->
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="px-8 py-6">
             <div class="card">
                 <div class="card-header">
                     <h6 class="m-0 font-weight-bold text-primary">
@@ -170,17 +175,16 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-times me-2"></i>Batal
+                                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200 mr-3">
+                                        <i class="fas fa-times mr-2"></i>Batal
                                     </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Simpan Pengguna
+                                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                        <i class="fas fa-save mr-2"></i>Simpan Pengguna
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>
             </div>
         </div>
     </div>
@@ -237,9 +241,60 @@ document.querySelector('form').addEventListener('submit', function(e) {
     
     if (!isAnyChecked) {
         e.preventDefault();
-        alert('Silakan pilih minimal satu peran untuk pengguna.');
+        showNotification('Silakan pilih minimal satu peran untuk pengguna.', 'warning');
         return false;
     }
 });
+
+// Simple notification function
+function showNotification(message, type = 'info') {
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.className = 'fixed top-4 right-4 z-50 space-y-2';
+        document.body.appendChild(container);
+    }
+
+    const notification = document.createElement('div');
+    const typeClasses = {
+        success: 'bg-green-500 border-green-600',
+        error: 'bg-red-500 border-red-600',
+        warning: 'bg-yellow-500 border-yellow-600',
+        info: 'bg-blue-500 border-blue-600'
+    };
+
+    notification.className = `
+        ${typeClasses[type] || typeClasses.info}
+        text-white px-6 py-4 rounded-lg shadow-lg border-l-4
+        transform transition-all duration-300 ease-in-out
+        max-w-sm
+    `;
+
+    const icon = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-times-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info: 'fas fa-info-circle'
+    };
+
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="${icon[type] || icon.info} mr-3"></i>
+            <span class="flex-1">${message}</span>
+            <button class="ml-4 text-white hover:text-gray-200 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
 </script>
 @endsection

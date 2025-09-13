@@ -20,14 +20,14 @@ class AppSetting extends Model
     public static function get(string $key, $default = null)
     {
         $cacheKey = "app_setting_{$key}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($key, $default) {
             $setting = static::where('key', $key)->first();
-            
-            if (!$setting) {
+
+            if (! $setting) {
                 return $default;
             }
-            
+
             return static::castValue($setting->value, $setting->type);
         });
     }
@@ -45,7 +45,7 @@ class AppSetting extends Model
                 'description' => $description,
             ]
         );
-        
+
         // Clear cache
         Cache::forget("app_setting_{$key}");
     }
@@ -55,7 +55,7 @@ class AppSetting extends Model
      */
     private static function castValue($value, string $type)
     {
-        return match($type) {
+        return match ($type) {
             'integer' => (int) $value,
             'boolean' => (bool) $value,
             'float' => (float) $value,

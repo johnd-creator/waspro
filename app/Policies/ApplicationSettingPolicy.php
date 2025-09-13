@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\ApplicationSetting;
 use App\Models\PenggunaSistem;
-use Illuminate\Auth\Access\Response;
 
 class ApplicationSettingPolicy
 {
@@ -38,7 +37,7 @@ class ApplicationSettingPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(PenggunaSistem $penggunaSistem, ApplicationSetting $applicationSetting = null): bool
+    public function update(PenggunaSistem $penggunaSistem, ?ApplicationSetting $applicationSetting = null): bool
     {
         // Hanya Super Admin yang bisa mengupdate system settings
         return $penggunaSistem->isSuperAdmin();

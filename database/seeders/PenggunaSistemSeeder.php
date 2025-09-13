@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\PenggunaSistem;
-use App\Models\UnitPembangkit;
 use App\Models\PeranPengguna;
+use App\Models\UnitPembangkit;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class PenggunaSistemSeeder extends Seeder
 {
@@ -20,17 +18,19 @@ class PenggunaSistemSeeder extends Seeder
         // Pastikan ada data unit dan peran
         $unitList = UnitPembangkit::all();
         $peranList = PeranPengguna::all();
-        
+
         if ($unitList->isEmpty()) {
             $this->command->warn('Tidak ada data unit pembangkit. Jalankan UnitPembangkitSeeder terlebih dahulu.');
+
             return;
         }
-        
+
         if ($peranList->isEmpty()) {
             $this->command->warn('Tidak ada data peran pengguna. Jalankan PeranPenggunaSeeder terlebih dahulu.');
+
             return;
         }
-        
+
         // Data pengguna demo
         $users = [
             [
@@ -39,7 +39,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Super Admin']
+                'peran' => ['Super Admin'],
             ],
             [
                 'nama_lengkap' => 'Administrator Jakarta',
@@ -47,7 +47,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Pusat')->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Admin']
+                'peran' => ['Admin'],
             ],
             [
                 'nama_lengkap' => 'Manager Surabaya',
@@ -55,7 +55,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Surabaya')->first()?->unit_id ?? $unitList->skip(1)->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Manager']
+                'peran' => ['Manager'],
             ],
             [
                 'nama_lengkap' => 'Operator Jakarta 1',
@@ -63,7 +63,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Pusat')->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Operator']
+                'peran' => ['Operator'],
             ],
             [
                 'nama_lengkap' => 'Operator Jakarta 2',
@@ -71,7 +71,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Pusat')->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Operator']
+                'peran' => ['Operator'],
             ],
             [
                 'nama_lengkap' => 'Operator Surabaya 1',
@@ -79,7 +79,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Surabaya')->first()?->unit_id ?? $unitList->skip(1)->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Operator']
+                'peran' => ['Operator'],
             ],
             [
                 'nama_lengkap' => 'Supervisor Bandung',
@@ -87,7 +87,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Medan')->first()?->unit_id ?? $unitList->skip(2)->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Supervisor']
+                'peran' => ['Supervisor'],
             ],
             [
                 'nama_lengkap' => 'Operator Bandung 1',
@@ -95,7 +95,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Medan')->first()?->unit_id ?? $unitList->skip(2)->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Operator']
+                'peran' => ['Operator'],
             ],
             [
                 'nama_lengkap' => 'Viewer Jakarta',
@@ -103,7 +103,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Pusat')->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Viewer']
+                'peran' => ['Viewer'],
             ],
             [
                 'nama_lengkap' => 'User Nonaktif',
@@ -111,30 +111,31 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->first()->unit_id,
                 'aktif' => false,
-                'peran' => ['Operator']
-            ]
+                'peran' => ['Operator'],
+            ],
         ];
-        
+
         $this->command->info('Membuat pengguna sistem demo...');
-        
+
         foreach ($users as $userData) {
             // Cek apakah user sudah ada
             $existingUser = PenggunaSistem::where('email_address', $userData['email_address'])->first();
-            
+
             if ($existingUser) {
                 $this->command->warn("User {$userData['email_address']} sudah ada, dilewati.");
+
                 continue;
             }
-            
+
             // Buat user baru
             $user = PenggunaSistem::create([
                 'nama_lengkap' => $userData['nama_lengkap'],
                 'email_address' => $userData['email_address'],
                 'kata_sandi_hash' => Hash::make($userData['kata_sandi']),
                 'unit_id' => $userData['unit_id'],
-                'aktif' => $userData['aktif']
+                'aktif' => $userData['aktif'],
             ]);
-            
+
             // Attach peran
             $peranIds = [];
             foreach ($userData['peran'] as $peranName) {
@@ -143,15 +144,15 @@ class PenggunaSistemSeeder extends Seeder
                     $peranIds[] = $peran->peran_id;
                 }
             }
-            
-            if (!empty($peranIds)) {
+
+            if (! empty($peranIds)) {
                 $user->peranPengguna()->attach($peranIds);
             }
-            
+
             $unitName = $unitList->where('unit_id', $userData['unit_id'])->first()?->nama_unit ?? 'Unknown';
             $this->command->info("✓ User {$userData['nama_lengkap']} ({$userData['email_address']}) - Unit: {$unitName}");
         }
-        
+
         $this->command->info('\nSeeder PenggunaSistem selesai!');
         $this->command->info('\nInformasi Login:');
         $this->command->info('==================');

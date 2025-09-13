@@ -2,11 +2,10 @@
 
 namespace App\Exports;
 
-use App\Models\LogPenyimpananLimbah;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Carbon\Carbon;
 
 class ExpiryReportExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -18,8 +17,8 @@ class ExpiryReportExport implements FromCollection, WithHeadings, WithMapping
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return $this->logs;
@@ -39,7 +38,7 @@ class ExpiryReportExport implements FromCollection, WithHeadings, WithMapping
             'Status Kadaluarsa',
             'Hari Tersisa',
             'Status Log',
-            'Tanggal Input'
+            'Tanggal Input',
         ];
     }
 
@@ -52,11 +51,11 @@ class ExpiryReportExport implements FromCollection, WithHeadings, WithMapping
         $daysText = '';
         if ($daysUntilExpiry !== null) {
             if ($daysUntilExpiry > 0) {
-                $daysText = $daysUntilExpiry . ' hari lagi';
+                $daysText = $daysUntilExpiry.' hari lagi';
             } elseif ($daysUntilExpiry == 0) {
                 $daysText = 'Kadaluarsa hari ini';
             } else {
-                $daysText = 'Sudah kadaluarsa ' . abs($daysUntilExpiry) . ' hari';
+                $daysText = 'Sudah kadaluarsa '.abs($daysUntilExpiry).' hari';
             }
         }
 
@@ -72,7 +71,7 @@ class ExpiryReportExport implements FromCollection, WithHeadings, WithMapping
             $log->getExpiryStatusText(),
             $daysText,
             $log->status_log,
-            $log->created_at->format('d/m/Y H:i:s')
+            $log->created_at->format('d/m/Y H:i:s'),
         ];
     }
 }

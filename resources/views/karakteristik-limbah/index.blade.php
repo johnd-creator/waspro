@@ -1,21 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Karakteristik Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('karakteristik-limbah.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Tambah Karakteristik
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Karakteristik Limbah</h1>
+                    <p class="text-slate-600">Kelola data karakteristik limbah dalam sistem</p>
                 </div>
-                <div class="card-body">
+                <a href="{{ route('karakteristik-limbah.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-plus mr-2"></i> Tambah Karakteristik
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Table Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="p-8">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
@@ -78,12 +82,10 @@
                     </div>
                     
                     @if($karakteristikLimbah->hasPages())
-                        <div class="d-flex justify-content-center mt-3">
+                        <div class="flex justify-center mt-6">
                             {{ $karakteristikLimbah->links() }}
                         </div>
                     @endif
-                </div>
-            </div>
         </div>
     </div>
 </div>

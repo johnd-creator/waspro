@@ -2,28 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
-    use HasFactory, Notifiable, CanResetPasswordTrait;
+    use CanResetPasswordTrait, HasFactory, Notifiable;
 
     protected $table = 'pengguna_sistem';
+
     protected $primaryKey = 'user_id';
+
     public $incrementing = true;
+
     protected $keyType = 'int';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,7 +36,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
         'email_address',
         'kata_sandi_hash',
         'unit_id',
-        'aktif'
+        'aktif',
     ];
 
     /**
@@ -67,7 +69,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $this->kata_sandi_hash;
     }
-    
+
     /**
      * Get the email address that should be used for password resets.
      *
@@ -128,7 +130,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $this->hasMany(LogPenyimpananLimbah::class, 'user_id', 'user_id');
     }
-    
+
     /**
      * Scope untuk filter berdasarkan unit
      */
@@ -137,24 +139,24 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
         if ($unitId) {
             return $query->where('unit_id', $unitId);
         }
-        
+
         return $query;
     }
-    
+
     /**
      * Scope untuk filter berdasarkan unit user yang sedang login
      */
     public function scopeByCurrentUserUnit(Builder $query)
     {
         $currentUser = Auth::user();
-        
-        if ($currentUser && !$this->isUserAdmin($currentUser)) {
+
+        if ($currentUser && ! $this->isUserAdmin($currentUser)) {
             return $query->where('unit_id', $currentUser->unit_id);
         }
-        
+
         return $query;
     }
-    
+
     /**
      * Scope untuk filter hanya user aktif
      */
@@ -162,7 +164,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $query->where('aktif', true);
     }
-    
+
     /**
      * Scope untuk filter berdasarkan peran
      */
@@ -172,7 +174,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
             $q->where('nama_peran', $peranName);
         });
     }
-    
+
     /**
      * Check if user is Super Admin
      */
@@ -206,27 +208,36 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     }
 
     /**
+     * Check if user is Supervisor
+     */
+    public function isSupervisor()
+    {
+        return $this->peranPengguna()->where('peran_pengguna.nama_peran', 'Supervisor')->exists();
+    }
+
+    /**
      * Check if user is Admin (backward compatibility)
      * Now includes Administrator and Super Admin roles
      */
     public function isAdmin()
     {
         $adminRoles = ['Admin', 'Administrator', 'Super Admin'];
+
         return $this->peranPengguna()->whereIn('peran_pengguna.nama_peran', $adminRoles)->exists();
     }
-    
+
     /**
      * Cek apakah user tertentu adalah admin (static method)
      */
     public static function isUserAdmin($user)
     {
-        if (!$user) {
+        if (! $user) {
             return false;
         }
-        
+
         return $user->peranPengguna()->whereIn('peran_pengguna.nama_peran', ['Admin', 'Super Admin'])->exists();
     }
-    
+
     /**
      * Cek apakah user dapat mengakses unit tertentu
      */
@@ -236,11 +247,11 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
         if ($this->isAdmin()) {
             return true;
         }
-        
+
         // User biasa hanya dapat mengakses unit sendiri
         return $this->unit_id == $unitId;
     }
-    
+
     /**
      * Get nama peran sebagai string
      */
@@ -248,7 +259,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $this->peranPengguna()->pluck('peran_pengguna.nama_peran')->join(', ');
     }
-    
+
     /**
      * Get status aktif sebagai string
      */
@@ -256,7 +267,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $this->aktif ? 'Aktif' : 'Nonaktif';
     }
-    
+
     /**
      * Get nama unit
      */
@@ -264,14 +275,14 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         return $this->unitPembangkit ? $this->unitPembangkit->nama_unit : 'N/A';
     }
-    
+
     /**
      * Boot method untuk menambahkan global scope jika diperlukan
      */
     protected static function boot()
     {
         parent::boot();
-        
+
         // Uncomment jika ingin menambahkan global scope untuk membatasi akses berdasarkan unit
         // static::addGlobalScope('unit', function (Builder $builder) {
         //     $currentUser = Auth::user();

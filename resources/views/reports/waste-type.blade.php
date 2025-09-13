@@ -82,7 +82,7 @@
                                                 <tr>
                                                     <th>Jenis Limbah</th>
                                                     <th>Total Log</th>
-                                                    <th>Total Berat (Ton)</th>
+                                                    <th>Total Berat (Kg)</th>
                                                     <th>Tersimpan</th>
                                                     <th>Diangkut</th>
                                                 </tr>
@@ -117,7 +117,7 @@
                                     <th>Tanggal Masuk</th>
                                     <th>Perusahaan</th>
                                     <th>Unit</th>
-                                    <th>Jumlah (Ton)</th>
+                                    <th>Jumlah (Kg)</th>
                                     <th>Status</th>
                                     <th>Tanggal Pengangkutan</th>
                                     <th>Sumber Limbah</th>
@@ -156,7 +156,7 @@
 
                     <!-- Pagination -->
                     @if(method_exists($data['logs'], 'links'))
-                        <div class="d-flex justify-content-center">
+                        <div class="flex justify-center mt-6">
                             {{ $data['logs']->appends(request()->query())->links() }}
                         </div>
                     @endif

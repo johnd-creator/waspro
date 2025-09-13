@@ -11,11 +11,12 @@ class KarakteristikLimbah extends Model
     use HasFactory;
 
     protected $table = 'karakteristik_limbah';
+
     protected $primaryKey = 'karakteristik_id';
-    
+
     protected $fillable = [
         'nama_karakteristik',
-        'status_aktif'
+        'status_aktif',
     ];
 
     /**

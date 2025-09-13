@@ -3,7 +3,7 @@
 @section('title', 'System Settings')
 
 @section('content')
-<div class="container-fluid">
+<div class="px-4">
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -199,7 +199,7 @@ code {
 function confirmDelete(settingId, settingKey) {
     document.getElementById('settingKey').textContent = settingKey;
     document.getElementById('deleteForm').action = `/application-settings/${settingId}`;
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteModal').classList.remove('hidden');
 }
 </script>
 @endsection

@@ -11,17 +11,18 @@ class KategoriKegiatanSumber extends Model
     use HasFactory;
 
     protected $table = 'kategori_kegiatan_sumber';
+
     protected $primaryKey = 'kategori_id';
-    
+
     protected $fillable = [
         'nama_kategori',
     ];
 
     /**
-     * Get all jenis limbah for this kategori
+     * Get all log penyimpanan limbah for this kategori
      */
-    public function jenisLimbah(): HasMany
+    public function logPenyimpananLimbah(): HasMany
     {
-        return $this->hasMany(JenisLimbah::class, 'kategori_id', 'kategori_id');
+        return $this->hasMany(LogPenyimpananLimbah::class, 'detail_sumber_limbah', 'nama_kategori');
     }
 }

@@ -1,23 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Kategori Kegiatan Sumber</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('kategori-kegiatan-sumber.edit', $kategoriKegiatanSumber) }}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="{{ route('kategori-kegiatan-sumber.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Detail Kategori Kegiatan Sumber</h1>
+                    <p class="text-slate-600">Informasi lengkap kategori kegiatan sumber</p>
                 </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('kategori-kegiatan-sumber.edit', $kategoriKegiatanSumber) }}" class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-edit mr-2"></i> Edit
+                    </a>
+                    <a href="{{ route('kategori-kegiatan-sumber.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
@@ -52,62 +59,7 @@
 
 
 
-                    <!-- Related Log Penyimpanan -->
-                    @if($kategoriKegiatanSumber->logPenyimpananLimbah && $kategoriKegiatanSumber->logPenyimpananLimbah->count() > 0)
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Log Penyimpanan Limbah Terkait</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tanggal</th>
-                                                        <th>Jenis Limbah</th>
-                                                        <th>Jumlah</th>
-                                                        <th>Perusahaan</th>
-                                                        <th>Status</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($kategoriKegiatanSumber->logPenyimpananLimbah->take(5) as $log)
-                                                        <tr>
-                                                            <td>{{ $log->tanggal_penyimpanan->format('d/m/Y') }}</td>
-                                                            <td>{{ $log->jenisLimbah->nama_limbah ?? '-' }}</td>
-                                                            <td>{{ $log->jumlah }} {{ $log->satuan }}</td>
-                                                            <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? '-' }}</td>
-                                                            <td>
-                                                                @if($log->status_transportasi)
-                                                                    <span class="badge bg-success">Sudah Diangkut</span>
-                                                                @else
-                                                                    <span class="badge bg-warning">Belum Diangkut</span>
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                <a href="{{ route('log-penyimpanan.show', $log) }}" 
-                                                                   class="btn btn-info btn-sm">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        @if($kategoriKegiatanSumber->logPenyimpananLimbah->count() > 5)
-                                            <div class="text-center mt-2">
-                                                <small class="text-muted">Menampilkan 5 dari {{ $kategoriKegiatanSumber->logPenyimpananLimbah->count() }} log penyimpanan</small>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+
 
                     <!-- Delete Form -->
                     <div class="row mt-4">
@@ -130,8 +82,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

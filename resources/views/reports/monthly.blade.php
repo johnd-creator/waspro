@@ -128,7 +128,7 @@
                                     <th>Kode Limbah</th>
                                     <th>Perusahaan</th>
                                     <th>Unit</th>
-                                    <th>Jumlah (Ton)</th>
+                                    <th>Jumlah (Kg)</th>
                                     <th>Status</th>
                                     <th>Tanggal Pengangkutan</th>
                                 </tr>
@@ -161,7 +161,7 @@
 
                     <!-- Pagination -->
                     @if(method_exists($data['logs'], 'links'))
-                        <div class="d-flex justify-content-center">
+                        <div class="flex justify-center mt-6">
                             {{ $data['logs']->appends(request()->query())->links() }}
                         </div>
                     @endif

@@ -3,28 +3,33 @@
 @section('title', 'Detail Pengguna Sistem')
 
 @section('content')
-<div class="container-fluid">
+<div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Detail Pengguna Sistem</h1>
-            <p class="text-muted mb-0">Informasi lengkap pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('pengguna-sistem.edit', $penggunaSistem) }}" class="btn btn-warning">
-                <i class="fas fa-edit me-2"></i>Edit
-            </a>
-            <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Kembali
-            </a>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Detail Pengguna Sistem</h1>
+                    <p class="text-slate-600">Informasi lengkap pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
+                </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('pengguna-sistem.edit', $penggunaSistem) }}" class="inline-flex items-center px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-edit mr-2"></i>Edit
+                    </a>
+                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row">
+    <!-- Content Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Profile Card -->
-        <div class="col-lg-4 mb-4">
-            <div class="card">
-                <div class="card-body text-center">
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+                <div class="px-8 py-6 text-center">
                     <div class="avatar-lg mx-auto mb-3">
                         <div class="avatar-title bg-primary text-white rounded-circle">
                             {{ strtoupper(substr($penggunaSistem->nama_lengkap, 0, 2)) }}
@@ -64,15 +69,15 @@
         </div>
 
         <!-- Details Card -->
-        <div class="col-lg-8 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-primary">
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+                <div class="px-8 py-6 border-b border-slate-200">
+                    <h6 class="text-lg font-semibold text-slate-900 flex items-center">
                         <i class="fas fa-info-circle me-2"></i>Informasi Detail
                     </h6>
                 </div>
-                <div class="card-body">
-                    <div class="row">
+                <div class="px-8 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-md-6 mb-3">
                             <label class="form-label text-muted">ID Pengguna</label>
                             <p class="fw-bold">{{ $penggunaSistem->user_id }}</p>

@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('export-data', function ($user) {
-            return !$user->isViewer();
+            return ! $user->isViewer();
         });
 
         Gate::define('import-data', function ($user) {

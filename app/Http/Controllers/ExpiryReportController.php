@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\LogPenyimpananLimbah;
+use App\Exports\ExpiryReportExport;
 use App\Models\JenisLimbah;
+use App\Models\LogPenyimpananLimbah;
 use App\Models\PerusahaanPenghasil;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExpiryReportExport;
 
 class ExpiryReportController extends Controller
 {
@@ -81,7 +81,7 @@ class ExpiryReportController extends Controller
         $query->orderBy('tanggal_kadaluarsa', 'asc');
         $logs = $query->get();
 
-        $filename = 'laporan-expiry-limbah-' . Carbon::now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $filename = 'laporan-expiry-limbah-'.Carbon::now()->format('Y-m-d-H-i-s').'.xlsx';
 
         return Excel::download(new ExpiryReportExport($logs), $filename);
     }
@@ -117,9 +117,18 @@ class ExpiryReportController extends Controller
         // Get chart data for expiry trends
         $chartData = $this->getExpiryChartData();
 
+        // Create statistics array for the view
+        $statistics = [
+            'expired' => $expiredCount,
+            'critical' => $criticalCount,
+            'warning' => $warningCount,
+            'safe' => $safeCount,
+            'total' => $expiredCount + $criticalCount + $warningCount + $safeCount,
+        ];
+
         return view('expiry-reports.dashboard', compact(
             'expiredCount', 'criticalCount', 'warningCount', 'safeCount',
-            'recentExpired', 'expiringSoon', 'chartData'
+            'statistics', 'recentExpired', 'expiringSoon', 'chartData'
         ));
     }
 
@@ -149,10 +158,10 @@ class ExpiryReportController extends Controller
     private function getExpiryChartData()
     {
         $data = LogPenyimpananLimbah::select(
-                DB::raw('DATE(tanggal_kadaluarsa) as date'),
-                DB::raw('COUNT(*) as count'),
-                'expiry_status'
-            )
+            DB::raw('DATE(tanggal_kadaluarsa) as date'),
+            DB::raw('COUNT(*) as count'),
+            'expiry_status'
+        )
             ->where('status_log', 'Tersimpan')
             ->whereNotNull('tanggal_kadaluarsa')
             ->where('tanggal_kadaluarsa', '>=', Carbon::now()->subMonth())

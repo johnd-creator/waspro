@@ -46,14 +46,20 @@
                             <h3 class="card-title"><i class="fas fa-info-circle"></i> Informasi Pengaturan</h3>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-exclamation-triangle text-warning"></i> Status Kritis</h5>
-                                    <p class="text-muted">Limbah akan ditandai sebagai <strong>Kritis</strong> jika tanggal kadaluarsa kurang dari atau sama dengan jumlah hari yang ditentukan.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-2">
+                                        <x-status-indicator status="critical" size="sm" />
+                                        <h5 class="text-lg font-semibold mb-0">Status Kritis</h5>
+                                    </div>
+                                    <p class="text-gray-600">Limbah akan ditandai sebagai <strong>Kritis</strong> jika tanggal kadaluarsa kurang dari atau sama dengan jumlah hari yang ditentukan.</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-clock text-info"></i> Status Peringatan</h5>
-                                    <p class="text-muted">Limbah akan ditandai sebagai <strong>Peringatan</strong> jika tanggal kadaluarsa kurang dari atau sama dengan jumlah hari yang ditentukan, tetapi lebih dari hari kritis.</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-2">
+                                        <x-status-indicator status="warning" size="sm" />
+                                        <h5 class="text-lg font-semibold mb-0">Status Peringatan</h5>
+                                    </div>
+                                    <p class="text-gray-600">Limbah akan ditandai sebagai <strong>Peringatan</strong> jika tanggal kadaluarsa kurang dari atau sama dengan jumlah hari yang ditentukan, tetapi lebih dari hari kritis.</p>
                                 </div>
                             </div>
                             <div class="alert alert-warning">

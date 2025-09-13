@@ -1,28 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <!-- Success Alert -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="px-2 py-4">
+    <!-- Success Alert -->
+    @if(session('success'))
+        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-6 flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Kategori Kegiatan Sumber</h1>
+                    <p class="text-slate-600">Kelola data kategori kegiatan sumber dalam sistem</p>
                 </div>
-            @endif
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Kategori Kegiatan Sumber</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('kategori-kegiatan-sumber.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Tambah Kategori
+                <a href="{{ route('kategori-kegiatan-sumber.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-plus mr-2"></i> Tambah Kategori
                         </a>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
+        </div>
+    </div>
+    
+    <!-- Table Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6">
+            <div class="overflow-x-auto">
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -76,11 +83,10 @@
                     </div>
                     
                     @if($kategoriKegiatanSumber->hasPages())
-                        <div class="d-flex justify-content-center mt-3">
+                        <div class="flex justify-center mt-6">
                             {{ $kategoriKegiatanSumber->links() }}
                         </div>
                     @endif
-                </div>
             </div>
         </div>
     </div>

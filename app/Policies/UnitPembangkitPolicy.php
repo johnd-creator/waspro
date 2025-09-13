@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\UnitPembangkit;
 use App\Models\PenggunaSistem;
+use App\Models\UnitPembangkit;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UnitPembangkitPolicy
@@ -28,7 +28,7 @@ class UnitPembangkitPolicy
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // User lain hanya bisa melihat unit sendiri
         return $user->unit_id === $unitPembangkit->unit_id;
     }
@@ -51,12 +51,12 @@ class UnitPembangkitPolicy
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa mengupdate unit sendiri
         if ($user->isAdministrator()) {
             return $user->unit_id === $unitPembangkit->unit_id;
         }
-        
+
         // Operator dan Viewer tidak bisa mengupdate unit
         return false;
     }
@@ -96,12 +96,12 @@ class UnitPembangkitPolicy
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa mengelola settings unit sendiri
         if ($user->isAdministrator()) {
             return $user->unit_id === $unitPembangkit->unit_id;
         }
-        
+
         return false;
     }
 
@@ -114,7 +114,7 @@ class UnitPembangkitPolicy
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // User lain hanya bisa melihat laporan unit sendiri
         return $user->unit_id === $unitPembangkit->unit_id;
     }

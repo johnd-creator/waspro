@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LogPenyimpananLimbah;
 use App\Models\JenisLimbah;
+use App\Models\LogPenyimpananLimbah;
 use App\Models\PerusahaanPenghasil;
 use App\Models\UnitPembangkit;
-use App\Models\PenggunaSistem;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -31,10 +29,10 @@ class ReportController extends Controller
     public function monthly(Request $request)
     {
         $request->validate([
-            'year' => 'nullable|integer|min:2020|max:' . (date('Y') + 1),
+            'year' => 'nullable|integer|min:2020|max:'.(date('Y') + 1),
             'month' => 'nullable|integer|min:1|max:12',
             'unit_id' => 'nullable|exists:unit_pembangkit,unit_id',
-            'format' => 'nullable|in:view,pdf,excel'
+            'format' => 'nullable|in:view,pdf,excel',
         ]);
 
         $year = $request->get('year', date('Y'));
@@ -43,8 +41,8 @@ class ReportController extends Controller
         $format = $request->get('format', 'view');
 
         // Cache key for this report
-        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_" . Auth::user()->unit_id;
-        
+        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_".Auth::user()->unit_id;
+
         $data = Cache::remember($cacheKey, 3600, function () use ($year, $month, $unitId) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
                 ->whereYear('tanggal_limbah_masuk', $year);
@@ -75,7 +73,7 @@ class ReportController extends Controller
                     'total_waste' => $monthLogs->sum('jumlah_limbah_masuk'),
                     'transported' => $monthLogs->where('status_log', 'Diangkut')->sum('jumlah_diangkut'),
                     'stored' => $monthLogs->where('status_log', 'Tersimpan')->sum('jumlah_limbah_masuk'),
-                    'expired' => $monthLogs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk')
+                    'expired' => $monthLogs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk'),
                 ];
             });
 
@@ -85,7 +83,7 @@ class ReportController extends Controller
                     return [
                         'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
                         'total_quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
-                        'total_logs' => $wasteLogs->count()
+                        'total_logs' => $wasteLogs->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity')
@@ -98,7 +96,7 @@ class ReportController extends Controller
                     return [
                         'nama_perusahaan' => $companyLogs->first()->perusahaanPenghasil->nama_perusahaan ?? 'Unknown',
                         'total_quantity' => $companyLogs->sum('jumlah_limbah_masuk'),
-                        'total_logs' => $companyLogs->count()
+                        'total_logs' => $companyLogs->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity')
@@ -114,19 +112,20 @@ class ReportController extends Controller
         $data['month'] = $month;
         $data['unitId'] = $unitId;
         $data['monthName'] = $month ? Carbon::create()->month($month)->format('F') : null;
-        
+
         // All units for filter (filtered by user access)
-        $data['units'] = (Auth::user() && Auth::user()->role === 'super_admin') 
+        $data['units'] = (Auth::user() && Auth::user()->role === 'super_admin')
             ? UnitPembangkit::orderBy('nama_unit')->get()
             : UnitPembangkit::where('unit_id', Auth::user()->unit_id)->get();
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.monthly-pdf', $data);
-            return $pdf->download("monthly-report-{$year}" . ($month ? "-{$month}" : '') . ".pdf");
+
+            return $pdf->download("monthly-report-{$year}".($month ? "-{$month}" : '').'.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\MonthlyReportExport($data), "monthly-report-{$year}" . ($month ? "-{$month}" : '') . ".xlsx");
+            return Excel::download(new \App\Exports\MonthlyReportExport($data), "monthly-report-{$year}".($month ? "-{$month}" : '').'.xlsx');
         }
 
         return view('reports.monthly', $data);
@@ -141,7 +140,7 @@ class ReportController extends Controller
             'status' => 'nullable|in:Tersimpan,Diangkut,Kadaluarsa',
             'date_from' => 'nullable|date',
             'date_to' => 'nullable|date|after_or_equal:date_from',
-            'format' => 'nullable|in:view,pdf,excel'
+            'format' => 'nullable|in:view,pdf,excel',
         ]);
 
         $status = $request->get('status');
@@ -149,8 +148,8 @@ class ReportController extends Controller
         $dateTo = $request->get('date_to');
         $format = $request->get('format', 'view');
 
-        $cacheKey = "status_report_{$status}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
-        
+        $cacheKey = "status_report_{$status}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+
         $data = Cache::remember($cacheKey, 1800, function () use ($status, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit', 'penggunaSistem']);
 
@@ -174,7 +173,7 @@ class ReportController extends Controller
                     return [
                         'count' => $statusLogs->count(),
                         'total_quantity' => $statusLogs->sum('jumlah_limbah_masuk'),
-                        'percentage' => 0 // Will be calculated after
+                        'percentage' => 0, // Will be calculated after
                     ];
                 });
 
@@ -182,13 +181,14 @@ class ReportController extends Controller
             if ($totalLogs > 0) {
                 $statusDistribution = $statusDistribution->map(function ($item) use ($totalLogs) {
                     $item['percentage'] = round(($item['count'] / $totalLogs) * 100, 2);
+
                     return $item;
                 });
             }
 
             // Near expiry waste (for Tersimpan status)
             $nearExpiryWaste = collect();
-            if (!$status || $status === 'Tersimpan') {
+            if (! $status || $status === 'Tersimpan') {
                 $nearExpiryWaste = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
                     ->where('status_log', 'Tersimpan')
                     ->where('maksimal_penyimpanan_tanggal', '<=', Carbon::now()->addDays(30))
@@ -205,11 +205,12 @@ class ReportController extends Controller
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.status-pdf', $data);
-            return $pdf->download("status-report-" . ($status ? strtolower($status) : 'all') . ".pdf");
+
+            return $pdf->download('status-report-'.($status ? strtolower($status) : 'all').'.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\StatusReportExport($data), "status-report-" . ($status ? strtolower($status) : 'all') . ".xlsx");
+            return Excel::download(new \App\Exports\StatusReportExport($data), 'status-report-'.($status ? strtolower($status) : 'all').'.xlsx');
         }
 
         return view('reports.status', $data);
@@ -224,7 +225,7 @@ class ReportController extends Controller
             'jenis_limbah_id' => 'nullable|exists:jenis_limbah,jenis_limbah_id',
             'date_from' => 'nullable|date',
             'date_to' => 'nullable|date|after_or_equal:date_from',
-            'format' => 'nullable|in:view,pdf,excel'
+            'format' => 'nullable|in:view,pdf,excel',
         ]);
 
         $jenisLimbahId = $request->get('jenis_limbah_id');
@@ -232,13 +233,13 @@ class ReportController extends Controller
         $dateTo = $request->get('date_to');
         $format = $request->get('format', 'view');
 
-        $cacheKey = "waste_type_report_{$jenisLimbahId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
-        
+        $cacheKey = "waste_type_report_{$jenisLimbahId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+
         $data = Cache::remember($cacheKey, 1800, function () use ($jenisLimbahId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
 
             if ($jenisLimbahId) {
-                $query->whereHas('jenisLimbah', function($q) use ($jenisLimbahId) {
+                $query->whereHas('jenisLimbah', function ($q) use ($jenisLimbahId) {
                     $q->where('jenis_limbah_id', $jenisLimbahId);
                 });
             }
@@ -257,6 +258,7 @@ class ReportController extends Controller
             $wasteTypeStats = $logs->groupBy('kode_limbah')
                 ->map(function ($wasteLogs) {
                     $jenisLimbah = $wasteLogs->first()->jenisLimbah;
+
                     return [
                         'kode_limbah' => $jenisLimbah->kode_limbah ?? 'Unknown',
                         'nama_limbah' => $jenisLimbah->nama_limbah ?? 'Unknown',
@@ -269,7 +271,7 @@ class ReportController extends Controller
                                 $log->tanggal_pengangkutan ? Carbon::parse($log->tanggal_pengangkutan) : Carbon::now()
                             );
                         }),
-                        'status_breakdown' => $wasteLogs->groupBy('status_log')->map->count()
+                        'status_breakdown' => $wasteLogs->groupBy('status_log')->map->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity');
@@ -286,11 +288,12 @@ class ReportController extends Controller
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.waste-type-pdf', $data);
-            return $pdf->download("waste-type-report-" . ($jenisLimbahId ?: 'all') . ".pdf");
+
+            return $pdf->download('waste-type-report-'.($jenisLimbahId ?: 'all').'.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\WasteTypeReportExport($data), "waste-type-report-" . ($jenisLimbahId ?: 'all') . ".xlsx");
+            return Excel::download(new \App\Exports\WasteTypeReportExport($data), 'waste-type-report-'.($jenisLimbahId ?: 'all').'.xlsx');
         }
 
         return view('reports.waste-type', $data);
@@ -305,7 +308,7 @@ class ReportController extends Controller
             'perusahaan_id' => 'nullable|exists:perusahaan_penghasil,perusahaan_id',
             'date_from' => 'nullable|date',
             'date_to' => 'nullable|date|after_or_equal:date_from',
-            'format' => 'nullable|in:view,pdf,excel'
+            'format' => 'nullable|in:view,pdf,excel',
         ]);
 
         $perusahaanId = $request->get('perusahaan_id');
@@ -313,8 +316,8 @@ class ReportController extends Controller
         $dateTo = $request->get('date_to');
         $format = $request->get('format', 'view');
 
-        $cacheKey = "company_report_{$perusahaanId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
-        
+        $cacheKey = "company_report_{$perusahaanId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+
         $data = Cache::remember($cacheKey, 1800, function () use ($perusahaanId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
 
@@ -337,6 +340,7 @@ class ReportController extends Controller
                 ->groupBy('perusahaan_id')
                 ->map(function ($companyLogs) {
                     $perusahaan = $companyLogs->first()->perusahaanPenghasil;
+
                     return [
                         'perusahaan_id' => $perusahaan->perusahaan_id ?? null,
                         'nama_perusahaan' => $perusahaan->nama_perusahaan ?? 'Unknown',
@@ -350,10 +354,10 @@ class ReportController extends Controller
                             return [
                                 'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
                                 'quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
-                                'logs_count' => $wasteLogs->count()
+                                'logs_count' => $wasteLogs->count(),
                             ];
                         })->sortByDesc('quantity'),
-                        'status_breakdown' => $companyLogs->groupBy('status_log')->map->count()
+                        'status_breakdown' => $companyLogs->groupBy('status_log')->map->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity');
@@ -370,11 +374,12 @@ class ReportController extends Controller
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.company-pdf', $data);
-            return $pdf->download("company-report-" . ($perusahaanId ?: 'all') . ".pdf");
+
+            return $pdf->download('company-report-'.($perusahaanId ?: 'all').'.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\CompanyReportExport($data), "company-report-" . ($perusahaanId ?: 'all') . ".xlsx");
+            return Excel::download(new \App\Exports\CompanyReportExport($data), 'company-report-'.($perusahaanId ?: 'all').'.xlsx');
         }
 
         return view('reports.company', $data);
@@ -389,7 +394,7 @@ class ReportController extends Controller
             'unit_id' => 'nullable|exists:unit_pembangkit,unit_id',
             'date_from' => 'nullable|date',
             'date_to' => 'nullable|date|after_or_equal:date_from',
-            'format' => 'nullable|in:view,pdf,excel'
+            'format' => 'nullable|in:view,pdf,excel',
         ]);
 
         $unitId = $request->get('unit_id');
@@ -398,12 +403,12 @@ class ReportController extends Controller
         $format = $request->get('format', 'view');
 
         // Only Super Admin can see all units
-        if ((!Auth::user() || Auth::user()->role !== 'super_admin') && $unitId && $unitId != Auth::user()->unit_id) {
+        if ((! Auth::user() || Auth::user()->role !== 'super_admin') && $unitId && $unitId != Auth::user()->unit_id) {
             abort(403, 'Unauthorized access to unit data.');
         }
 
-        $cacheKey = "unit_report_{$unitId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
-        
+        $cacheKey = "unit_report_{$unitId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+
         $data = Cache::remember($cacheKey, 1800, function () use ($unitId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
 
@@ -425,6 +430,7 @@ class ReportController extends Controller
             $unitStats = $logs->groupBy('unit_id')
                 ->map(function ($unitLogs) {
                     $unit = $unitLogs->first()->unitPembangkit;
+
                     return [
                         'unit_id' => $unit->unit_id ?? null,
                         'nama_unit' => $unit->nama_unit ?? 'Unknown',
@@ -441,16 +447,16 @@ class ReportController extends Controller
                             return [
                                 'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
                                 'quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
-                                'logs_count' => $wasteLogs->count()
+                                'logs_count' => $wasteLogs->count(),
                             ];
                         })->sortByDesc('quantity'),
-                        'status_breakdown' => $unitLogs->groupBy('status_log')->map->count()
+                        'status_breakdown' => $unitLogs->groupBy('status_log')->map->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity');
 
             // All units for filter (filtered by user access)
-            $units = (Auth::user() && Auth::user()->role === 'super_admin') 
+            $units = (Auth::user() && Auth::user()->role === 'super_admin')
                 ? UnitPembangkit::orderBy('nama_unit')->get()
                 : UnitPembangkit::where('unit_id', Auth::user()->unit_id)->get();
 
@@ -463,11 +469,12 @@ class ReportController extends Controller
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.unit-pdf', $data);
-            return $pdf->download("unit-report-" . ($unitId ?: 'all') . ".pdf");
+
+            return $pdf->download('unit-report-'.($unitId ?: 'all').'.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\UnitReportExport($data), "unit-report-" . ($unitId ?: 'all') . ".xlsx");
+            return Excel::download(new \App\Exports\UnitReportExport($data), 'unit-report-'.($unitId ?: 'all').'.xlsx');
         }
 
         return view('reports.unit', $data);
@@ -479,11 +486,11 @@ class ReportController extends Controller
     public function clearCache()
     {
         // Check if user is super admin for cache clearing
-        if (!Auth::user() || Auth::user()->role !== 'super_admin') {
+        if (! Auth::user() || Auth::user()->role !== 'super_admin') {
             return redirect()->route('reports.index')
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus cache.');
         }
-        
+
         // Clear report cache
         $this->clearReportCache();
 
@@ -500,7 +507,7 @@ class ReportController extends Controller
             'status_report_*',
             'waste_type_report_*',
             'company_report_*',
-            'unit_report_*'
+            'unit_report_*',
         ];
 
         foreach ($patterns as $pattern) {

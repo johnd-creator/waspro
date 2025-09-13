@@ -3,23 +3,27 @@
 @section('title', 'Pengelolaan Pengguna Sistem')
 
 @section('content')
-<div class="container-fluid">
+<div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Pengelolaan Pengguna Sistem</h1>
-            <p class="text-muted mb-0">Kelola pengguna sistem berdasarkan unit pembangkit</p>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Pengguna Sistem</h1>
+                    <p class="text-slate-600">Kelola pengguna sistem berdasarkan unit pembangkit</p>
+                </div>
+                <a href="{{ route('pengguna-sistem.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-plus mr-2"></i> Tambah Pengguna
+                </a>
+            </div>
         </div>
-        <a href="{{ route('pengguna-sistem.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Tambah Pengguna
-        </a>
     </div>
 
 
 
     <!-- Filter Section -->
-    <div class="card mb-4">
-        <div class="card-body">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
             <form method="GET" action="{{ route('pengguna-sistem.index') }}" class="row g-3">
                 <div class="col-md-4">
                     <label for="search" class="form-label">Pencarian</label>
@@ -62,16 +66,16 @@
     </div>
 
     <!-- Users Table -->
-    <div class="card">
-        <div class="card-header">
-            <h6 class="m-0 font-weight-bold text-primary">
-                <i class="fas fa-users me-2"></i>Daftar Pengguna Sistem
-                <span class="badge bg-secondary ms-2">{{ $users->total() }} pengguna</span>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                <i class="fas fa-users mr-2"></i>Daftar Pengguna Sistem
+                <span class="ml-2 px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full">{{ $users->total() }} pengguna</span>
             </h6>
         </div>
-        <div class="card-body">
+        <div class="px-8 py-6">
             @if($users->count() > 0)
-                <div class="table-responsive">
+                <div class="overflow-x-auto">
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
@@ -242,7 +246,7 @@
 function confirmDelete(userId, userName) {
     document.getElementById('userName').textContent = userName;
     document.getElementById('deleteForm').action = `/pengguna-sistem/${userId}`;
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteModal').classList.remove('hidden');
 }
 </script>
 @endsection

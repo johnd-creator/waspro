@@ -107,7 +107,7 @@
                                     <th>Jenis Limbah</th>
                                     <th>Perusahaan</th>
                                     <th>Unit</th>
-                                    <th>Jumlah (Ton)</th>
+                                    <th>Jumlah (Kg)</th>
                                     <th>Status</th>
                                     <th>Tanggal Pengangkutan</th>
                                     <th>Maksimal Penyimpanan</th>
@@ -141,11 +141,14 @@
                                     <td>
                                         @if($daysRemaining !== null)
                                             @if($isExpired)
-                                                <span class="badge badge-danger">Kadaluarsa</span>
+                                                <x-status-indicator status="expired" />
                                             @else
-                                                <span class="badge badge-{{ $daysRemaining <= 7 ? 'warning' : 'info' }}">
+                                                <x-status-indicator 
+                                                    status="{{ $daysRemaining <= 7 ? 'critical' : 'warning' }}" 
+                                                    :show-icon="false" 
+                                                >
                                                     {{ $daysRemaining }} hari
-                                                </span>
+                                                </x-status-indicator>
                                             @endif
                                         @else
                                             -

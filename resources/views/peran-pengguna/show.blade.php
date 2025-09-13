@@ -1,21 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Peran Pengguna</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('peran-pengguna.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Detail Peran Pengguna</h1>
+                    <p class="text-slate-600">Informasi lengkap peran: {{ $peranPengguna->nama_peran }}</p>
                 </div>
-                
-                <div class="card-body">
-                    <div class="row">
+                <div>
+                    <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                <i class="fas fa-info-circle mr-2"></i>Informasi Detail
+            </h6>
+        </div>
+        <div class="px-8 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-md-6">
                             <table class="table table-borderless">
                                 <tr>
@@ -124,8 +136,6 @@
                             <i class="fas fa-trash"></i> Hapus
                         </button>
                     @endif
-                </div>
-            </div>
         </div>
     </div>
 </div>

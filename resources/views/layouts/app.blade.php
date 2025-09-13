@@ -10,462 +10,701 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS will be loaded via Vite -->
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Custom Styles -->
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fc;
+        /* Custom styles */
+        
+        /* Safari input text color fix */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="search"],
+        input[type="date"],
+        input[type="time"],
+        input[type="datetime-local"],
+        textarea,
+        select {
+            color: #374151 !important;
+            -webkit-text-fill-color: #374151 !important;
+            opacity: 1 !important;
+            -webkit-opacity: 1 !important;
         }
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        
+        /* Safari autofill background fix */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px white inset !important;
+            -webkit-text-fill-color: #374151 !important;
         }
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 1rem;
-            border-radius: 0.35rem;
-            margin: 0.25rem 1rem;
+        
+        /* Placeholder text color for Safari */
+        input::placeholder,
+        textarea::placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
         }
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
+        
+        /* Safari compatibility fixes for dashboard header */
+        .safari-gradient-fallback {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #f3e8ff 100%);
         }
-        .sidebar .nav-link i {
-            margin-right: 0.5rem;
-            width: 1rem;
-        }
-        .navbar {
-            background-color: #fff;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-        }
-        .card {
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-            border: none;
-        }
-        .btn-primary {
-            background-color: #4e73df;
-            border-color: #4e73df;
-        }
-        .btn-primary:hover {
-            background-color: #2e59d9;
-            border-color: #2653d4;
-        }
-        .text-primary {
-            color: #4e73df !important;
-        }
-        .main-content {
-            margin-left: 250px;
-            min-height: 100vh;
-        }
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
+        
+        /* Safari backdrop-blur fallback */
+        @supports not (backdrop-filter: blur(10px)) {
+            .bg-white\/80 {
+                background-color: rgba(255, 255, 255, 0.95) !important;
             }
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -250px;
-                width: 250px;
-                z-index: 1050;
-                transition: left 0.3s;
-            }
-            .sidebar.show {
-            left: 0;
         }
-    }
-    
-    /* User Dropdown Styles */
-    .dropdown-toggle::after {
-        margin-left: 0.5rem;
-    }
-    
-    .dropdown-menu {
-        border: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
-    
-    .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-    
-    .dropdown-item:focus {
-        background-color: #e9ecef;
-    }
-    
-    /* Accordion Menu Styles */
-    .nav-link[data-bs-toggle="collapse"] {
-        position: relative;
-        transition: all 0.3s ease;
-    }
-    
-    .nav-link[data-bs-toggle="collapse"]:after {
-        content: '\f107';
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        position: absolute;
-        right: 1rem;
-        transition: transform 0.3s ease;
-    }
-    
-    .nav-link[data-bs-toggle="collapse"]:not(.collapsed):after {
-        transform: rotate(180deg);
-    }
-    
-    .nav-link[data-bs-toggle="collapse"].collapsed:after {
-        transform: rotate(0deg);
-    }
-    
-    .sb-sidenav-menu-nested {
-        padding-left: 1rem;
-    }
-    
-    .sb-sidenav-menu-nested .nav-link {
-        padding: 0.75rem 1rem;
-        margin: 0.125rem 1rem;
-        font-size: 0.9rem;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-left: 3px solid transparent;
-    }
-    
-    .sb-sidenav-menu-nested .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-        border-left-color: rgba(255, 255, 255, 0.5);
-    }
-    
-    .sb-sidenav-menu-nested .nav-link.active {
-        background-color: rgba(255, 255, 255, 0.2);
-        border-left-color: #fff;
-    }
-    
-    .collapse {
-        transition: height 0.35s ease;
-    }
-    
-    .collapsing {
-        transition: height 0.35s ease;
-    }
-    
-    /* Ensure smooth collapse animation */
-    .collapse:not(.show) {
-        display: none;
-    }
-    
-    .collapse.show {
-        display: block;
-    }
+        
+        /* Safari transform and animation fixes */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            .animate-pulse {
+                animation: safari-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            
+            @keyframes safari-pulse {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: .5;
+                }
+            }
+        }
+        
+        /* Ensure proper rendering on Safari */
+        .dashboard-header {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
     </style>
     @stack('styles')
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <div id="app">
+<body class="bg-gray-100">
+    <div class="flex h-screen">
         @auth
         <!-- Sidebar -->
-        <nav class="sidebar position-fixed top-0 start-0" style="width: 250px; z-index: 1000;">
-            <div class="p-4 text-center">
-                <a class="navbar-brand text-white fw-bold d-block" href="{{ route('dashboard') }}" style="text-decoration: none; font-size: 1.5rem;">
-                    <i class="fas fa-recycle me-2" style="font-size: 1.8rem;"></i>
-                    WASPRO
-                </a>
-            </div>
-            <hr class="text-white mx-3">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('log-penyimpanan.*') ? 'active' : '' }}" href="{{ route('log-penyimpanan.index') }}">
-                        <i class="fas fa-clipboard-list"></i>
-                        Log Penyimpanan Limbah
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }} {{ request()->routeIs('reports.*') ? '' : 'collapsed' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="{{ request()->routeIs('reports.*') ? 'true' : 'false' }}" aria-controls="collapseReports">
-                        <i class="fas fa-chart-bar"></i>
-                        LAPORAN
-                    </a>
-                    <div class="collapse {{ request()->routeIs('reports.*') ? 'show' : '' }}" id="collapseReports">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }}" href="{{ route('reports.index') }}">
-                                <i class="fas fa-home"></i>
-                                Dashboard Report
-                            </a>
-                            <a class="nav-link {{ request()->routeIs('reports.monthly') ? 'active' : '' }}" href="{{ route('reports.monthly') }}">
-                                <i class="fas fa-calendar-alt"></i>
-                                Laporan Bulanan
-                            </a>
-                            <a class="nav-link {{ request()->routeIs('reports.status') ? 'active' : '' }}" href="{{ route('reports.status') }}">
-                                <i class="fas fa-info-circle"></i>
-                                Laporan Status
-                            </a>
-                            <a class="nav-link {{ request()->routeIs('reports.waste-type') ? 'active' : '' }}" href="{{ route('reports.waste-type') }}">
-                                <i class="fas fa-recycle"></i>
-                                Laporan Jenis Limbah
-                            </a>
-                            <a class="nav-link {{ request()->routeIs('reports.company') ? 'active' : '' }}" href="{{ route('reports.company') }}">
-                                <i class="fas fa-building"></i>
-                                Laporan Perusahaan
-                            </a>
-                            <a class="nav-link {{ request()->routeIs('reports.unit') ? 'active' : '' }}" href="{{ route('reports.unit') }}">
-                                <i class="fas fa-industry"></i>
-                                Laporan Unit
-                            </a>
-                        </nav>
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out shadow-2xl" id="sidebar">
+            <nav class="h-full flex flex-col">
+                <div class="flex items-center justify-center h-16 px-4 border-b border-slate-700/50 bg-slate-800/50 backdrop-blur-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-recycle text-white text-lg"></i>
+                        </div>
+                        <span class="text-white text-xl font-bold tracking-wide">WASPRO</span>
                     </div>
-                </li>
-                <li class="nav-item mt-3">
-                    <div class="text-white-50 small px-3 mb-2">MASTER DATA</div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('jenis-limbah.*', 'karakteristik-limbah.*', 'kategori-kegiatan-sumber.*') ? '' : 'collapsed' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLimbah" aria-expanded="{{ request()->routeIs('jenis-limbah.*', 'karakteristik-limbah.*', 'kategori-kegiatan-sumber.*') ? 'true' : 'false' }}" aria-controls="collapseLimbah">
-                        <i class="fas fa-recycle"></i>
-                        LIMBAH
-                    </a>
-                    <div class="collapse {{ request()->routeIs('jenis-limbah.*', 'karakteristik-limbah.*', 'kategori-kegiatan-sumber.*') ? 'show' : '' }}" id="collapseLimbah">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link {{ request()->routeIs('jenis-limbah.*') ? 'active' : '' }}" href="{{ route('jenis-limbah.index') }}">
-                                <i class="fas fa-file-alt"></i>
-                                Jenis Limbah
+                </div>
+                
+                <div class="flex-1 px-2 py-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
+                    <div class="space-y-3">
+                        <!-- Menu Dashboard -->
+                        <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('dashboard') ? 'bg-blue-600/80 text-white shadow-lg shadow-blue-600/25' : '' }}" href="{{ route('dashboard') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-blue-500/50 transition-colors duration-200">
+                                    <i class="fas fa-tachometer-alt text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium">Dashboard</span>
                             </a>
-                            <a class="nav-link {{ request()->routeIs('karakteristik-limbah.*') ? 'active' : '' }}" href="{{ route('karakteristik-limbah.index') }}">
-                                <i class="fas fa-tags"></i>
-                                Karakteristik Limbah
+                        </div>
+                        
+                        <!-- Menu Notifikasi -->
+                        <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('notifications.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('notifications.index') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200 relative">
+                                    <i class="fas fa-bell text-xs"></i>
+                                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center" id="sidebar-notification-badge" style="display: none;"></span>
+                                </div>
+                                <span class="text-sm font-medium">Notifikasi</span>
                             </a>
-                            <a class="nav-link {{ request()->routeIs('kategori-kegiatan-sumber.*') ? 'active' : '' }}" href="{{ route('kategori-kegiatan-sumber.index') }}">
-                                <i class="fas fa-list"></i>
-                                Kategori Kegiatan Limbah
+                        </div>
+                        
+                        <!-- Menu Log Penyimpanan -->
+                        <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('log-penyimpanan.*') ? 'bg-green-600/80 text-white shadow-lg shadow-green-600/25' : '' }}" href="{{ route('log-penyimpanan.index') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-green-500/50 transition-colors duration-200">
+                                    <i class="fas fa-clipboard-list text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium">Log Penyimpanan</span>
                             </a>
-                        </nav>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('perusahaan-penghasil.*') ? 'active' : '' }}" href="{{ route('perusahaan-penghasil.index') }}">
-                        <i class="fas fa-building"></i>
-                        Perusahaan Penghasil
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('unit-pembangkit.*') ? 'active' : '' }}" href="{{ route('unit-pembangkit.index') }}">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Unit Pembangkit
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('pengguna-sistem.*') ? 'active' : '' }}" href="{{ route('pengguna-sistem.index') }}">
-                        <i class="fas fa-users"></i>
-                        Pengelolaan Users
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('peran-pengguna.*') ? 'active' : '' }}" href="{{ route('peran-pengguna.index') }}">
-                        <i class="fas fa-user-tag"></i>
-                        Peran Pengguna
-                    </a>
-                </li>
-                <li class="nav-item mt-3">
-                    <div class="text-white-50 small px-3 mb-2">SISTEM</div>
-                </li>
-                @if(Auth::guard('web')->user() && Auth::guard('web')->user()->isSuperAdmin())
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('application-settings.*') ? 'active' : '' }}" href="{{ route('application-settings.index') }}">
-                        <i class="fas fa-cogs"></i>
-                        System Settings
-                    </a>
-                </li>
-                @endif
-            </ul>
-        </nav>
+                        </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-                <div class="container-fluid">
-                    <button class="btn btn-link d-md-none" type="button" id="sidebarToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
+                        @if(Auth::guard('web')->user() && (Auth::guard('web')->user()->isSupervisor() || Auth::guard('web')->user()->isAdmin()))
+                        <!-- Menu Pengangkutan Limbah -->
+                        <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('pengangkutan-limbah.*') ? 'bg-yellow-600/80 text-white shadow-lg shadow-yellow-600/25' : '' }}" href="{{ route('pengangkutan-limbah.index') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-yellow-500/50 transition-colors duration-200">
+                                    <i class="fas fa-truck text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium">Pengangkutan Limbah</span>
+                            </a>
+                        </div>
+                        @endif
+                        
+                         <!-- Section LAPORAN -->
+                         <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
+                             <i class="fas fa-chart-bar mr-1"></i>LAPORAN
+                         </div>
+                         
+                         <!-- Menu Laporan Bulanan -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.monthly') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.monthly') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
+                                     <i class="fas fa-calendar-alt text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Laporan Bulanan</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Laporan Status -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.status') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.status') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
+                                     <i class="fas fa-info-circle text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Laporan Status</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Laporan Jenis Limbah -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.waste-type') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.waste-type') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
+                                     <i class="fas fa-recycle text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Laporan Jenis Limbah</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Laporan Perusahaan -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.company') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.company') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
+                                     <i class="fas fa-building text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Laporan Perusahaan</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Laporan Unit -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.unit') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.unit') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
+                                     <i class="fas fa-industry text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Laporan Unit</span>
+                             </a>
+                         </div>
+                         <!-- Section MASTER DATA -->
+                         <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
+                             <i class="fas fa-database mr-1"></i>MASTER DATA
+                         </div>
+                         
+                         <!-- Menu Perusahaan Penghasil -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('perusahaan-penghasil.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('perusahaan-penghasil.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200">
+                                     <i class="fas fa-building text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Perusahaan Penghasil</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Unit Pembangkit -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('unit-pembangkit.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('unit-pembangkit.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200">
+                                     <i class="fas fa-map-marker-alt text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Unit Pembangkit</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Pengelolaan Users -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('pengguna-sistem.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('pengguna-sistem.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200">
+                                     <i class="fas fa-users text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Pengelolaan Users</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Peran Pengguna -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('peran-pengguna.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('peran-pengguna.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200">
+                                     <i class="fas fa-user-tag text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Peran Pengguna</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Section LIMBAH -->
+                         <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
+                             <i class="fas fa-recycle mr-1"></i>LIMBAH
+                         </div>
+                         
+                         <!-- Menu Jenis Limbah -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('jenis-limbah.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('jenis-limbah.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-orange-500/50 transition-colors duration-200">
+                                     <i class="fas fa-file-alt text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Jenis Limbah</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Karakteristik Limbah -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('karakteristik-limbah.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('karakteristik-limbah.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-orange-500/50 transition-colors duration-200">
+                                     <i class="fas fa-tags text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Karakteristik Limbah</span>
+                             </a>
+                         </div>
+                         
+                         <!-- Menu Kategori Kegiatan Limbah -->
+                         <div class="space-y-1">
+                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('kategori-kegiatan-sumber.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('kategori-kegiatan-sumber.index') }}">
+                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-orange-500/50 transition-colors duration-200">
+                                     <i class="fas fa-list text-xs"></i>
+                                 </div>
+                                 <span class="text-sm font-medium">Kategori Kegiatan Limbah</span>
+                             </a>
+                         </div>
+                         
+
+                         
+                         <!-- Section PENGATURAN -->
+                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
+                              <i class="fas fa-cog mr-1"></i>PENGATURAN
+                          </div>
+                          
+                          @if(Auth::guard('web')->user() && Auth::guard('web')->user()->isSuperAdmin())
+                          <!-- Menu System Settings -->
+                          <div class="space-y-1">
+                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('application-settings.*') ? 'bg-blue-600/80 text-white shadow-lg shadow-blue-600/25' : '' }}" href="{{ route('application-settings.index') }}">
+                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-blue-500/50 transition-colors duration-200">
+                                      <i class="fas fa-cogs text-xs"></i>
+                                  </div>
+                                  <span class="text-sm font-medium">System Settings</span>
+                              </a>
+                          </div>
+                          @endif
+                          
+                          <!-- Menu Logout -->
+                          <div class="space-y-1">
+                              <form method="POST" action="{{ route('logout') }}">
+                                  @csrf
+                                  <button type="submit" class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-red-600/50 hover:text-white hover:shadow-lg hover:scale-105 w-full text-left">
+                                      <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-red-500/50 transition-colors duration-200">
+                                          <i class="fas fa-sign-out-alt text-xs"></i>
+                                      </div>
+                                      <span class="text-sm font-medium">Logout</span>
+                                  </button>
+                              </form>
+                          </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+        <!-- Main Content -->        <div class="flex-1 flex flex-col overflow-hidden md:ml-64 transition-all duration-300 ease-in-out">            <!-- Top Navbar -->            <nav class="bg-white/95 backdrop-blur-sm border-b border-gray-200/50 shadow-sm sticky top-0 z-40">                <div class="flex items-center justify-between px-6 py-4">                    <!-- Left side -->                    <div class="flex items-center space-x-4">                        <button class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" id="sidebarToggle">                            <i class="fas fa-bars text-lg"></i>                        </button>                        <div class="flex items-center">
+                            <div class="w-32 h-16 rounded-lg flex items-center justify-center">
+                                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-32 h-16 object-contain">
+                            </div>
+                        </div>                    </div>
                     
-                    <div class="navbar-nav ms-auto">
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 14px;">
-                                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}
-                                    </div>
-                                    <div class="d-none d-md-block text-start">
-                                        <div class="fw-semibold text-dark">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>
-                                        <div class="small text-muted">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>
+                    <!-- Right side -->                    <div class="flex items-center space-x-4">                        <!-- Search -->                        <div class="hidden md:flex items-center">                            <div class="relative group">                                <input class="w-64 pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all duration-200 text-sm" type="text" placeholder="Cari data...">                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">                                    <i class="fas fa-search text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200"></i>                                </div>                            </div>                        </div>
+                        
+                        <!-- Notifications -->                        <div class="relative">
+                            <button class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-gray-900 focus:outline-none rounded-xl hover:bg-gray-50 transition-all duration-200 relative" id="notification-bell" onclick="toggleNotificationDropdown()">
+                                <i class="far fa-bell text-lg"></i>
+                                <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold" id="notification-count" style="display: none;">0</span>
+                            </button>
+                            <div class="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 hidden overflow-hidden" id="notification-dropdown">
+                                <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-bold text-gray-900" id="notification-header">0 Notifikasi</h3>
+                                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="refreshNotifications()">
+                                            <i class="fas fa-sync-alt mr-1"></i>Refresh
+                                        </button>
                                     </div>
                                 </div>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown" style="min-width: 280px;">
-                                <li class="px-3 py-3 border-bottom bg-light">
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; font-size: 18px;">
-                                            {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>
-                                            <div class="small text-muted">{{ Auth::user()->email_address ?? Auth::user()->email }}</div>
-                                            <div class="small text-primary">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li><a class="dropdown-item py-2" href="{{ route('profile.show') }}">
-                                    <i class="fas fa-user me-2 text-primary"></i>Lihat Profile
-                                </a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('pengguna-sistem.index') }}">
-                                    <i class="fas fa-users me-2 text-success"></i>Kelola Users
-                                </a></li>
-                                <li><hr class="dropdown-divider my-1"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}" class="m-0" id="logoutForm" style="display: none;">
-                                        @csrf
-                                    </form>
-                                    <a href="#" class="dropdown-item py-2 text-danger" onclick="handleLogout(event); return false;">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                <div class="max-h-80 overflow-y-auto" id="notification-list">
+                                    <!-- Notifications will be loaded here -->
+                                </div>
+                                <div class="border-t border-gray-100 bg-gray-50">
+                                    <a href="{{ route('notifications.index') }}" class="flex items-center justify-center w-full px-6 py-3 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 font-medium">
+                                        Lihat Semua Notifikasi
                                     </a>
-                                </li>
-                            </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- User Dropdown -->                        <div class="relative">                            <button class="flex items-center space-x-3 text-gray-700 hover:text-gray-900 focus:outline-none p-2 rounded-xl hover:bg-gray-50 transition-all duration-200" id="userDropdown" onclick="toggleUserDropdown()">                                <div class="flex items-center space-x-3">                                    <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-lg">                                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                    </div>                                    <div class="hidden md:block text-left">                                        <div class="font-semibold text-gray-900 text-sm">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>                                        <div class="text-xs text-gray-500">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>                                    </div>                                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>                                </div>                            </button>
+                            <div class="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 hidden overflow-hidden" id="userDropdownMenu">                                <div class="px-6 py-5 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">                                    <div class="flex items-center space-x-4">                                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg">                                            {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                        </div>                                        <div class="flex-1">                                            <div class="font-bold text-gray-900 text-lg">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>                                            <div class="text-sm text-gray-600">{{ Auth::user()->email_address ?? Auth::user()->email }}</div>                                            <div class="text-sm text-blue-600 font-medium mt-1">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>                                        </div>                                    </div>                                </div>                                <div class="py-3">                                    <a class="flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group" href="{{ route('profile.show') }}">                                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors duration-200">                                            <i class="fas fa-user text-blue-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Lihat Profile</span>                                    </a>                                    <a class="flex items-center px-6 py-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 group" href="{{ route('pengguna-sistem.index') }}">                                        <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-emerald-200 transition-colors duration-200">                                            <i class="fas fa-users text-emerald-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Kelola Users</span>                                    </a>                                </div>                                <div class="border-t border-gray-100 bg-gray-50">                                    <form method="POST" action="{{ route('logout') }}" class="hidden" id="logout-form">                                        @csrf                                    </form>                                    <button class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group" onclick="handleLogout(event); return false;">                                        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-red-200 transition-colors duration-200">                                            <i class="fas fa-sign-out-alt text-red-600 text-sm"></i>                                        </div>                                        <span class="font-medium">Logout</span>                                    </button>                                </div>                            </div>
                         </div>
                     </div>
                 </div>
             </nav>
 
-            <!-- Page Content -->
-            <main class="py-4">
-                @if(session('success'))
-                    <div class="container-fluid">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Page Content -->            <main class="flex-1 overflow-y-auto bg-gray-50/50">                <div class="py-4">
+                    @if(session('success'))
+                        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                {{ session('success') }}
+                            </div>
+                            <button type="button" class="text-green-600 hover:text-green-800 focus:outline-none" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                    </div>
-                @endif
+                    @endif
 
-                @if(session('error'))
-                    <div class="container-fluid">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    @if(session('error'))
+                        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ session('error') }}
+                            </div>
+                            <button type="button" class="text-red-600 hover:text-red-800 focus:outline-none" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                    </div>
-                @endif
+                    @endif
+                    
+                    @if(session('warning'))
+                        <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                {{ session('warning') }}
+                            </div>
+                            <button type="button" class="text-yellow-600 hover:text-yellow-800 focus:outline-none" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    @endif
+                    
+                    @if(session('info'))
+                        <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                {{ session('info') }}
+                            </div>
+                            <button type="button" class="text-blue-600 hover:text-blue-800 focus:outline-none" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    @endif
 
-                @yield('content')
+                    @yield('content')
+                </div>
             </main>
+            
+            <!-- Footer -->            <footer class="bg-white border-t border-gray-200/50 py-6 mt-auto">                <div class="px-4">                    <div class="flex items-center justify-between text-sm text-gray-500">                        <div class="flex items-center space-x-2">                            <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">                                <i class="fas fa-recycle text-white text-xs"></i>                            </div>                            <span>Copyright &copy; WASPRO {{ date('Y') }}</span>                        </div>                        <div class="flex items-center space-x-6">                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Privacy Policy</a>                            <span class="text-gray-300">&middot;</span>                            <a href="#" class="hover:text-blue-600 transition-colors duration-200 font-medium">Terms &amp; Conditions</a>                        </div>                    </div>                </div>            </footer>
         </div>
         @else
         <!-- Guest Layout -->
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto">
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                        @endif
-
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
-                        @endif
-                    </ul>
+        <div class="min-h-screen bg-gray-50">
+            <!-- Top Navbar for Guests -->
+            <nav class="bg-white shadow-sm border-b border-gray-200">                <div class="px-4">
+                    <div class="flex justify-between h-16">
+                        <div class="flex items-center">
+                            <a href="{{ url('/') }}" class="text-xl font-bold text-gray-800">
+                                <i class="fas fa-recycle mr-2 text-blue-600"></i>
+                                WASPRO
+                            </a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            @if (Route::has('login'))
+                                <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                                    Login
+                                </a>
+                            @endif
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                    Register
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+            </nav>
+            
+            <!-- Main Content for Guests -->
+            <main class="py-6">
+                @if(session('success'))
+                    <div class="px-4 mb-4">
+                        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between" role="alert">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                {{ session('success') }}
+                            </div>
+                            <button type="button" class="text-green-600 hover:text-green-800 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                @endif
+                
+                @if(session('error'))
+                    <div class="px-4 mb-4">
+                        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between" role="alert">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ session('error') }}
+                            </div>
+                            <button type="button" class="text-red-600 hover:text-red-800 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                @endif
+                
+                @yield('content')
+            </main>
+        </div>
         @endauth
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <!-- Custom Scripts -->
     <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            mainContent.classList.toggle('md:ml-0');
+        }
+        
+        // Toggle submenu
+        function toggleSubmenu(submenuId) {
+            const submenu = document.getElementById(submenuId);
+            const icon = document.getElementById(submenuId + '-icon');
+            
+            if (submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                submenu.classList.add('block');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                submenu.classList.add('hidden');
+                submenu.classList.remove('block');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Toggle user dropdown
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+        
         // Sidebar toggle for mobile
         document.getElementById('sidebarToggle')?.addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('show');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
         });
+        
+        // Notification functions
+         function toggleNotificationDropdown() {
+             const dropdown = document.getElementById('notification-dropdown');
+             dropdown.classList.toggle('hidden');
+         }
+        
+        function loadNotifications() {
+            fetch('/notifications/get-count')
+                .then(response => response.json())
+                .then(data => {
+                    updateNotificationBadge(data.count);
+                    updateNotificationHeader(data.count);
+                })
+                .catch(error => console.error('Error loading notification count:', error));
+                
+            fetch('/notifications/get-expiry-notifications')
+                .then(response => response.json())
+                .then(data => {
+                    updateNotificationList(data.notifications);
+                })
+                .catch(error => console.error('Error loading notifications:', error));
+        }
+        
+        function updateNotificationBadge(count) {
+             const badge = document.getElementById('notification-count');
+             const sidebarBadge = document.getElementById('sidebar-notification-badge');
+             
+             if (count > 0) {
+                 badge.textContent = count > 99 ? '99+' : count;
+                 badge.style.display = 'flex';
+                 
+                 if (sidebarBadge) {
+                     sidebarBadge.style.display = 'flex';
+                 }
+             } else {
+                 badge.style.display = 'none';
+                 
+                 if (sidebarBadge) {
+                     sidebarBadge.style.display = 'none';
+                 }
+             }
+         }
+        
+        function updateNotificationHeader(count) {
+            const header = document.getElementById('notification-header');
+            header.textContent = count + ' Notifikasi';
+        }
+        
+        function updateNotificationList(notifications) {
+            const list = document.getElementById('notification-list');
+            
+            if (notifications.length === 0) {
+                list.innerHTML = '<div class="px-6 py-8 text-center text-gray-500"><i class="fas fa-bell-slash text-3xl mb-2"></i><p>Tidak ada notifikasi</p></div>';
+                return;
+            }
+            
+            let html = '';
+            notifications.forEach(notification => {
+                const statusClass = getStatusClass(notification.expiry_status);
+                const statusText = getStatusText(notification.expiry_status);
+                const timeText = getTimeText(notification.days_until_expiry);
+                
+                html += `
+                    <div class="px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 ${statusClass} rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    ${notification.kode_identitas}
+                                </p>
+                                <p class="text-xs text-gray-600 mt-1">
+                                    ${notification.jenis_limbah_nama}
+                                </p>
+                                <div class="flex items-center justify-between mt-2">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusClass.replace('bg-', 'bg-').replace('-500', '-100')} ${statusClass.replace('bg-', 'text-').replace('-500', '-800')}">
+                                        ${statusText}
+                                    </span>
+                                    <span class="text-xs text-gray-500">${timeText}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            list.innerHTML = html;
+        }
+        
+        function getStatusClass(status) {
+            switch(status) {
+                case 'expired': return 'bg-red-500';
+                case 'urgent': return 'bg-orange-500';
+                case 'critical': return 'bg-yellow-500';
+                case 'warning': return 'bg-blue-500';
+                default: return 'bg-gray-500';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'expired': return 'Kadaluarsa';
+                case 'urgent': return 'Sangat Mendesak';
+                case 'critical': return 'Kritis';
+                case 'warning': return 'Peringatan';
+                default: return 'Normal';
+            }
+        }
+        
+        function getTimeText(days) {
+            if (days < 0) {
+                return Math.abs(days) + ' hari yang lalu';
+            } else if (days === 0) {
+                return 'Hari ini';
+            } else {
+                return days + ' hari lagi';
+            }
+        }
+        
+        function refreshNotifications() {
+            loadNotifications();
+        }
+        
+        // Close notification dropdown when clicking outside
+         document.addEventListener('click', function(event) {
+             const notificationDropdown = document.getElementById('notification-dropdown');
+             const notificationButton = event.target.closest('#notification-bell');
+             
+             if (!notificationButton && notificationDropdown && !notificationDropdown.contains(event.target)) {
+                 notificationDropdown.classList.add('hidden');
+             }
+         });
 
         // Auto-hide alerts after 5 seconds
         setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
+            const alerts = document.querySelectorAll('[role="alert"]');
             alerts.forEach(function(alert) {
-                if (alert && bootstrap.Alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
             });
         }, 5000);
         
-        // Initialize Bootstrap dropdowns and collapses
+        // Initialize event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize all dropdowns
-            var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
-            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-                return new bootstrap.Dropdown(dropdownToggleEl);
-            });
             
-            // Let Bootstrap handle collapse automatically - no custom initialization needed
-            
-            // Manual click handler for user dropdown
-            const userDropdown = document.getElementById('userDropdown');
-            if (userDropdown) {
-                userDropdown.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const dropdown = bootstrap.Dropdown.getInstance(userDropdown) || new bootstrap.Dropdown(userDropdown);
-                    dropdown.toggle();
-                });
+            // Mobile menu button event
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', toggleMobileMenu);
             }
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                const userDropdown = document.getElementById('userDropdownMenu');
+                const userButton = event.target.closest('#userDropdown');
+                
+                if (!userButton && userDropdown && !userDropdown.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
             
             // Safari-compatible logout handler
              window.handleLogout = function(e) {
-                 if (e) {
-                     e.preventDefault();
-                     e.stopPropagation();
+                 e.preventDefault();
+                 if (confirm('Apakah Anda yakin ingin logout?')) {
+                     document.getElementById('logout-form').submit();
                  }
-                 
-                 // Use setTimeout to ensure Safari processes the event properly
-                 setTimeout(function() {
-                     if (confirm('Apakah Anda yakin ingin logout?')) {
-                         var form = document.getElementById('logoutForm');
-                         if (form) {
-                             form.submit();
-                         }
-                     }
-                 }, 10);
-                 
-                 return false;
              };
              
              // Global delete confirmation handler
@@ -485,6 +724,12 @@
                  }
                  return false;
              };
+             
+             // Load notifications on page load
+             loadNotifications();
+             
+             // Auto-refresh notifications every 30 seconds
+             setInterval(loadNotifications, 30000);
         });
     </script>
     

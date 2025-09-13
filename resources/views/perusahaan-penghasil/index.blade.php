@@ -1,23 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Data Perusahaan Penghasil Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('perusahaan-penghasil.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Tambah Perusahaan
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Perusahaan Penghasil Limbah</h1>
+                    <p class="text-slate-600">Kelola informasi perusahaan penghasil limbah</p>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                <div>
+                    <a href="{{ route('perusahaan-penghasil.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus mr-2"></i>Tambah Perusahaan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                <i class="fas fa-building mr-2"></i>Daftar Perusahaan
+            </h6>
+        </div>
+        <div class="px-8 py-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
                             <thead>
                                 <tr>
                                     <th width="5%">No</th>
@@ -103,7 +114,7 @@
                     </div>
                     
                     @if($perusahaanPenghasil->hasPages())
-                        <div class="d-flex justify-content-center mt-3">
+                        <div class="flex justify-center mt-6">
                             {{ $perusahaanPenghasil->links() }}
                         </div>
                     @endif

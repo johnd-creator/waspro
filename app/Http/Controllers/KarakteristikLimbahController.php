@@ -48,6 +48,7 @@ class KarakteristikLimbahController extends Controller
     public function show(KarakteristikLimbah $karakteristikLimbah)
     {
         $karakteristikLimbah->load('jenisLimbah');
+
         return view('karakteristik-limbah.show', compact('karakteristikLimbah'));
     }
 
@@ -65,7 +66,7 @@ class KarakteristikLimbahController extends Controller
     public function update(Request $request, KarakteristikLimbah $karakteristikLimbah)
     {
         $validated = $request->validate([
-            'nama_karakteristik' => 'required|string|max:255|unique:karakteristik_limbah,nama_karakteristik,' . $karakteristikLimbah->karakteristik_id,
+            'nama_karakteristik' => 'required|string|max:255|unique:karakteristik_limbah,nama_karakteristik,'.$karakteristikLimbah->karakteristik_id,
         ]);
 
         $karakteristikLimbah->update($validated);

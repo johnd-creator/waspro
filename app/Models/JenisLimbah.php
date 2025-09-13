@@ -12,18 +12,23 @@ class JenisLimbah extends Model
     use HasFactory;
 
     protected $table = 'jenis_limbah';
+
     protected $primaryKey = 'kode_limbah';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
-    
+
     protected $fillable = [
         'kode_limbah',
         'nama_limbah',
         'kemasan',
         'jumlah_ton_per_tahun',
         'waktu_penyimpanan_hari',
+        'batas_penyimpanan_hari',
         'karakteristik_id',
-        'kategori_id',
+        'deskripsi_limbah',
+        'status_aktif',
     ];
 
     /**
@@ -40,14 +45,6 @@ class JenisLimbah extends Model
     public function karakteristikLimbah(): BelongsTo
     {
         return $this->belongsTo(KarakteristikLimbah::class, 'karakteristik_id', 'karakteristik_id');
-    }
-
-    /**
-     * Get the kategori that owns the jenis limbah
-     */
-    public function kategori(): BelongsTo
-    {
-        return $this->belongsTo(KategoriKegiatanSumber::class, 'kategori_id', 'kategori_id');
     }
 
     /**

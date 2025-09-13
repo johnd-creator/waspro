@@ -82,7 +82,7 @@
                                                 <tr>
                                                     <th>Perusahaan</th>
                                                     <th>Total Log</th>
-                                                    <th>Total Berat (Ton)</th>
+                                                    <th>Total Berat (Kg)</th>
                                                     <th>Tersimpan</th>
                                                     <th>Diangkut</th>
                                                     <th>Jenis Limbah Terbanyak</th>
@@ -123,7 +123,7 @@
                                     <th>Jenis Limbah</th>
                                     <th>Kode Limbah</th>
                                     <th>Unit</th>
-                                    <th>Jumlah (Ton)</th>
+                                    <th>Jumlah (Kg)</th>
                                     <th>Status</th>
                                     <th>Tanggal Pengangkutan</th>
                                     <th>Sumber Limbah</th>

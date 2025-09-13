@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\HandlesValidation;
 use App\Models\PeranPengguna;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class PeranPenggunaController extends Controller
 {
+    use HandlesValidation;
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -16,11 +23,11 @@ class PeranPenggunaController extends Controller
         $query = PeranPengguna::query();
 
         // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nama_peran', 'like', '%' . $search . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_peran', 'like', '%'.$search.'%')
+                    ->orWhere('deskripsi', 'like', '%'.$search.'%');
             });
         }
 
@@ -30,7 +37,7 @@ class PeranPenggunaController extends Controller
         }
 
         $peranPengguna = $query->orderBy('nama_peran')->paginate(10);
-        
+
         return view('peran-pengguna.index', compact('peranPengguna'));
     }
 
@@ -47,26 +54,37 @@ class PeranPenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nama_peran' => 'required|string|max:255|unique:peran_pengguna,nama_peran',
-            'deskripsi' => 'nullable|string',
-            'is_active' => 'boolean'
-        ]);
+            'deskripsi' => 'nullable|string|max:1000',
+            'is_active' => 'boolean',
+        ];
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        $messages = [
+            'nama_peran.required' => 'Nama peran wajib diisi.',
+            'nama_peran.unique' => 'Nama peran sudah digunakan.',
+            'nama_peran.max' => 'Nama peran maksimal 255 karakter.',
+            'deskripsi.max' => 'Deskripsi maksimal 1000 karakter.',
+        ];
+
+        $validated = $this->validateRequest($request, $rules, $messages);
+
+        if (is_array($validated) && ! $validated['success']) {
+            return $validated;
         }
 
-        PeranPengguna::create([
-            'nama_peran' => $request->nama_peran,
-            'deskripsi' => $request->deskripsi,
-            'is_active' => $request->has('is_active') ? true : false
-        ]);
-
-        return redirect()->route('peran-pengguna.index')
-            ->with('success', 'Peran pengguna berhasil ditambahkan.');
+        return $this->handleDatabaseOperation(
+            function () use ($validated, $request) {
+                return PeranPengguna::create([
+                    'nama_peran' => $validated['nama_peran'],
+                    'deskripsi' => $validated['deskripsi'] ?? null,
+                    'is_active' => $request->has('is_active'),
+                ]);
+            },
+            'Peran pengguna berhasil ditambahkan.',
+            'Gagal menambahkan peran pengguna',
+            'peran-pengguna.index'
+        );
     }
 
     /**
@@ -75,6 +93,7 @@ class PeranPenggunaController extends Controller
     public function show($peran_id)
     {
         $peranPengguna = PeranPengguna::findOrFail($peran_id);
+
         return view('peran-pengguna.show', compact('peranPengguna'));
     }
 
@@ -84,6 +103,7 @@ class PeranPenggunaController extends Controller
     public function edit($peran_id)
     {
         $peranPengguna = PeranPengguna::findOrFail($peran_id);
+
         return view('peran-pengguna.edit', compact('peranPengguna'));
     }
 
@@ -93,27 +113,38 @@ class PeranPenggunaController extends Controller
     public function update(Request $request, $peran_id)
     {
         $peranPengguna = PeranPengguna::findOrFail($peran_id);
-        
-        $validator = Validator::make($request->all(), [
-            'nama_peran' => 'required|string|max:255|unique:peran_pengguna,nama_peran,' . $peran_id . ',peran_id',
-            'deskripsi' => 'nullable|string',
-            'is_active' => 'boolean'
-        ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        $rules = [
+            'nama_peran' => 'required|string|max:255|unique:peran_pengguna,nama_peran,'.$peran_id.',peran_id',
+            'deskripsi' => 'nullable|string|max:1000',
+            'is_active' => 'boolean',
+        ];
+
+        $messages = [
+            'nama_peran.required' => 'Nama peran wajib diisi.',
+            'nama_peran.unique' => 'Nama peran sudah digunakan.',
+            'nama_peran.max' => 'Nama peran maksimal 255 karakter.',
+            'deskripsi.max' => 'Deskripsi maksimal 1000 karakter.',
+        ];
+
+        $validated = $this->validateRequest($request, $rules, $messages);
+
+        if (is_array($validated) && ! $validated['success']) {
+            return $validated;
         }
 
-        $peranPengguna->update([
-            'nama_peran' => $request->nama_peran,
-            'deskripsi' => $request->deskripsi,
-            'is_active' => $request->has('is_active') ? true : false
-        ]);
-
-        return redirect()->route('peran-pengguna.index')
-            ->with('success', 'Peran pengguna berhasil diperbarui.');
+        return $this->handleDatabaseOperation(
+            function () use ($peranPengguna, $validated, $request) {
+                return $peranPengguna->update([
+                    'nama_peran' => $validated['nama_peran'],
+                    'deskripsi' => $validated['deskripsi'] ?? null,
+                    'is_active' => $request->has('is_active'),
+                ]);
+            },
+            'Peran pengguna berhasil diperbarui.',
+            'Gagal memperbarui peran pengguna',
+            'peran-pengguna.index'
+        );
     }
 
     /**
@@ -122,17 +153,23 @@ class PeranPenggunaController extends Controller
     public function destroy($peran_id)
     {
         $peranPengguna = PeranPengguna::findOrFail($peran_id);
-        
+
         // Check if role is being used by users
         if ($peranPengguna->penggunaSistem()->count() > 0) {
-            return redirect()->route('peran-pengguna.index')
-                ->with('error', 'Peran pengguna tidak dapat dihapus karena masih digunakan oleh pengguna.');
+            return $this->errorResponse(
+                'Peran pengguna tidak dapat dihapus karena masih digunakan oleh pengguna.',
+                400
+            );
         }
-        
-        $peranPengguna->delete();
-        
-        return redirect()->route('peran-pengguna.index')
-            ->with('success', 'Peran pengguna berhasil dihapus.');
+
+        return $this->handleDatabaseOperation(
+            function () use ($peranPengguna) {
+                return $peranPengguna->delete();
+            },
+            'Peran pengguna berhasil dihapus.',
+            'Gagal menghapus peran pengguna',
+            'peran-pengguna.index'
+        );
     }
 
     /**
@@ -142,9 +179,9 @@ class PeranPenggunaController extends Controller
     {
         $peranPengguna = PeranPengguna::findOrFail($peran_id);
         $peranPengguna->toggleStatus();
-        
+
         $status = $peranPengguna->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        
+
         return redirect()->route('peran-pengguna.index')
             ->with('success', "Peran pengguna berhasil {$status}.");
     }

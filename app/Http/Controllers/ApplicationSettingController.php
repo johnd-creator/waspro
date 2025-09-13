@@ -22,8 +22,8 @@ class ApplicationSettingController extends Controller
         Gate::authorize('viewAny', ApplicationSetting::class);
 
         $settings = ApplicationSetting::orderBy('category')
-                                    ->orderBy('key')
-                                    ->get();
+            ->orderBy('key')
+            ->get();
 
         // Group settings by category
         $settingsByCategory = $settings->groupBy('category');
@@ -39,8 +39,8 @@ class ApplicationSettingController extends Controller
         Gate::authorize('create', ApplicationSetting::class);
 
         $categories = ApplicationSetting::distinct()
-                                      ->pluck('category')
-                                      ->sort();
+            ->pluck('category')
+            ->sort();
 
         return view('application-settings.create', compact('categories'));
     }
@@ -58,7 +58,7 @@ class ApplicationSettingController extends Controller
             'type' => 'required|in:string,integer,boolean,json,text',
             'category' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         // Validate value based on type
@@ -69,7 +69,7 @@ class ApplicationSettingController extends Controller
         ApplicationSetting::create($validated);
 
         return redirect()->route('application-settings.index')
-                        ->with('success', 'Setting berhasil dibuat.');
+            ->with('success', 'Setting berhasil dibuat.');
     }
 
     /**
@@ -80,13 +80,13 @@ class ApplicationSettingController extends Controller
         Gate::authorize('view', $applicationSetting);
 
         $setting = $applicationSetting;
-        
+
         // Get related settings from the same category
         $relatedSettings = ApplicationSetting::where('category', $setting->category)
-                                           ->where('id', '!=', $setting->id)
-                                           ->orderBy('key')
-                                           ->get();
-        
+            ->where('id', '!=', $setting->id)
+            ->orderBy('key')
+            ->get();
+
         return view('application-settings.show', compact('setting', 'relatedSettings'));
     }
 
@@ -99,8 +99,8 @@ class ApplicationSettingController extends Controller
 
         $setting = $applicationSetting;
         $categories = ApplicationSetting::distinct()
-                                      ->pluck('category')
-                                      ->sort();
+            ->pluck('category')
+            ->sort();
 
         return view('application-settings.edit', compact('setting', 'categories'));
     }
@@ -117,13 +117,13 @@ class ApplicationSettingController extends Controller
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('application_settings', 'key')->ignore($applicationSetting->id)
+                Rule::unique('application_settings', 'key')->ignore($applicationSetting->id),
             ],
             'value' => 'nullable|string',
             'type' => 'required|in:string,integer,boolean,json,text',
             'category' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         // Validate value based on type
@@ -142,7 +142,7 @@ class ApplicationSettingController extends Controller
         \Illuminate\Support\Facades\Cache::forget("app_setting_{$validated['key']}");
 
         return redirect()->route('application-settings.index')
-                        ->with('success', 'Setting berhasil diperbarui.');
+            ->with('success', 'Setting berhasil diperbarui.');
     }
 
     /**
@@ -158,7 +158,7 @@ class ApplicationSettingController extends Controller
         $applicationSetting->delete();
 
         return redirect()->route('application-settings.index')
-                        ->with('success', 'Setting berhasil dihapus.');
+            ->with('success', 'Setting berhasil dihapus.');
     }
 
     /**
@@ -171,7 +171,7 @@ class ApplicationSettingController extends Controller
         ApplicationSetting::clearCache();
 
         return redirect()->route('application-settings.index')
-                        ->with('success', 'Cache setting berhasil dibersihkan.');
+            ->with('success', 'Cache setting berhasil dibersihkan.');
     }
 
     /**
@@ -185,23 +185,23 @@ class ApplicationSettingController extends Controller
 
         switch ($type) {
             case 'integer':
-                if (!is_numeric($value)) {
+                if (! is_numeric($value)) {
                     throw \Illuminate\Validation\ValidationException::withMessages([
-                        'value' => 'Value harus berupa angka untuk tipe integer.'
+                        'value' => 'Value harus berupa angka untuk tipe integer.',
                     ]);
                 }
                 break;
             case 'boolean':
-                if (!in_array(strtolower($value), ['true', 'false', '1', '0', 'yes', 'no'])) {
+                if (! in_array(strtolower($value), ['true', 'false', '1', '0', 'yes', 'no'])) {
                     throw \Illuminate\Validation\ValidationException::withMessages([
-                        'value' => 'Value harus berupa true/false, 1/0, atau yes/no untuk tipe boolean.'
+                        'value' => 'Value harus berupa true/false, 1/0, atau yes/no untuk tipe boolean.',
                     ]);
                 }
                 break;
             case 'json':
                 if (json_decode($value) === null && json_last_error() !== JSON_ERROR_NONE) {
                     throw \Illuminate\Validation\ValidationException::withMessages([
-                        'value' => 'Value harus berupa JSON yang valid.'
+                        'value' => 'Value harus berupa JSON yang valid.',
                     ]);
                 }
                 break;

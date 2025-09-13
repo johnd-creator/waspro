@@ -271,7 +271,7 @@ code {
 function confirmDelete(settingId, settingKey) {
     document.getElementById('settingKey').textContent = settingKey;
     document.getElementById('deleteForm').action = `/application-settings/${settingId}`;
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    document.getElementById('deleteModal').classList.remove('hidden');
 }
 
 function copyToClipboard(elementId) {
@@ -289,8 +289,59 @@ function copyToClipboard(elementId) {
         }, 2000);
     }).catch(function(err) {
         console.error('Could not copy text: ', err);
-        alert('Gagal menyalin ke clipboard');
+        showNotification('Gagal menyalin ke clipboard', 'error');
     });
+}
+
+// Simple notification function
+function showNotification(message, type = 'info') {
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.className = 'fixed top-4 right-4 z-50 space-y-2';
+        document.body.appendChild(container);
+    }
+
+    const notification = document.createElement('div');
+    const typeClasses = {
+        success: 'bg-green-500 border-green-600',
+        error: 'bg-red-500 border-red-600',
+        warning: 'bg-yellow-500 border-yellow-600',
+        info: 'bg-blue-500 border-blue-600'
+    };
+
+    notification.className = `
+        ${typeClasses[type] || typeClasses.info}
+        text-white px-6 py-4 rounded-lg shadow-lg border-l-4
+        transform transition-all duration-300 ease-in-out
+        max-w-sm
+    `;
+
+    const icon = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-times-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info: 'fas fa-info-circle'
+    };
+
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="${icon[type] || icon.info} mr-3"></i>
+            <span class="flex-1">${message}</span>
+            <button class="ml-4 text-white hover:text-gray-200 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
 }
 </script>
 @endsection

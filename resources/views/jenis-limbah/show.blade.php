@@ -1,190 +1,174 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Jenis Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('jenis-limbah.edit', $jenisLimbah) }}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="{{ route('jenis-limbah.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Detail Jenis Limbah</h1>
+                    <p class="text-slate-600">Informasi lengkap tentang jenis limbah</p>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th width="40%">Kode Limbah:</th>
-                                    <td>
-                                        <span class="badge bg-info fs-6">{{ $jenisLimbah->kode_limbah }}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Nama Limbah:</th>
-                                    <td><strong>{{ $jenisLimbah->nama_limbah }}</strong></td>
-                                </tr>
-                                <tr>
-                                    <th>Karakteristik:</th>
-                                    <td>
-                                        @if($jenisLimbah->karakteristikLimbah)
-                                            <span class="badge bg-secondary">{{ $jenisLimbah->karakteristikLimbah->nama_karakteristik }}</span>
-                                        @else
-                                            <span class="text-muted">Tidak ada karakteristik</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Kategori Sumber:</th>
-                                    <td>
-                                        @if($jenisLimbah->kategoriKegiatanSumber)
-                                            <span class="badge bg-warning">{{ $jenisLimbah->kategoriKegiatanSumber->kode_kategori }}</span>
-                                            <br><small class="text-muted">{{ $jenisLimbah->kategoriKegiatanSumber->nama_kategori }}</small>
-                                        @else
-                                            <span class="text-muted">Tidak ada kategori</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th width="40%">Batas Penyimpanan:</th>
-                                    <td>
-                                        @if($jenisLimbah->batas_penyimpanan_hari)
-                                            <span class="badge bg-info">{{ $jenisLimbah->batas_penyimpanan_hari }} hari</span>
-                                        @else
-                                            <span class="text-muted">Tidak ditentukan</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Status:</th>
-                                    <td>
-                                        @if($jenisLimbah->status_aktif)
-                                            <span class="badge bg-success">Aktif</span>
-                                        @else
-                                            <span class="badge bg-danger">Tidak Aktif</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Dibuat:</th>
-                                    <td>
-                                        <small class="text-muted">
-                                            {{ $jenisLimbah->created_at ? $jenisLimbah->created_at->format('d/m/Y H:i') : '-' }}
-                                        </small>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Diperbarui:</th>
-                                    <td>
-                                        <small class="text-muted">
-                                            {{ $jenisLimbah->updated_at ? $jenisLimbah->updated_at->format('d/m/Y H:i') : '-' }}
-                                        </small>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    @if($jenisLimbah->deskripsi_limbah)
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <h5>Deskripsi Limbah</h5>
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <p class="mb-0">{{ $jenisLimbah->deskripsi_limbah }}</p>
-                                    </div>
-                                </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('jenis-limbah.edit', $jenisLimbah) }}" class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-edit mr-2"></i> Edit
+                    </a>
+                    <a href="{{ route('jenis-limbah.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Kode Limbah:</span>
+                            <div class="w-3/5">
+                                <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">{{ $jenisLimbah->kode_limbah }}</span>
                             </div>
                         </div>
-                    @endif
-
-                    <!-- Related Log Penyimpanan -->
-                    @if($jenisLimbah->logPenyimpananLimbah && $jenisLimbah->logPenyimpananLimbah->count() > 0)
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5>Log Penyimpanan Terkait</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Tanggal Masuk</th>
-                                                <th>Jumlah (Kg)</th>
-                                                <th>Status</th>
-                                                <th>Perusahaan</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($jenisLimbah->logPenyimpananLimbah->take(5) as $log)
-                                                <tr>
-                                                    <td>{{ $log->tanggal_limbah_masuk ? \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d/m/Y') : '-' }}</td>
-                                                    <td>{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
-                                                    <td>
-                                                        @if($log->status_log == 'Tersimpan')
-                                                            <span class="badge bg-primary">{{ $log->status_log }}</span>
-                                                        @elseif($log->status_log == 'Diangkut')
-                                                            <span class="badge bg-success">{{ $log->status_log }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger">{{ $log->status_log }}</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if($log->perusahaanPenghasil)
-                                                            {{ $log->perusahaanPenghasil->nama_perusahaan }}
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ route('log-penyimpanan.show', $log) }}" 
-                                                           class="btn btn-info btn-sm" title="Lihat Detail">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @if($jenisLimbah->logPenyimpananLimbah->count() > 5)
-                                    <p class="text-muted"><small>Menampilkan 5 dari {{ $jenisLimbah->logPenyimpananLimbah->count() }} log penyimpanan</small></p>
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Nama Limbah:</span>
+                            <div class="w-3/5">
+                                <span class="text-sm font-semibold text-gray-900">{{ $jenisLimbah->nama_limbah }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Karakteristik:</span>
+                            <div class="w-3/5">
+                                @if($jenisLimbah->karakteristikLimbah)
+                                    <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-gray-100 text-gray-800">{{ $jenisLimbah->karakteristikLimbah->nama_karakteristik }}</span>
+                                @else
+                                    <span class="text-sm text-gray-500">Tidak ada karakteristik</span>
                                 @endif
                             </div>
                         </div>
-                    @endif
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>
-                            <form action="{{ route('jenis-limbah.destroy', $jenisLimbah) }}" method="POST" 
-                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus jenis limbah ini? Semua data terkait akan ikut terhapus.')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </button>
-                            </form>
+                    </div>
+                </div>
+                <div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Batas Penyimpanan:</span>
+                            <div class="w-3/5">
+                                @if($jenisLimbah->batas_penyimpanan_hari)
+                                    <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">{{ $jenisLimbah->batas_penyimpanan_hari }} hari</span>
+                                @else
+                                    <span class="text-sm text-gray-500">Tidak ditentukan</span>
+                                @endif
+                            </div>
                         </div>
-                        <div>
-                            <a href="{{ route('jenis-limbah.edit', $jenisLimbah) }}" class="btn btn-warning me-2">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="{{ route('jenis-limbah.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-list"></i> Daftar Jenis Limbah
-                            </a>
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Status:</span>
+                            <div class="w-3/5">
+                                @if($jenisLimbah->status_aktif)
+                                    <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                @else
+                                    <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">Tidak Aktif</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Dibuat:</span>
+                            <div class="w-3/5">
+                                <span class="text-sm text-gray-500">
+                                    {{ $jenisLimbah->created_at ? $jenisLimbah->created_at->format('d/m/Y H:i') : '-' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-sm font-medium text-gray-700 w-2/5">Diperbarui:</span>
+                            <div class="w-3/5">
+                                <span class="text-sm text-gray-500">
+                                    {{ $jenisLimbah->updated_at ? $jenisLimbah->updated_at->format('d/m/Y H:i') : '-' }}
+                                </span>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            @if($jenisLimbah->deskripsi_limbah)
+                <div class="mt-8">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-4">Deskripsi Limbah</h5>
+                    <div class="bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="p-4">
+                            <p class="text-sm text-gray-700 mb-0">{{ $jenisLimbah->deskripsi_limbah }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Related Log Penyimpanan -->
+            @if($jenisLimbah->logPenyimpananLimbah && $jenisLimbah->logPenyimpananLimbah->count() > 0)
+                <div class="mt-8">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-4">Log Penyimpanan Terkait</h5>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Masuk</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah (Kg)</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perusahaan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                             <tbody class="bg-white divide-y divide-gray-200">
+                                 @foreach($jenisLimbah->logPenyimpananLimbah->take(5) as $log)
+                                     <tr class="hover:bg-gray-50">
+                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $log->tanggal_limbah_masuk ? \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d/m/Y') : '-' }}</td>
+                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
+                                         <td class="px-6 py-4 whitespace-nowrap">
+                                             @if($log->status_log == 'Tersimpan')
+                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $log->status_log }}</span>
+                                             @elseif($log->status_log == 'Diangkut')
+                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ $log->status_log }}</span>
+                                             @else
+                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">{{ $log->status_log }}</span>
+                                             @endif
+                                         </td>
+                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                             @if($log->perusahaanPenghasil)
+                                                 {{ $log->perusahaanPenghasil->nama_perusahaan }}
+                                             @else
+                                                 <span class="text-gray-500">-</span>
+                                             @endif
+                                         </td>
+                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                             <a href="{{ route('log-penyimpanan.show', $log) }}" 
+                                                class="inline-flex items-center px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors duration-200" title="Lihat Detail">
+                                                 <i class="fas fa-eye"></i>
+                                             </a>
+                                         </td>
+                                     </tr>
+                                 @endforeach
+                             </tbody>
+                         </table>
+                     </div>
+                     @if($jenisLimbah->logPenyimpananLimbah->count() > 5)
+                         <p class="text-sm text-gray-500 mt-4">Menampilkan 5 dari {{ $jenisLimbah->logPenyimpananLimbah->count() }} log penyimpanan</p>
+                     @endif
+                 </div>
+             @endif
+
+            <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
+                <div>
+                    <form action="{{ route('jenis-limbah.destroy', $jenisLimbah) }}" method="POST" 
+                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus jenis limbah ini? Semua data terkait akan ikut terhapus.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
+                            <i class="fas fa-trash mr-2"></i> Hapus
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

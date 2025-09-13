@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 
 class ApplicationSetting extends Model
 {
@@ -14,7 +13,7 @@ class ApplicationSetting extends Model
         'type',
         'category',
         'description',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [
@@ -27,16 +26,16 @@ class ApplicationSetting extends Model
     public static function get(string $key, $default = null)
     {
         $cacheKey = "app_setting_{$key}";
-        
+
         return Cache::remember($cacheKey, 3600, function () use ($key, $default) {
             $setting = self::where('key', $key)
-                          ->where('is_active', true)
-                          ->first();
-            
-            if (!$setting) {
+                ->where('is_active', true)
+                ->first();
+
+            if (! $setting) {
                 return $default;
             }
-            
+
             return self::castValue($setting->value, $setting->type);
         });
     }
@@ -44,7 +43,7 @@ class ApplicationSetting extends Model
     /**
      * Set setting value by key
      */
-    public static function set(string $key, $value, string $type = 'string', string $category = 'general', string $description = null)
+    public static function set(string $key, $value, string $type = 'string', string $category = 'general', ?string $description = null)
     {
         $setting = self::updateOrCreate(
             ['key' => $key],
@@ -53,13 +52,13 @@ class ApplicationSetting extends Model
                 'type' => $type,
                 'category' => $category,
                 'description' => $description,
-                'is_active' => true
+                'is_active' => true,
             ]
         );
 
         // Clear cache
         Cache::forget("app_setting_{$key}");
-        
+
         return $setting;
     }
 
@@ -69,11 +68,11 @@ class ApplicationSetting extends Model
     public static function getByCategory(string $category)
     {
         return self::where('category', $category)
-                  ->where('is_active', true)
-                  ->get()
-                  ->mapWithKeys(function ($setting) {
-                      return [$setting->key => self::castValue($setting->value, $setting->type)];
-                  });
+            ->where('is_active', true)
+            ->get()
+            ->mapWithKeys(function ($setting) {
+                return [$setting->key => self::castValue($setting->value, $setting->type)];
+            });
     }
 
     /**

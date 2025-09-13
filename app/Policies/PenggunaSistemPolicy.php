@@ -15,7 +15,7 @@ class PenggunaSistemPolicy
     public function viewAny(PenggunaSistem $user): bool
     {
         // Operator tidak bisa mengakses manajemen pengguna
-        return !$user->isOperator();
+        return ! $user->isOperator();
     }
 
     /**
@@ -27,12 +27,12 @@ class PenggunaSistemPolicy
         if ($user->isOperator()) {
             return $user->user_id === $penggunaSistem->user_id; // Hanya bisa melihat profil sendiri
         }
-        
+
         // Super Admin bisa melihat semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator dan Viewer hanya bisa melihat pengguna dari unit sendiri
         return $user->unit_id === $penggunaSistem->unit_id;
     }
@@ -55,17 +55,17 @@ class PenggunaSistemPolicy
         if ($user->isOperator()) {
             return $user->user_id === $penggunaSistem->user_id;
         }
-        
+
         // Viewer tidak bisa mengupdate pengguna
         if ($user->isViewer()) {
             return $user->user_id === $penggunaSistem->user_id; // Hanya profil sendiri
         }
-        
+
         // Super Admin bisa mengupdate semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa mengupdate pengguna dari unit sendiri
         return $user->unit_id === $penggunaSistem->unit_id;
     }
@@ -79,17 +79,17 @@ class PenggunaSistemPolicy
         if ($user->user_id === $penggunaSistem->user_id) {
             return false;
         }
-        
+
         // Hanya Administrator dan Super Admin yang bisa menghapus pengguna
-        if (!$user->isAdministrator() && !$user->isSuperAdmin()) {
+        if (! $user->isAdministrator() && ! $user->isSuperAdmin()) {
             return false;
         }
-        
+
         // Super Admin bisa menghapus semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa menghapus pengguna dari unit sendiri
         return $user->unit_id === $penggunaSistem->unit_id;
     }
@@ -120,17 +120,17 @@ class PenggunaSistemPolicy
         if ($user->user_id === $penggunaSistem->user_id) {
             return false;
         }
-        
+
         // Hanya Administrator dan Super Admin yang bisa toggle status
-        if (!$user->isAdministrator() && !$user->isSuperAdmin()) {
+        if (! $user->isAdministrator() && ! $user->isSuperAdmin()) {
             return false;
         }
-        
+
         // Super Admin bisa toggle status semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa toggle status pengguna dari unit sendiri
         return $user->unit_id === $penggunaSistem->unit_id;
     }
@@ -141,15 +141,15 @@ class PenggunaSistemPolicy
     public function assignRoles(PenggunaSistem $user, PenggunaSistem $penggunaSistem): bool
     {
         // Hanya Administrator dan Super Admin yang bisa assign roles
-        if (!$user->isAdministrator() && !$user->isSuperAdmin()) {
+        if (! $user->isAdministrator() && ! $user->isSuperAdmin()) {
             return false;
         }
-        
+
         // Super Admin bisa assign roles ke semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa assign roles ke pengguna dari unit sendiri
         // dan tidak bisa assign role Super Admin
         return $user->unit_id === $penggunaSistem->unit_id;
@@ -164,17 +164,17 @@ class PenggunaSistemPolicy
         if ($user->user_id === $penggunaSistem->user_id) {
             return true;
         }
-        
+
         // Hanya Administrator dan Super Admin yang bisa reset password pengguna lain
-        if (!$user->isAdministrator() && !$user->isSuperAdmin()) {
+        if (! $user->isAdministrator() && ! $user->isSuperAdmin()) {
             return false;
         }
-        
+
         // Super Admin bisa reset password semua pengguna
         if ($user->isSuperAdmin()) {
             return true;
         }
-        
+
         // Administrator hanya bisa reset password pengguna dari unit sendiri
         return $user->unit_id === $penggunaSistem->unit_id;
     }

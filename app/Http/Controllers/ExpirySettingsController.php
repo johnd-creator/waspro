@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ExpirySettingsController extends Controller
 {
@@ -15,6 +15,7 @@ class ExpirySettingsController extends Controller
             if (Auth::user()->role !== 'Super Admin') {
                 abort(403, 'Unauthorized access');
             }
+
             return $next($request);
         });
     }
@@ -25,11 +26,11 @@ class ExpirySettingsController extends Controller
     public function index()
     {
         $settings = $this->getExpirySettings();
-        
+
         // Calculate percentages for progress bars
         $criticalPercentage = round(($settings['critical_days'] / 365) * 100, 2);
         $warningPercentage = round(($settings['warning_days'] / 365) * 100, 2);
-        
+
         return view('expiry-settings.index', compact('settings', 'criticalPercentage', 'warningPercentage'));
     }
 
@@ -46,7 +47,7 @@ class ExpirySettingsController extends Controller
         // Validate that warning_days > critical_days
         if ($request->warning_days <= $request->critical_days) {
             return back()->withErrors([
-                'warning_days' => 'Hari peringatan harus lebih besar dari hari kritis'
+                'warning_days' => 'Hari peringatan harus lebih besar dari hari kritis',
             ]);
         }
 
@@ -55,7 +56,7 @@ class ExpirySettingsController extends Controller
 
             // Update or create critical_days setting
             $this->updateOrCreateSetting('critical_days', $request->critical_days, 'Jumlah hari untuk status kritis sebelum kadaluarsa');
-            
+
             // Update or create warning_days setting
             $this->updateOrCreateSetting('warning_days', $request->warning_days, 'Jumlah hari untuk status peringatan sebelum kadaluarsa');
 
@@ -66,7 +67,8 @@ class ExpirySettingsController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan: '.$e->getMessage()]);
         }
     }
 
@@ -124,7 +126,8 @@ class ExpirySettingsController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->withErrors(['error' => 'Gagal mereset pengaturan: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Gagal mereset pengaturan: '.$e->getMessage()]);
         }
     }
 }

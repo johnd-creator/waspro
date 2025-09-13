@@ -1,62 +1,66 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Karakteristik Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="btn btn-info">
-                            <i class="fas fa-eye"></i> Lihat
-                        </a>
-                        <a href="{{ route('karakteristik-limbah.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Karakteristik Limbah</h1>
+                    <p class="text-slate-600">Perbarui informasi karakteristik limbah yang sudah ada</p>
                 </div>
-                <div class="card-body">
+                <div class="flex gap-3">
+                    <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-eye mr-2"></i> Lihat
+                    </a>
+                    <a href="{{ route('karakteristik-limbah.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="p-8">
                     <form action="{{ route('karakteristik-limbah.update', $karakteristikLimbah) }}" method="POST">
                         @csrf
                         @method('PUT')
                         
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="status_aktif" class="form-label">Status <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('status_aktif') is-invalid @enderror" 
-                                            id="status_aktif" name="status_aktif" required>
-                                        <option value="1" {{ old('status_aktif', $karakteristikLimbah->status_aktif) == '1' ? 'selected' : '' }}>Aktif</option>
-                                        <option value="0" {{ old('status_aktif', $karakteristikLimbah->status_aktif) == '0' ? 'selected' : '' }}>Tidak Aktif</option>
-                                    </select>
-                                    @error('status_aktif')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="status_aktif" class="block text-sm font-medium text-slate-700 mb-2">Status <span class="text-red-500">*</span></label>
+                                <select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('status_aktif') border-red-500 @enderror" 
+                                        id="status_aktif" name="status_aktif" required>
+                                    <option value="1" {{ old('status_aktif', $karakteristikLimbah->status_aktif) == '1' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="0" {{ old('status_aktif', $karakteristikLimbah->status_aktif) == '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                                </select>
+                                @error('status_aktif')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="nama_karakteristik" class="form-label">Nama Karakteristik <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama_karakteristik') is-invalid @enderror" 
+                        <div class="mt-6">
+                            <label for="nama_karakteristik" class="block text-sm font-medium text-slate-700 mb-2">Nama Karakteristik <span class="text-red-500">*</span></label>
+                            <input type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('nama_karakteristik') border-red-500 @enderror" 
                                    id="nama_karakteristik" name="nama_karakteristik" 
                                    value="{{ old('nama_karakteristik', $karakteristikLimbah->nama_karakteristik) }}" 
                                    placeholder="Contoh: Mudah Terbakar" maxlength="100" required>
                             @error('nama_karakteristik')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="btn btn-secondary me-2">Batal</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">Batal</a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-save mr-2"></i> Update
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
         </div>
     </div>
 </div>

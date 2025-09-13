@@ -13,6 +13,7 @@ class UnitPembangkitController extends Controller
     public function index()
     {
         $unitPembangkit = UnitPembangkit::paginate(10);
+
         return view('unit-pembangkit.index', compact('unitPembangkit'));
     }
 
@@ -48,6 +49,7 @@ class UnitPembangkitController extends Controller
     public function show(UnitPembangkit $unitPembangkit)
     {
         $unitPembangkit->load(['penggunaSistem', 'logPenyimpanan']);
+
         return view('unit-pembangkit.show', compact('unitPembangkit'));
     }
 
@@ -65,7 +67,7 @@ class UnitPembangkitController extends Controller
     public function update(Request $request, UnitPembangkit $unitPembangkit)
     {
         $validated = $request->validate([
-            'nama_unit' => 'required|string|max:255|unique:unit_pembangkit,nama_unit,' . $unitPembangkit->unit_id . ',unit_id',
+            'nama_unit' => 'required|string|max:255|unique:unit_pembangkit,nama_unit,'.$unitPembangkit->unit_id.',unit_id',
             'alamat_unit' => 'required|string|max:500',
             'kota' => 'required|string|max:100',
             'kode_pos' => 'required|string|max:10',

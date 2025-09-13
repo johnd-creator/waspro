@@ -210,7 +210,7 @@
 @endpush
 
 @section('content')
-<div class="container-fluid">
+<div class="px-4">
     <!-- Hero Section -->
     <div class="hero-section p-4 mb-4 animate-fade-in">
         <div class="row align-items-center position-relative">

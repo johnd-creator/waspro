@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\UnitPembangkit;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UnitPembangkitSeeder extends Seeder
@@ -18,7 +17,7 @@ class UnitPembangkitSeeder extends Seeder
             [
                 'alamat_unit' => 'Jl. Sudirman No. 123, Jakarta Pusat',
                 'kota' => 'Jakarta',
-                'kode_pos' => '10220'
+                'kode_pos' => '10220',
             ]
         );
 
@@ -27,7 +26,7 @@ class UnitPembangkitSeeder extends Seeder
             [
                 'alamat_unit' => 'Jl. Pemuda No. 456, Surabaya',
                 'kota' => 'Surabaya',
-                'kode_pos' => '60271'
+                'kode_pos' => '60271',
             ]
         );
 
@@ -36,7 +35,7 @@ class UnitPembangkitSeeder extends Seeder
             [
                 'alamat_unit' => 'Jl. Gatot Subroto No. 789, Medan',
                 'kota' => 'Medan',
-                'kode_pos' => '20112'
+                'kode_pos' => '20112',
             ]
         );
     }

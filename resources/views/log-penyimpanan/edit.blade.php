@@ -1,22 +1,60 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+/* Safari Select Compatibility Fixes */
+select, .form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px !important;
+    min-height: 42px;
+}
+
+/* Ensure consistent height with other inputs */
+select, .form-select, .form-control, input[type="text"], input[type="number"], input[type="date"], textarea {
+    min-height: 42px;
+}
+
+/* Safari specific fixes */
+@supports (-webkit-appearance: none) {
+    select, .form-select {
+        background-color: white;
+        border: 1px solid #ced4da;
+    }
+    
+    select:focus, .form-select:focus {
+        outline: none;
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+}
+</style>
+@endpush
+
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Log Penyimpanan Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="btn btn-info">
-                            <i class="fas fa-eye"></i> Lihat
-                        </a>
-                        <a href="{{ route('log-penyimpanan.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 mb-2">Edit Log Penyimpanan Limbah</h1>
+                <p class="text-slate-600">Ubah data penyimpanan limbah yang sudah ada</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-eye mr-2"></i> Lihat
+                </a>
+                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                </a>
+            </div>
+        </div>
+        <div class="px-8 py-6">
                     <form action="{{ route('log-penyimpanan.update', $logPenyimpanan) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -86,27 +124,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="unit_id" class="form-label">Unit Pembangkit <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('unit_id') is-invalid @enderror"
-                                            id="unit_id" name="unit_id" required>
-                                        <option value="">Pilih Unit Pembangkit</option>
-                                        @foreach($unitList as $unit)
-                                            <option value="{{ $unit->unit_id }}"
-                                                    {{ old('unit_id', $logPenyimpanan->unit_id) == $unit->unit_id ? 'selected' : '' }}>
-                                                {{ $unit->nama_unit }} - {{ $unit->kota }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('unit_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -124,13 +141,47 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="tanggal_pengangkutan" class="form-label">Tanggal Pengangkutan</label>
+                                    <input type="date" class="form-control @error('tanggal_pengangkutan') is-invalid @enderror"
+                                           id="tanggal_pengangkutan" name="tanggal_pengangkutan" 
+                                           value="{{ old('tanggal_pengangkutan', $logPenyimpanan->tanggal_pengangkutan ? $logPenyimpanan->tanggal_pengangkutan->format('Y-m-d') : '') }}">
+                                    @error('tanggal_pengangkutan')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Kosongkan jika limbah belum diangkut</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="jumlah_diangkut" class="form-label">Jumlah Diangkut (Kg)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control @error('jumlah_diangkut') is-invalid @enderror"
+                                           id="jumlah_diangkut" name="jumlah_diangkut" 
+                                           value="{{ old('jumlah_diangkut', $logPenyimpanan->jumlah_diangkut) }}">
+                                    @error('jumlah_diangkut')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Masukkan 0 jika limbah belum diangkut</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mb-3">
-                            <label for="detail_sumber_limbah" class="form-label">Detail Sumber Limbah <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('detail_sumber_limbah') is-invalid @enderror" 
-                                      id="detail_sumber_limbah" name="detail_sumber_limbah" 
-                                      rows="4" maxlength="1000" required>{{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) }}</textarea>
-                            <div class="form-text">Maksimal 1000 karakter</div>
+                            <label for="detail_sumber_limbah" class="form-label">Sumber Limbah <span class="text-danger">*</span></label>
+                            <select class="form-select @error('detail_sumber_limbah') is-invalid @enderror" 
+                                    id="detail_sumber_limbah" name="detail_sumber_limbah" required>
+                                <option value="">Pilih Sumber Limbah</option>
+                                @foreach($kategoriKegiatanSumber as $kategori)
+                                    <option value="{{ $kategori->nama_kategori }}" 
+                                            {{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) == $kategori->nama_kategori ? 'selected' : '' }}>
+                                        {{ $kategori->nama_kategori }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('detail_sumber_limbah')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -167,15 +218,13 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="btn btn-secondary me-2">Batal</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update
+                        <div class="flex justify-end gap-3">
+                            <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">Batal</a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-save mr-2"></i> Update
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
         </div>
     </div>
 </div>

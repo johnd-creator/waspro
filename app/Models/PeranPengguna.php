@@ -11,8 +11,9 @@ class PeranPengguna extends Model
     use HasFactory;
 
     protected $table = 'peran_pengguna';
+
     protected $primaryKey = 'peran_id';
-    
+
     protected $fillable = [
         'nama_peran',
         'deskripsi',
@@ -36,8 +37,9 @@ class PeranPengguna extends Model
      */
     public function toggleStatus()
     {
-        $this->is_active = !$this->is_active;
+        $this->is_active = ! $this->is_active;
         $this->save();
+
         return $this;
     }
 

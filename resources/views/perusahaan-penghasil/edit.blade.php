@@ -1,23 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Edit Perusahaan Penghasil Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="btn btn-info">
-                            <i class="fas fa-eye"></i> Lihat
-                        </a>
-                        <a href="{{ route('perusahaan-penghasil.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Perusahaan Penghasil Limbah</h1>
+                    <p class="text-slate-600">Perbarui informasi perusahaan penghasil limbah</p>
                 </div>
-                <div class="card-body">
-                    <form action="{{ route('perusahaan-penghasil.update', $perusahaanPenghasil) }}" method="POST">
+                <div class="flex gap-3">
+                    <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-eye mr-2"></i>Lihat
+                    </a>
+                    <a href="{{ route('perusahaan-penghasil.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="px-8 py-6 border-b border-slate-200">
+                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                    <i class="fas fa-building mr-2"></i>Informasi Perusahaan
+                </h6>
+            </div>
+            <div class="px-8 py-6">
+                <form action="{{ route('perusahaan-penghasil.update', $perusahaanPenghasil) }}" method="POST">
                         @csrf
                         @method('PUT')
                         
@@ -151,12 +165,17 @@
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="btn btn-secondary me-2">Batal</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                Batal
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-save mr-2"></i>Update
                             </button>
                         </div>
+                        @csrf
+                        @method('PUT')
                     </form>
                 </div>
             </div>

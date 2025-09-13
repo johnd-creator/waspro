@@ -11,8 +11,9 @@ class UnitPembangkit extends Model
     use HasFactory;
 
     protected $table = 'unit_pembangkit';
+
     protected $primaryKey = 'unit_id';
-    
+
     protected $fillable = [
         'nama_unit',
         'alamat_unit',

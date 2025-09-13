@@ -10,7 +10,7 @@ class PenggunaPeran extends Pivot
     use HasFactory;
 
     protected $table = 'pengguna_peran';
-    
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *

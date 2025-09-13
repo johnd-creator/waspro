@@ -1,18 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">Manajemen Peran Pengguna</h3>
-                    <a href="{{ route('peran-pengguna.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Tambah Peran
+<div class="px-2 py-4">
+    <!-- Header Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Manajemen Peran Pengguna</h1>
+                    <p class="text-slate-600">Kelola peran dan hak akses pengguna sistem</p>
+                </div>
+                <div>
+                    <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus mr-2"></i>Tambah Peran
                     </a>
                 </div>
-                
-                <div class="card-body">
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+        <div class="px-8 py-6">
                     <!-- Search and Filter Form -->
                     <form method="GET" action="{{ route('peran-pengguna.index') }}" class="mb-4">
                         <div class="row">
@@ -42,22 +51,23 @@
                             </div>
                         </div>
                     </form>
+        </div>
+    </div>
 
-                    <!-- Success/Error Messages -->
+    <!-- Success/Error Messages -->
+    <x-session-messages />
 
-
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert">
-                                <span>&times;</span>
-                            </button>
-                        </div>
-                    @endif
-
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+    <!-- Table Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-8 py-6 border-b border-slate-200">
+            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+                <i class="fas fa-list mr-2"></i>Daftar Peran Pengguna
+                <span class="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">{{ $peranPengguna->count() }}</span>
+            </h6>
+        </div>
+        <div class="px-8 py-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
                             <thead>
                                 <tr>
                                     <th width="5%">No</th>
@@ -124,8 +134,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
+                    <div class="flex justify-between items-center mt-6">
+                        <div class="text-sm text-slate-600">
                             Menampilkan {{ $peranPengguna->firstItem() ?? 0 }} sampai {{ $peranPengguna->lastItem() ?? 0 }} 
                             dari {{ $peranPengguna->total() }} data
                         </div>
@@ -133,8 +143,6 @@
                             {{ $peranPengguna->appends(request()->query())->links() }}
                         </div>
                     </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
