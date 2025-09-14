@@ -48,6 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('unit.access')->group(function () {
         Route::get('pengangkutan-limbah', [App\Http\Controllers\PengangkutanLimbahController::class, 'index'])
             ->name('pengangkutan-limbah.index');
+        Route::get('pengangkutan-limbah/create', [App\Http\Controllers\PengangkutanLimbahController::class, 'create'])
+            ->name('pengangkutan-limbah.create');
+        Route::post('pengangkutan-limbah', [App\Http\Controllers\PengangkutanLimbahController::class, 'store'])
+            ->name('pengangkutan-limbah.store');
         Route::get('pengangkutan-limbah/diangkut', [App\Http\Controllers\PengangkutanLimbahController::class, 'diangkut'])
             ->name('pengangkutan-limbah.diangkut');
         Route::post('pengangkutan-limbah/{id}/approve', [App\Http\Controllers\PengangkutanLimbahController::class, 'approve'])

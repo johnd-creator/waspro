@@ -59,8 +59,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 1: Tanggal dan Jenis Limbah -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="tanggal_limbah_masuk" class="block text-sm font-medium text-slate-700 mb-2">Tanggal Limbah Masuk <span class="text-red-500">*</span></label>
-                                    <input type="date" class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('tanggal_limbah_masuk') border-red-500 @enderror" 
+                                    <label for="tanggal_limbah_masuk" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-red-500">*</span></label>
+                                    <input type="date" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('tanggal_limbah_masuk') border-red-500 @enderror" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="tanggal_limbah_masuk" name="tanggal_limbah_masuk" 
                                            value="{{ old('tanggal_limbah_masuk', date('Y-m-d')) }}" required>
                                     @error('tanggal_limbah_masuk')
@@ -69,17 +70,26 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                                 </div>
                                 
                                 <div>
-                                    <label for="kode_limbah" class="block text-sm font-medium text-slate-700 mb-2">Jenis Limbah <span class="text-red-500">*</span></label>
-                                    <select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('kode_limbah') border-red-500 @enderror" 
-                                            id="kode_limbah" name="kode_limbah" required>
-                                        <option value="">Pilih Jenis Limbah</option>
+                                    <label for="kode_limbah" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Jenis Limbah <span class="text-red-500">*</span></label>
+                                    <input type="text" 
+                                           class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('kode_limbah') border-red-500 @enderror" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                           id="kode_limbah" 
+                                           name="kode_limbah" 
+                                           value="{{ old('kode_limbah') }}" 
+                                           placeholder="Pilih jenis limbah"
+                                           list="jenis_limbah_list" 
+                                           required>
+                                    
+                                    <!-- Datalist untuk autocomplete dengan nilai dari database -->
+                                    <datalist id="jenis_limbah_list">
                                         @foreach($jenisLimbah as $jenis)
-                                            <option value="{{ $jenis->kode_limbah }}" 
-                                                    {{ old('kode_limbah') == $jenis->kode_limbah ? 'selected' : '' }}>
+                                            <option value="{{ $jenis->kode_limbah }}">
                                                 {{ $jenis->kode_limbah }} - {{ $jenis->nama_limbah }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </datalist>
+                                    
                                     @error('kode_limbah')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -89,8 +99,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 2: Jumlah Limbah -->
                             <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label for="jumlah_limbah_masuk" class="block text-sm font-medium text-slate-700 mb-2">Jumlah Limbah Masuk (Kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('jumlah_limbah_masuk') border-red-500 @enderror" 
+                                    <label for="jumlah_limbah_masuk" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('jumlah_limbah_masuk') border-red-500 @enderror" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="jumlah_limbah_masuk" name="jumlah_limbah_masuk" 
                                            value="{{ old('jumlah_limbah_masuk') }}" step="0.01" min="0.01" required>
                                     @error('jumlah_limbah_masuk')
@@ -102,18 +113,24 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 3: Perusahaan Penghasil -->
                             <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label for="perusahaan_id" class="block text-sm font-medium text-slate-700 mb-2">Perusahaan/Vendor Penghasil Limbah</label>
-                                    <select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('perusahaan_id') border-red-500 @enderror" 
-                                            id="perusahaan_id" name="perusahaan_id">
-                                        <option value="">Pilih Perusahaan (Opsional)</option>
+                                    <label for="perusahaan_nama" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
+                                    <input type="text" 
+                                           class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('perusahaan_nama') border-red-500 @enderror" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                           id="perusahaan_nama" 
+                                           name="perusahaan_nama" 
+                                           value="{{ old('perusahaan_nama') }}" 
+                                           placeholder="Masukkan nama perusahaan penghasil limbah"
+                                           list="perusahaan_list">
+                                    
+                                    <!-- Datalist untuk autocomplete dengan nilai dari database -->
+                                    <datalist id="perusahaan_list">
                                         @foreach($perusahaanPenghasil as $perusahaan)
-                                            <option value="{{ $perusahaan->perusahaan_id }}" 
-                                                    {{ old('perusahaan_id') == $perusahaan->perusahaan_id ? 'selected' : '' }}>
-                                                {{ $perusahaan->nama_perusahaan }}
-                                            </option>
+                                            <option value="{{ $perusahaan->nama_perusahaan }}">
                                         @endforeach
-                                    </select>
-                                    @error('perusahaan_id')
+                                    </datalist>
+                                    
+                                    @error('perusahaan_nama')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -122,17 +139,24 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
 
                             <!-- Row 4: Detail Sumber Limbah -->
                             <div class="mt-6">
-                                <label for="detail_sumber_limbah" class="block text-sm font-medium text-slate-700 mb-2">Sumber Kegiatan Limbah <span class="text-red-500">*</span></label>
-                                <select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('detail_sumber_limbah') border-red-500 @enderror" 
-                                        id="detail_sumber_limbah" name="detail_sumber_limbah" required>
-                                    <option value="">Pilih Sumber Limbah</option>
+                                <label for="detail_sumber_limbah" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-red-500">*</span></label>
+                                <input type="text" 
+                                       class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('detail_sumber_limbah') border-red-500 @enderror" 
+                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                       id="detail_sumber_limbah" 
+                                       name="detail_sumber_limbah" 
+                                       value="{{ old('detail_sumber_limbah') }}" 
+                                       placeholder="Masukkan sumber kegiatan limbah"
+                                       list="sumber_limbah_list" 
+                                       required>
+                                
+                                <!-- Datalist untuk autocomplete dengan nilai dari database -->
+                                <datalist id="sumber_limbah_list">
                                     @foreach($kategoriKegiatanSumber as $kategori)
-                                        <option value="{{ $kategori->nama_kategori }}" 
-                                                {{ old('detail_sumber_limbah') == $kategori->nama_kategori ? 'selected' : '' }}>
-                                            {{ $kategori->nama_kategori }}
-                                        </option>
+                                        <option value="{{ $kategori->nama_kategori }}">
                                     @endforeach
-                                </select>
+                                </datalist>
+                                
                                 @error('detail_sumber_limbah')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -149,4 +173,61 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validasi untuk field kode_limbah
+    const kodeLimbahInput = document.getElementById('kode_limbah');
+    const jenisLimbahDatalist = document.getElementById('jenis_limbah_list');
+    
+    if (kodeLimbahInput && jenisLimbahDatalist) {
+        kodeLimbahInput.addEventListener('input', function() {
+            const value = this.value;
+            const options = Array.from(jenisLimbahDatalist.options).map(option => option.value);
+            
+            // Reset custom validity
+            this.setCustomValidity('');
+            
+            if (value && !options.includes(value)) {
+                this.setCustomValidity('Pilih jenis limbah yang tersedia dari daftar');
+            }
+        });
+    }
+    
+    // Validasi untuk field perusahaan_nama
+    const perusahaanInput = document.getElementById('perusahaan_nama');
+    const perusahaanDatalist = document.getElementById('perusahaan_list');
+    
+    if (perusahaanInput && perusahaanDatalist) {
+        perusahaanInput.addEventListener('input', function() {
+            const value = this.value;
+            const options = Array.from(perusahaanDatalist.options).map(option => option.value);
+            
+            // Reset custom validity
+            this.setCustomValidity('');
+            
+            // Allow new company names (don't validate against existing list)
+        });
+    }
+    
+    // Validasi untuk field detail_sumber_limbah
+    const sumberLimbahInput = document.getElementById('detail_sumber_limbah');
+    const sumberLimbahDatalist = document.getElementById('sumber_limbah_list');
+    
+    if (sumberLimbahInput && sumberLimbahDatalist) {
+        sumberLimbahInput.addEventListener('input', function() {
+            const value = this.value;
+            const options = Array.from(sumberLimbahDatalist.options).map(option => option.value);
+            
+            // Reset custom validity
+            this.setCustomValidity('');
+            
+            if (value && !options.includes(value)) {
+                this.setCustomValidity('Pilih sumber kegiatan limbah yang tersedia dari daftar');
+            }
+        });
+    }
+});
+</script>
+
 @endsection

@@ -250,11 +250,11 @@
                                 @if($log->status_log == 'Tersimpan')
                                 <!-- Transport Modal - Tailwind CSS -->
                                 <div id="transportModal{{ $log->log_id }}" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 hidden">
-                                    <div class="p-5 border w-96 shadow-lg rounded-md bg-white">
+                                    <div class="p-5 border w-96 shadow-lg rounded-md" style="background-color: var(--card-bg); border-color: var(--border-primary);">
                                         <div class="mt-3">
                                             <div class="flex items-center justify-between mb-4">
-                                                <h3 class="text-lg font-medium text-gray-900">Tandai Sebagai Diangkut</h3>
-                                                <button type="button" class="text-gray-400 hover:text-gray-600" onclick="closeModal('transportModal{{ $log->log_id }}')">
+                                                <h3 class="text-lg font-medium" style="color: var(--text-primary);">Tandai Sebagai Diangkut</h3>
+                                                <button type="button" class="hover:opacity-75 transition-opacity" style="color: var(--text-secondary);" onclick="closeModal('transportModal{{ $log->log_id }}')">
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
@@ -262,16 +262,16 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="mb-4">
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Pengangkutan</label>
-                                                    <input type="date" name="tanggal_pengangkutan" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                                    <label class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Tanggal Pengangkutan</label>
+                                                    <input type="date" name="tanggal_pengangkutan" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" required>
                                                 </div>
                                                 <div class="mb-4">
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Diangkut (Kg)</label>
-                                                    <input type="number" name="jumlah_diangkut" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" step="0.01" max="{{ $log->jumlah_limbah_masuk }}" required>
-                                                    <small class="text-gray-500 text-sm">Maksimal: {{ $log->jumlah_limbah_masuk }} kg</small>
+                                                    <label class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Jumlah Diangkut (Kg)</label>
+                                                    <input type="number" name="jumlah_diangkut" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" step="0.01" max="{{ $log->jumlah_limbah_masuk }}" required>
+                                                    <small class="text-sm" style="color: var(--text-secondary);">Maksimal: {{ $log->jumlah_limbah_masuk }} kg</small>
                                                 </div>
                                                 <div class="flex justify-end space-x-3">
-                                                    <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors" onclick="closeModal('transportModal{{ $log->log_id }}')">Batal</button>
+                                                    <button type="button" class="px-4 py-2 rounded-md transition-colors" style="background-color: var(--button-secondary-bg); color: var(--button-secondary-text);" onclick="closeModal('transportModal{{ $log->log_id }}')">Batal</button>
                                                     <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">Simpan</button>
                                                 </div>
                                             </form>

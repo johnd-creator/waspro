@@ -3,180 +3,152 @@
 @section('title', 'Laporan Status Limbah')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Laporan Status Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('reports.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Laporan Status Limbah</h3>
+            <a href="{{ route('reports.index') }}" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg ring-1 ring-gray-300 dark:ring-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <i class="fas fa-arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+        </div>
+        <div class="p-6">
+            <!-- Filter Form -->
+            <form method="GET" action="{{ route('reports.status') }}" class="mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                        <select name="status" id="status" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Semua Status</option>
+                            <option value="Tersimpan" {{ request('status') === 'Tersimpan' ? 'selected' : '' }}>Tersimpan</option>
+                            <option value="Diangkut" {{ request('status') === 'Diangkut' ? 'selected' : '' }}>Diangkut</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Dari Tanggal</label>
+                        <input type="date" name="date_from" id="date_from" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ request('date_from') }}">
+                    </div>
+                    <div>
+                        <label for="date_to" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sampai Tanggal</label>
+                        <input type="date" name="date_to" id="date_to" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" value="{{ request('date_to') }}">
+                    </div>
+                    <div class="flex md:items-end">
+                        <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
                     </div>
                 </div>
-                <div class="card-body">
-                    <!-- Filter Form -->
-                    <form method="GET" action="{{ route('reports.status') }}" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="">Semua Status</option>
-                                    <option value="TERSIMPAN" {{ request('status') === 'TERSIMPAN' ? 'selected' : '' }}>Tersimpan</option>
-                                    <option value="DIANGKUT" {{ request('status') === 'DIANGKUT' ? 'selected' : '' }}>Diangkut</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="date_from" class="form-label">Dari Tanggal</label>
-                                <input type="date" name="date_from" id="date_from" class="form-control" 
-                                       value="{{ request('date_from') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="date_to" class="form-label">Sampai Tanggal</label>
-                                <input type="date" name="date_to" id="date_to" class="form-control" 
-                                       value="{{ request('date_to') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">&nbsp;</label>
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+            </form>
 
-                    @if(isset($data))
-                    <!-- Export Buttons -->
-                    <div class="mb-3">
-                        <div class="btn-group" role="group">
-                            <a href="{{ route('reports.status.export', ['format' => 'pdf']) }}?{{ http_build_query(request()->all()) }}" 
-                               class="btn btn-danger">
-                                <i class="fas fa-file-pdf"></i> Export PDF
-                            </a>
-                            <a href="{{ route('reports.status.export', ['format' => 'excel']) }}?{{ http_build_query(request()->all()) }}" 
-                               class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Export Excel
-                            </a>
-                        </div>
-                    </div>
+            @php $hasData = isset($logs) && count($logs) > 0; @endphp
+            @if($hasData)
+            <!-- Export Buttons -->
+            <div class="mb-4 flex items-center gap-2">
+                <a href="{{ route('reports.status.export', ['format' => 'pdf']) }}?{{ http_build_query(request()->all()) }}" 
+                   class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="{{ route('reports.status.export', ['format' => 'excel']) }}?{{ http_build_query(request()->all()) }}" 
+                   class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
 
-                    <!-- Summary Statistics -->
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-warning"><i class="fas fa-warehouse"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Tersimpan</span>
-                                    <span class="info-box-number">{{ $data['summary']['stored'] }}</span>
-                                    <span class="progress-description">{{ number_format($data['summary']['stored_weight'], 2) }} Ton</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-success"><i class="fas fa-truck"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Diangkut</span>
-                                    <span class="info-box-number">{{ $data['summary']['transported'] }}</span>
-                                    <span class="progress-description">{{ number_format($data['summary']['transported_weight'], 2) }} Ton</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-danger"><i class="fas fa-exclamation-triangle"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Kadaluarsa</span>
-                                    <span class="info-box-number">{{ $data['summary']['expired'] }}</span>
-                                    <span class="progress-description">Melewati batas penyimpanan</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Data Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Jenis Limbah</th>
-                                    <th>Perusahaan</th>
-                                    <th>Unit</th>
-                                    <th>Jumlah (Kg)</th>
-                                    <th>Status</th>
-                                    <th>Tanggal Pengangkutan</th>
-                                    <th>Maksimal Penyimpanan</th>
-                                    <th>Hari Tersisa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data['logs'] as $index => $log)
-                                @php
-                                    $daysRemaining = null;
-                                    $isExpired = false;
-                                    if ($log->status_log === 'TERSIMPAN' && $log->maksimal_penyimpanan_tanggal) {
-                                        $daysRemaining = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($log->maksimal_penyimpanan_tanggal), false);
-                                        $isExpired = $daysRemaining < 0;
-                                    }
-                                @endphp
-                                <tr class="{{ $isExpired ? 'table-danger' : '' }}">
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $log->tanggal_limbah_masuk }}</td>
-                                    <td>{{ $log->jenisLimbah->nama_limbah ?? 'Unknown' }}</td>
-                                    <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'Internal' }}</td>
-                                    <td>{{ $log->unitPembangkit->nama_unit ?? 'Unknown' }}</td>
-                                    <td>{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $log->status_log === 'DIANGKUT' ? 'success' : 'warning' }}">
-                                            {{ $log->status_log }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $log->tanggal_pengangkutan ?: '-' }}</td>
-                                    <td>{{ $log->maksimal_penyimpanan_tanggal ?: '-' }}</td>
-                                    <td>
-                                        @if($daysRemaining !== null)
-                                            @if($isExpired)
-                                                <x-status-indicator status="expired" />
-                                            @else
-                                                <x-status-indicator 
-                                                    status="{{ $daysRemaining <= 7 ? 'critical' : 'warning' }}" 
-                                                    :show-icon="false" 
-                                                >
-                                                    {{ $daysRemaining }} hari
-                                                </x-status-indicator>
-                                            @endif
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="10" class="text-center">Tidak ada data untuk filter yang dipilih</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if(method_exists($data['logs'], 'links'))
-                        <div class="d-flex justify-content-center">
-                            {{ $data['logs']->appends(request()->query())->links() }}
-                        </div>
-                    @endif
-                    @else
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Silakan pilih filter untuk menampilkan laporan.
-                    </div>
-                    @endif
+            <!-- Summary Statistics -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="rounded-2xl ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900 p-4">
+                    <div class="text-xs font-medium text-gray-500 dark:text-gray-400">Tersimpan</div>
+                    <div class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $statusDistribution['Tersimpan']['count'] ?? 0 }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ number_format($statusDistribution['Tersimpan']['total_quantity'] ?? 0, 2) }} Kg</div>
+                </div>
+                <div class="rounded-2xl ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900 p-4">
+                    <div class="text-xs font-medium text-gray-500 dark:text-gray-400">Diangkut</div>
+                    <div class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $statusDistribution['Diangkut']['count'] ?? 0 }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ number_format($statusDistribution['Diangkut']['total_quantity'] ?? 0, 2) }} Kg</div>
+                </div>
+                <div class="rounded-2xl ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900 p-4">
+                    <div class="text-xs font-medium text-gray-500 dark:text-gray-400">Kadaluarsa</div>
+                    <div class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $statusDistribution['Kadaluarsa']['count'] ?? 0 }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Melewati batas penyimpanan</div>
                 </div>
             </div>
+
+            <!-- Data Table -->
+            <div class="mt-2 overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800/60">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">No</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Tanggal Masuk</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Jenis Limbah</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Perusahaan</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Unit</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Jumlah (Kg)</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Status</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Tanggal Pengangkutan</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Maksimal Penyimpanan</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">Hari Tersisa</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800">
+                        @forelse($logs as $index => $log)
+                        @php
+                            $daysRemaining = null;
+                            $isExpired = false;
+                            if (strtoupper($log->status_log) === 'TERSIMPAN' && $log->maksimal_penyimpanan_tanggal) {
+                                $daysRemaining = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($log->maksimal_penyimpanan_tanggal), false);
+                                $isExpired = $daysRemaining < 0;
+                            }
+                        @endphp
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/60 {{ $isExpired ? 'bg-red-50 dark:bg-red-900/10' : '' }}">
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $index + 1 }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->tanggal_limbah_masuk }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->jenisLimbah->nama_limbah ?? 'Unknown' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'Internal' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->unitPembangkit->nama_unit ?? 'Unknown' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
+                            <td class="px-4 py-3">
+                                @php $isTransported = strtoupper($log->status_log) === 'DIANGKUT'; @endphp
+                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 {{ $isTransported ? 'ring-emerald-200/50 bg-emerald-50 text-emerald-600 dark:ring-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-300' : 'ring-amber-200/50 bg-amber-50 text-amber-700 dark:ring-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300' }}">
+                                    {{ $log->status_log }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->tanggal_pengangkutan ?: '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $log->maksimal_penyimpanan_tanggal ?: '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
+                                @if($daysRemaining !== null)
+                                    @if($isExpired)
+                                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-red-200/50 bg-red-50 text-red-700 dark:ring-red-400/30 dark:bg-red-400/10 dark:text-red-300">Expired</span>
+                                    @else
+                                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 {{ $daysRemaining <= 7 ? 'ring-amber-200/50 bg-amber-50 text-amber-700 dark:ring-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300' : 'ring-blue-200/50 bg-blue-50 text-blue-700 dark:ring-blue-400/30 dark:bg-blue-400/10 dark:text-blue-300' }}">
+                                            {{ $daysRemaining }} hari
+                                        </span>
+                                    @endif
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">Tidak ada data untuk filter yang dipilih</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if(method_exists($logs, 'links'))
+                <div class="flex justify-center mt-6">
+                    {{ $logs->appends(request()->query())->links() }}
+                </div>
+            @endif
+            @else
+            <div class="mt-2 rounded-xl ring-1 ring-blue-200/60 dark:ring-blue-400/20 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 px-4 py-3">
+                <i class="fas fa-info-circle mr-2"></i> Silakan pilih filter untuk menampilkan laporan.
+            </div>
+            @endif
         </div>
     </div>
 </div>

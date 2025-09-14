@@ -34,11 +34,11 @@ class LogPenyimpananLimbah extends Model
         'expiry_status',
     ];
 
-    protected $dates = [
-        'tanggal_limbah_masuk',
-        'maksimal_penyimpanan_tanggal',
-        'tanggal_pengangkutan',
-        'tanggal_kadaluarsa',
+    protected $casts = [
+        'tanggal_limbah_masuk' => 'datetime',
+        'maksimal_penyimpanan_tanggal' => 'datetime',
+        'tanggal_pengangkutan' => 'datetime',
+        'tanggal_kadaluarsa' => 'datetime',
     ];
 
     /**
@@ -256,5 +256,29 @@ class LogPenyimpananLimbah extends Model
             'Expired' => $daysLeft < 0 ? 'Kadaluarsa '.abs($daysLeft).' hari' : 'Kadaluarsa',
             default => 'Unknown'
         };
+    }
+
+    /**
+     * Alias for getExpiryStatusBadgeClass() - used in views
+     */
+    public function getStatusBadgeClass(): string
+    {
+        return $this->getExpiryStatusBadgeClass();
+    }
+
+    /**
+     * Alias for getExpiryStatusText() - used in views
+     */
+    public function getStatusText(): string
+    {
+        return $this->getExpiryStatusText();
+    }
+
+    /**
+     * Get remaining days until expiry - used in views
+     */
+    public function getSisaHariKadaluarsa(): ?int
+    {
+        return $this->getDaysUntilExpiry();
     }
 }

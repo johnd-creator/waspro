@@ -220,7 +220,7 @@
                         </div>
                         
                         <!-- Menu Notifikasi -->
-                        <div class="space-y-1">
+                        <!-- <div class="space-y-1">
                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('notifications.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('notifications.index') }}">
                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200 relative">
                                     <i class="fas fa-bell text-xs"></i>
@@ -228,7 +228,7 @@
                                 </div>
                                 <span class="text-sm font-medium">Notifikasi</span>
                             </a>
-                        </div>
+                        </div> -->
                         
                         <!-- Menu Log Penyimpanan -->
                         <div class="space-y-1">
@@ -256,56 +256,64 @@
                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                              <i class="fas fa-chart-bar mr-1"></i>LAPORAN
                          </div>
-                         
+                          <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('reports.index') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200 relative">
+                                    <i class="fas fa-file-alt text-xs"></i>
+                                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center" id="sidebar-notification-badge" style="display: none;"></span>
+                                </div>
+                                <span class="text-sm font-medium">Dashboard Report</span>
+                            </a>
+                        </div>
                          <!-- Menu Laporan Bulanan -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.monthly') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.monthly') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-calendar-alt text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Bulanan</span>
                              </a>
-                         </div>
+                         </div> -->
                          
                          <!-- Menu Laporan Status -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.status') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.status') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-info-circle text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Status</span>
                              </a>
-                         </div>
+                         </div> -->
                          
                          <!-- Menu Laporan Jenis Limbah -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.waste-type') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.waste-type') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-recycle text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Jenis Limbah</span>
                              </a>
-                         </div>
+                         </div> -->
                          
                          <!-- Menu Laporan Perusahaan -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.company') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.company') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-building text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Perusahaan</span>
                              </a>
-                         </div>
+                         </div> -->
                          
                          <!-- Menu Laporan Unit -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.unit') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.unit') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-industry text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Unit</span>
                              </a>
-                         </div>
+                         </div> -->
                          <!-- Section MASTER DATA -->
                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                              <i class="fas fa-database mr-1"></i>MASTER DATA

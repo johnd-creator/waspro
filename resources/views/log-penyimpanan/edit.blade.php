@@ -62,10 +62,11 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="tanggal_limbah_masuk" class="form-label">Tanggal Limbah Masuk <span class="text-danger">*</span></label>
+                                    <label for="tanggal_limbah_masuk" class="form-label" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control @error('tanggal_limbah_masuk') is-invalid @enderror" 
                                            id="tanggal_limbah_masuk" name="tanggal_limbah_masuk" 
-                                           value="{{ old('tanggal_limbah_masuk', $logPenyimpanan->tanggal_limbah_masuk) }}" required>
+                                           value="{{ old('tanggal_limbah_masuk', $logPenyimpanan->tanggal_limbah_masuk) }}" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" required>
                                     @error('tanggal_limbah_masuk')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -74,17 +75,26 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
                             
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="kode_limbah" class="form-label">Jenis Limbah <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('kode_limbah') is-invalid @enderror" 
-                                            id="kode_limbah" name="kode_limbah" required>
-                                        <option value="">Pilih Jenis Limbah</option>
+                                    <label for="kode_limbah" class="form-label" style="color: var(--text-primary);">Jenis Limbah <span class="text-danger">*</span></label>
+                                    <input type="text" 
+                                           class="form-control @error('kode_limbah') is-invalid @enderror" 
+                                           id="kode_limbah" 
+                                           name="kode_limbah" 
+                                           value="{{ old('kode_limbah', $logPenyimpanan->kode_limbah) }}" 
+                                           placeholder="Pilih jenis limbah"
+                                           list="jenis_limbah_list" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" 
+                                           required>
+                                    
+                                    <!-- Datalist untuk autocomplete dengan nilai dari database -->
+                                    <datalist id="jenis_limbah_list">
                                         @foreach($jenisLimbah as $jenis)
-                                            <option value="{{ $jenis->kode_limbah }}" 
-                                                    {{ old('kode_limbah', $logPenyimpanan->kode_limbah) == $jenis->kode_limbah ? 'selected' : '' }}>
+                                            <option value="{{ $jenis->kode_limbah }}">
                                                 {{ $jenis->kode_limbah }} - {{ $jenis->nama_limbah }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </datalist>
+                                    
                                     @error('kode_limbah')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -95,10 +105,11 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="jumlah_limbah_masuk" class="form-label">Jumlah Limbah Masuk (Kg) <span class="text-danger">*</span></label>
+                                    <label for="jumlah_limbah_masuk" class="form-label" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control @error('jumlah_limbah_masuk') is-invalid @enderror" 
                                            id="jumlah_limbah_masuk" name="jumlah_limbah_masuk" 
-                                           value="{{ old('jumlah_limbah_masuk', $logPenyimpanan->jumlah_limbah_masuk) }}" step="0.01" min="0.01" required>
+                                           value="{{ old('jumlah_limbah_masuk', $logPenyimpanan->jumlah_limbah_masuk) }}" step="0.01" min="0.01" 
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" required>
                                     @error('jumlah_limbah_masuk')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -107,18 +118,21 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
                             
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="perusahaan_id" class="form-label">Perusahaan Penghasil</label>
-                                    <select class="form-select @error('perusahaan_id') is-invalid @enderror" 
-                                            id="perusahaan_id" name="perusahaan_id">
-                                        <option value="">Pilih Perusahaan (Opsional)</option>
+                                    <label for="perusahaan_nama" class="form-label" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
+                                    <input type="text" 
+                                           class="form-control @error('perusahaan_nama') is-invalid @enderror" 
+                                           id="perusahaan_nama" 
+                                           name="perusahaan_nama" 
+                                           value="{{ old('perusahaan_nama', $logPenyimpanan->perusahaan ? $logPenyimpanan->perusahaan->nama_perusahaan : '') }}"
+                                           list="perusahaan_list"
+                                           placeholder="Ketik nama perusahaan atau pilih dari daftar"
+                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;">
+                                    <datalist id="perusahaan_list">
                                         @foreach($perusahaanPenghasil as $perusahaan)
-                                            <option value="{{ $perusahaan->perusahaan_id }}" 
-                                                    {{ old('perusahaan_id', $logPenyimpanan->perusahaan_id) == $perusahaan->perusahaan_id ? 'selected' : '' }}>
-                                                {{ $perusahaan->nama_perusahaan }}
-                                            </option>
+                                            <option value="{{ $perusahaan->nama_perusahaan }}">
                                         @endforeach
-                                    </select>
-                                    @error('perusahaan_id')
+                                    </datalist>
+                                    @error('perusahaan_nama')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -171,17 +185,21 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
                         </div>
 
                         <div class="mb-3">
-                            <label for="detail_sumber_limbah" class="form-label">Sumber Limbah <span class="text-danger">*</span></label>
-                            <select class="form-select @error('detail_sumber_limbah') is-invalid @enderror" 
-                                    id="detail_sumber_limbah" name="detail_sumber_limbah" required>
-                                <option value="">Pilih Sumber Limbah</option>
+                            <label for="detail_sumber_limbah" class="form-label" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                   class="form-control @error('detail_sumber_limbah') is-invalid @enderror" 
+                                   id="detail_sumber_limbah" 
+                                   name="detail_sumber_limbah" 
+                                   value="{{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) }}"
+                                   list="sumber_limbah_list"
+                                   placeholder="Ketik sumber kegiatan atau pilih dari daftar"
+                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;"
+                                   required>
+                            <datalist id="sumber_limbah_list">
                                 @foreach($kategoriKegiatanSumber as $kategori)
-                                    <option value="{{ $kategori->nama_kategori }}" 
-                                            {{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) == $kategori->nama_kategori ? 'selected' : '' }}>
-                                        {{ $kategori->nama_kategori }}
-                                    </option>
+                                    <option value="{{ $kategori->nama_kategori }}">
                                 @endforeach
-                            </select>
+                            </datalist>
                             @error('detail_sumber_limbah')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -233,6 +251,42 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Validasi untuk field kode_limbah
+    const kodeLimbahInput = document.getElementById('kode_limbah');
+    const jenisLimbahDatalist = document.getElementById('jenis_limbah_list');
+    
+    if (kodeLimbahInput && jenisLimbahDatalist) {
+        kodeLimbahInput.addEventListener('input', function() {
+            const value = this.value;
+            const options = Array.from(jenisLimbahDatalist.options).map(option => option.value);
+            
+            // Reset custom validity
+            this.setCustomValidity('');
+            
+            if (value && !options.includes(value)) {
+                this.setCustomValidity('Pilih jenis limbah yang tersedia dari daftar');
+            }
+        });
+    }
+    
+    // Validasi untuk field detail_sumber_limbah
+    const sumberLimbahInput = document.getElementById('detail_sumber_limbah');
+    const sumberLimbahDatalist = document.getElementById('sumber_limbah_list');
+    
+    if (sumberLimbahInput && sumberLimbahDatalist) {
+        sumberLimbahInput.addEventListener('input', function() {
+            const value = this.value;
+            const options = Array.from(sumberLimbahDatalist.options).map(option => option.value);
+            
+            // Reset custom validity
+            this.setCustomValidity('');
+            
+            if (value && !options.includes(value)) {
+                this.setCustomValidity('Pilih sumber kegiatan limbah yang tersedia dari daftar');
+            }
+        });
+    }
+    
     const statusSelect = document.getElementById('status_log');
     const transportFields = document.getElementById('transport-fields');
     
