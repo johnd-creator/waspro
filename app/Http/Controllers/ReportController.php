@@ -60,8 +60,8 @@ class ReportController extends Controller
             // Statistics
             $totalLogs = $logs->count();
             $totalWaste = $logs->sum('jumlah_limbah_masuk');
-            $totalTransported = $logs->where('status_log', 'Diangkut')->sum('jumlah_diangkut');
-            $wasteStored = $logs->where('status_log', 'Tersimpan')->sum('jumlah_limbah_masuk');
+            $totalTransported = $logs->where('status_log', 'Diangkut')->count();
+            $wasteStored = $logs->where('status_log', 'Tersimpan')->count();
             $wasteExpired = $logs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk');
 
             // Monthly breakdown
@@ -71,8 +71,8 @@ class ReportController extends Controller
                 return [
                     'total_logs' => $monthLogs->count(),
                     'total_waste' => $monthLogs->sum('jumlah_limbah_masuk'),
-                    'transported' => $monthLogs->where('status_log', 'Diangkut')->sum('jumlah_diangkut'),
-                    'stored' => $monthLogs->where('status_log', 'Tersimpan')->sum('jumlah_limbah_masuk'),
+                    'transported' => $monthLogs->where('status_log', 'Diangkut')->count(),
+                    'stored' => $monthLogs->where('status_log', 'Tersimpan')->count(),
                     'expired' => $monthLogs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk'),
                 ];
             });
@@ -266,6 +266,9 @@ class ReportController extends Controller
         $data['jenisLimbahId'] = $jenisLimbahId;
         $data['dateFrom'] = $dateFrom;
         $data['dateTo'] = $dateTo;
+
+        // Add waste types for filter dropdown
+        $data['wasteTypes'] = \App\Models\JenisLimbah::where('status_aktif', true)->orderBy('nama_limbah')->get();
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.waste-type-pdf', $data);

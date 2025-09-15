@@ -22,9 +22,6 @@
                 <p class="text-slate-600">Kelola proses pengangkutan limbah dengan mudah</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('pengangkutan-limbah.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2"></i> Tambah Data
-                </a>
                 <a href="{{ route('pengangkutan-limbah.diangkut') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
                     <i class="fas fa-truck mr-2"></i> Limbah Diangkut
                 </a>

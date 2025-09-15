@@ -12,9 +12,8 @@ class PerusahaanPenghasilController extends Controller
      */
     public function index()
     {
-        $perusahaanPenghasil = PerusahaanPenghasil::withCount('logPenyimpanan')
-            ->orderBy('nama_perusahaan')
-            ->paginate(15);
+        $perusahaanPenghasil = PerusahaanPenghasil::orderBy('nama_perusahaan', 'asc')
+            ->paginate(10);
 
         return view('perusahaan-penghasil.index', compact('perusahaanPenghasil'));
     }

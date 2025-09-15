@@ -21,6 +21,9 @@ class LogPenyimpananLimbahController extends Controller
         // UnitScope akan otomatis memfilter berdasarkan unit user
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unit', 'penggunaSistem']);
 
+        // Filter untuk tidak menampilkan log dengan status 'diangkut'
+        $query->whereRaw("LOWER(status_log) != 'diangkut'");
+
         // Search filters
         if ($request->filled('search_jenis')) {
             $query->whereHas('jenisLimbah', function ($q) use ($request) {

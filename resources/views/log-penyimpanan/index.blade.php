@@ -19,9 +19,7 @@
                 <p class="text-slate-600">Kelola dan pantau data penyimpanan limbah dengan mudah</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('log-penyimpanan.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2"></i> Tambah Log Baru
-                </a>
+                <!-- Tombol Tambah Data dihapus sesuai permintaan -->
             </div>
         </div>
         <!-- Search Section -->
@@ -285,10 +283,7 @@
                                         <div class="flex flex-col items-center">
                                             <i class="fas fa-clipboard-list text-6xl text-slate-300 mb-4"></i>
                                             <h3 class="text-lg font-medium text-slate-900 mb-2">Belum ada data log penyimpanan limbah</h3>
-                                            <p class="text-slate-500 mb-4">Mulai dengan menambahkan log penyimpanan limbah pertama Anda</p>
-                                            <a href="{{ route('log-penyimpanan.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors">
-                                                <i class="fas fa-plus mr-2"></i> Tambah Log Pertama
-                                            </a>
+                            <p class="text-slate-500 mb-4">Tidak ada data yang tersedia saat ini</p>
                                         </div>
                                     </td>
                                 </tr>

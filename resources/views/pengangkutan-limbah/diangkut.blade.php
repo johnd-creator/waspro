@@ -110,37 +110,6 @@
         </div>
     </div>
 
-    <!-- Summary -->
-    <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200">
-      <div class="px-6 py-5 border-b border-slate-200">
-        <h3 class="text-lg font-semibold text-slate-800">Ringkasan</h3>
-      </div>
-      <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
-          <p class="text-slate-500 text-sm">Total Limbah Diangkut</p>
-          <p class="mt-1 text-2xl font-bold text-slate-800">{{ $totalDiangkut ?? 0 }} item</p>
-        </div>
-        <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
-          <p class="text-slate-500 text-sm">Total Berat</p>
-          <p class="mt-1 text-2xl font-bold text-slate-800">{{ number_format($totalBerat ?? 0, 2) }} Kg</p>
-        </div>
-        <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
-          @php
-            $periode = '-';
-            if (request('tanggal_mulai') && request('tanggal_akhir')) {
-                $periode = \Carbon\Carbon::parse(request('tanggal_mulai'))->format('d/m/Y') . ' - ' . \Carbon\Carbon::parse(request('tanggal_akhir'))->format('d/m/Y');
-            } elseif (request('tanggal_mulai')) {
-                $periode = \Carbon\Carbon::parse(request('tanggal_mulai'))->format('d/m/Y') . ' - sekarang';
-            } elseif (request('tanggal_akhir')) {
-                $periode = 's.d. ' . \Carbon\Carbon::parse(request('tanggal_akhir'))->format('d/m/Y');
-            } else {
-                $periode = 'Semua';
-            }
-          @endphp
-          <p class="text-slate-500 text-sm">Periode</p>
-          <p class="mt-1 text-2xl font-bold text-slate-800">{{ $periode }}</p>
-        </div>
-      </div>
-    </div>
+
 </div>
 @endsection

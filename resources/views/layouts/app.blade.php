@@ -185,6 +185,50 @@
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
         }
+        
+        /* Safari dropdown/select styling fixes */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 0.65rem auto;
+            padding-right: 2.5rem !important;
+            min-height: 2.5rem !important;
+            line-height: 1.5 !important;
+        }
+        
+        /* Safari specific select fixes */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            select {
+                background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 0.7rem center;
+                background-size: 0.65rem auto;
+                padding-right: 2.5rem !important;
+                min-height: 2.5rem !important;
+                line-height: 1.5 !important;
+                border-radius: 0.375rem !important;
+                border: 1px solid #d1d5db !important;
+            }
+            
+            /* Fix for Tailwind select classes */
+            .form-select,
+            select.form-control,
+            select[class*="border"],
+            select[class*="rounded"] {
+                -webkit-appearance: none !important;
+                background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>') !important;
+                background-repeat: no-repeat !important;
+                background-position: right 0.7rem center !important;
+                background-size: 0.65rem auto !important;
+                padding-right: 2.5rem !important;
+                min-height: 2.5rem !important;
+                line-height: 1.5 !important;
+            }
+        }
 
     </style>
     @stack('styles')
