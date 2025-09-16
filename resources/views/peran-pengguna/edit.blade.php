@@ -3,15 +3,15 @@
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6">
+    <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary); margin-bottom: 1.5rem;">
+        <div style="padding: 2rem;">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Peran Pengguna</h1>
-                    <p class="text-slate-600">Ubah informasi peran: {{ $peranPengguna->nama_peran }}</p>
+                    <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Edit Peran Pengguna</h1>
+                    <p style="color: var(--text-secondary);">Ubah informasi peran: {{ $peranPengguna->nama_peran }}</p>
                 </div>
                 <div>
-                    <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                    <a href="{{ route('peran-pengguna.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
@@ -21,13 +21,13 @@
 
     <!-- Form Section -->
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-            <div class="px-8 py-6 border-b border-slate-200">
-                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+        <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary);">
+            <div style="padding: 2rem; border-bottom: 1px solid var(--border-primary);">
+                <h6 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center;">
                     <i class="fas fa-user-edit mr-2"></i>Form Edit Peran
                 </h6>
             </div>
-            <div class="px-8 py-6">
+            <div style="padding: 2rem;">
                 <x-session-messages />
                 
                 <form action="{{ route('peran-pengguna.update', $peranPengguna->peran_id) }}" method="POST">
@@ -45,15 +45,15 @@
                             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="is_active">Status</label>
+                                    <label for="is_active" style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.5rem; display: block;">Status</label>
                                     <div class="form-check">
                                         <input type="checkbox" 
-                                               class="form-check-input" 
+                                               style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--accent-primary);" 
                                                id="is_active" 
                                                name="is_active" 
                                                value="1" 
                                                {{ old('is_active', $peranPengguna->is_active) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_active">
+                                        <label style="color: var(--text-secondary); margin-left: 0.5rem;" for="is_active">
                                             Aktif
                                         </label>
                                     </div>
@@ -77,10 +77,10 @@
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                            <a href="{{ route('peran-pengguna.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s; margin-right: 0.75rem;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
                                 <i class="fas fa-times mr-2"></i>Batal
                             </a>
-                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
                                 <i class="fas fa-save mr-2"></i>Update
                             </button>
                         </div>

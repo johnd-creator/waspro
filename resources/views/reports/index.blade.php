@@ -1,164 +1,113 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Report - Sistem Manajemen Limbah')
+@section('title', 'Pusat Laporan - Sistem Manajemen Limbah')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Hero Section -->
-    <div class="rounded-2xl overflow-hidden bg-gradient-to-tr from-indigo-500 to-purple-600 text-white shadow-sm mb-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
-            <div class="lg:col-span-2">
-                <h1 class="text-3xl font-bold mb-1">Dashboard Report</h1>
-                <p class="text-indigo-100">Sistem Manajemen Limbah Terintegrasi</p>
-                <p class="mt-2 text-indigo-50">Pantau dan kelola data limbah dengan mudah melalui dashboard komprehensif ini</p>
-                <div class="mt-4 flex flex-wrap gap-3">
-                    <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur ring-1 ring-white/30">
+<div class="min-h-screen px-2" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
+
+    <!-- Professional Header Section -->
+    <div class="rounded-2xl shadow-sm mb-8" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
+        <div class="px-6 py-8 lg:px-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                <!-- Page Title Section -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25">
+                            <i class="fas fa-file-alt text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h1 class="text-3xl lg:text-4xl font-bold tracking-tight" style="color: var(--text-primary);">
+                            Pusat Laporan
+                        </h1>
+                        <p class="mt-2 text-sm font-medium" style="color: var(--text-secondary);">
+                            Pilih dan lihat berbagai jenis laporan yang tersedia.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-300 hover:-translate-y-0.5">
                         <i class="fas fa-plus-circle"></i>
-                        <span>Tambah Log Limbah</span>
+                        <span>Tambah Log</span>
                     </a>
-                    <button type="button" onclick="clearReportCache()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur ring-1 ring-white/30">
+                    <button type="button" onclick="clearReportCache()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5" style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary); ">
                         <i class="fas fa-sync-alt"></i>
                         <span>Refresh Data</span>
                     </button>
                 </div>
             </div>
-            <div>
-                <div class="bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-gray-100 rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10 p-5">
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <div>
-                            <h3 class="text-indigo-600 dark:text-indigo-400 text-2xl font-semibold">{{ $totalLogs ?? 0 }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Total Log</p>
-                        </div>
-                        <div>
-                            <h3 class="text-emerald-600 dark:text-emerald-400 text-2xl font-semibold">{{ $totalTransported ?? 0 }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Diangkut</p>
-                        </div>
-                        <div>
-                            <h3 class="text-amber-600 dark:text-amber-400 text-2xl font-semibold">{{ $totalStored ?? 0 }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Tersimpan</p>
-                        </div>
-                        <div>
-                            <h3 class="text-sky-600 dark:text-sky-400 text-2xl font-semibold">{{ number_format($totalWaste ?? 0, 2) }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Total (Ton)</p>
-                        </div>
-                    </div>
-                    @if(($totalLogs ?? 0) > 0)
-                    @php $progressWidth = round((($totalTransported ?? 0) / max(($totalLogs ?? 1),1)) * 100); @endphp
-                    <div class="mt-4">
-                        <div class="flex items-center justify-between mb-1 text-xs text-gray-600 dark:text-gray-400">
-                            <span>Progress Pengangkutan</span>
-                            <span class="font-medium">{{ $progressWidth }}%</span>
-                        </div>
-                        <div class="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400" data-bar-width="{{ $progressWidth }}"></div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
         </div>
     </div>
 
+    @php
+    $reports = [
+        [
+            'route' => 'reports.monthly',
+            'title' => 'Laporan Bulanan/Tahunan',
+            'icon' => 'fa-calendar-alt',
+            'description' => 'Laporan berdasarkan periode waktu tertentu dengan ringkasan statistik.',
+            'color' => 'blue',
+        ],
+        [
+            'route' => 'reports.status',
+            'title' => 'Laporan Status',
+            'icon' => 'fa-tasks',
+            'description' => 'Laporan berdasarkan status limbah (Tersimpan, Diangkut, dll).',
+            'color' => 'emerald',
+        ],
+        [
+            'route' => 'reports.waste-type',
+            'title' => 'Laporan Jenis Limbah',
+            'icon' => 'fa-recycle',
+            'description' => 'Laporan berdasarkan jenis limbah yang disimpan dengan kategorisasi.',
+            'color' => 'amber',
+        ],
+        [
+            'route' => 'reports.company',
+            'title' => 'Laporan Perusahaan',
+            'icon' => 'fa-building',
+            'description' => 'Laporan berdasarkan perusahaan penghasil limbah dengan analisis performa.',
+            'color' => 'rose',
+        ],
+        [
+            'route' => 'reports.unit',
+            'title' => 'Laporan Unit',
+            'icon' => 'fa-industry',
+            'description' => 'Laporan berdasarkan unit pembangkit dengan breakdown detail operasional.',
+            'color' => 'indigo',
+        ],
+        [
+            'route' => 'expiry-reports.index',
+            'title' => 'Laporan Kadaluwarsa',
+            'icon' => 'fa-exclamation-triangle',
+            'description' => 'Laporan limbah yang mendekati atau telah melewati batas penyimpanan.',
+            'color' => 'red',
+        ],
+    ];
+    @endphp
+
     <!-- Report Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-        <!-- Monthly/Yearly -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-sky-500 to-cyan-400 text-white">
-                <h5 class="font-semibold"><i class="fas fa-calendar-alt mr-2"></i>Laporan Bulanan/Tahunan</h5>
-            </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Laporan berdasarkan periode waktu tertentu dengan ringkasan statistik komprehensif.</p>
-                <a href="{{ route('reports.monthly') }}" class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white">
-                    <i class="fas fa-eye"></i> Lihat Laporan
-                </a>
-            </div>
-        </div>
-        <!-- Status -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white">
-                <h5 class="font-semibold"><i class="fas fa-tasks mr-2"></i>Laporan Status</h5>
-            </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Laporan berdasarkan status limbah (Tersimpan, Diangkut, dll) dengan analisis mendalam.</p>
-                <a href="{{ route('reports.status') }}" class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
-                    <i class="fas fa-eye"></i> Lihat Laporan
-                </a>
-            </div>
-        </div>
-        <!-- Waste Type -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-amber-400 to-pink-500 text-white">
-                <h5 class="font-semibold"><i class="fas fa-recycle mr-2"></i>Laporan Jenis Limbah</h5>
-            </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Laporan berdasarkan jenis limbah yang disimpan dengan kategorisasi detail.</p>
-                <a href="{{ route('reports.waste-type') }}" class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white">
-                    <i class="fas fa-eye"></i> Lihat Laporan
-                </a>
-            </div>
-        </div>
-        <!-- Company -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-rose-500 to-orange-400 text-white">
-                <h5 class="font-semibold"><i class="fas fa-building mr-2"></i>Laporan Perusahaan</h5>
-            </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Laporan berdasarkan perusahaan penghasil limbah dengan analisis performa.</p>
-                <a href="{{ route('reports.company') }}" class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white">
-                    <i class="fas fa-eye"></i> Lihat Laporan
-                </a>
-            </div>
-        </div>
-        <!-- Unit -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-indigo-500 to-purple-600 text-white">
-                <h5 class="font-semibold"><i class="fas fa-industry mr-2"></i>Laporan Unit</h5>
-            </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Laporan berdasarkan unit pembangkit dengan breakdown detail operasional.</p>
-                <a href="{{ route('reports.unit') }}" class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white">
-                    <i class="fas fa-eye"></i> Lihat Laporan
-                </a>
-            </div>
-        </div>
-        <!-- Quick Stats -->
-        <div class="rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 bg-white dark:bg-gray-900">
-            <div class="px-5 py-4 bg-gradient-to-tr from-fuchsia-500 to-pink-500 text-white">
-                <h5 class="font-semibold"><i class="fas fa-chart-bar mr-2"></i>Statistik Cepat</h5>
-            </div>
-            <div class="p-5">
-                <div class="grid grid-cols-2 gap-3 text-center">
-                    <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-3">
-                        <h4 class="text-indigo-600 dark:text-indigo-400 text-xl font-semibold">{{ $totalLogs ?? 0 }}</h4>
-                        <small class="text-gray-500 dark:text-gray-400">Total Log</small>
-                    </div>
-                    <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-3">
-                        <h4 class="text-emerald-600 dark:text-emerald-400 text-xl font-semibold">{{ $totalTransported ?? 0 }}</h4>
-                        <small class="text-gray-500 dark:text-gray-400">Diangkut</small>
-                    </div>
-                    <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-3">
-                        <h4 class="text-amber-600 dark:text-amber-400 text-xl font-semibold">{{ $totalStored ?? 0 }}</h4>
-                        <small class="text-gray-500 dark:text-gray-400">Tersimpan</small>
-                    </div>
-                    <div class="rounded-lg bg-gray-50 dark:bg-gray-800 p-3">
-                        <h4 class="text-sky-600 dark:text-sky-400 text-xl font-semibold">{{ number_format($totalWaste ?? 0, 2) }}</h4>
-                        <small class="text-gray-500 dark:text-gray-400">Total (Ton)</small>
-                    </div>
+        @foreach ($reports as $report)
+        <a href="{{ route($report['route']) }}"
+           class="group block p-6 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-{{ $report['color'] }}-500/20"
+           style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-{{ $report['color'] }}-500 to-{{ $report['color'] }}-600 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <i class="fas {{ $report['icon'] }} text-white text-lg"></i>
                 </div>
-                @if(($totalLogs ?? 0) > 0)
-                @php $progressWidth2 = round((($totalTransported ?? 0) / max(($totalLogs ?? 1),1)) * 100); @endphp
-                <div class="mt-4">
-                    <div class="flex items-center justify-between mb-2 text-xs">
-                        <span class="font-medium text-gray-700 dark:text-gray-300">Progress Pengangkutan</span>
-                        <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ $progressWidth2 }}%</span>
-                    </div>
-                    <div class="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                        <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400" data-bar-width="{{ $progressWidth2 }}"></div>
-                    </div>
-                </div>
-                @endif
+                <h3 class="text-lg font-bold" style="color: var(--text-primary);">{{ $report['title'] }}</h3>
             </div>
-        </div>
+            <p class="text-sm mb-4" style="color: var(--text-secondary);">{{ $report['description'] }}</p>
+            <div class="mt-auto">
+                <span class="font-semibold text-{{ $report['color'] }}-600 group-hover:text-{{ $report['color'] }}-500 transition-colors duration-300">
+                    Lihat Laporan &rarr;
+                </span>
+            </div>
+        </a>
+        @endforeach
     </div>
 </div>
 

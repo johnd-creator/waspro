@@ -3,7 +3,7 @@
 @push('styles')
 <style>
 /* Safari Select Compatibility Fixes */
-select, .form-select {
+select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -16,21 +16,21 @@ select, .form-select {
 }
 
 /* Ensure consistent height with other inputs */
-select, .form-select, .form-control, input[type="text"], input[type="number"], input[type="date"], textarea {
+select, input[type="text"], input[type="number"], input[type="date"], textarea {
     min-height: 42px;
 }
 
 /* Safari specific fixes */
 @supports (-webkit-appearance: none) {
-    select, .form-select {
+    select {
         background-color: white;
-        border: 1px solid #ced4da;
+        border: 1px solid #cbd5e1;
     }
     
-    select:focus, .form-select:focus {
+    select:focus {
         outline: none;
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
 }
 </style>
@@ -39,210 +39,174 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-8 py-6" style="border-color: var(--border-primary);">
             <div>
-                <h1 class="text-2xl font-bold text-slate-800 mb-2">Edit Log Penyimpanan Limbah</h1>
-                <p class="text-slate-600">Ubah data penyimpanan limbah yang sudah ada</p>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Edit Log Penyimpanan Limbah</h1>
+                <p style="color: var(--text-secondary);">Ubah data penyimpanan limbah yang sudah ada</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-eye mr-2"></i> Lihat
-                </a>
-                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center rounded-xl bg-slate-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:bg-slate-700 hover:shadow-xl">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali
                 </a>
             </div>
         </div>
         <div class="px-8 py-6">
-                    <form action="{{ route('log-penyimpanan.update', $logPenyimpanan) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="tanggal_limbah_masuk" class="form-label" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control @error('tanggal_limbah_masuk') is-invalid @enderror" 
-                                           id="tanggal_limbah_masuk" name="tanggal_limbah_masuk" 
-                                           value="{{ old('tanggal_limbah_masuk', $logPenyimpanan->tanggal_limbah_masuk) }}" 
-                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" required>
-                                    @error('tanggal_limbah_masuk')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="kode_limbah" class="form-label" style="color: var(--text-primary);">Jenis Limbah <span class="text-danger">*</span></label>
-                                    <input type="text" 
-                                           class="form-control @error('kode_limbah') is-invalid @enderror" 
-                                           id="kode_limbah" 
-                                           name="kode_limbah" 
-                                           value="{{ old('kode_limbah', $logPenyimpanan->kode_limbah) }}" 
-                                           placeholder="Pilih jenis limbah"
-                                           list="jenis_limbah_list" 
-                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" 
-                                           required>
-                                    
-                                    <!-- Datalist untuk autocomplete dengan nilai dari database -->
-                                    <datalist id="jenis_limbah_list">
-                                        @foreach($jenisLimbah as $jenis)
-                                            <option value="{{ $jenis->kode_limbah }}">
-                                                {{ $jenis->kode_limbah }} - {{ $jenis->nama_limbah }}
-                                            </option>
-                                        @endforeach
-                                    </datalist>
-                                    
-                                    @error('kode_limbah')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="jumlah_limbah_masuk" class="form-label" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control @error('jumlah_limbah_masuk') is-invalid @enderror" 
-                                           id="jumlah_limbah_masuk" name="jumlah_limbah_masuk" 
-                                           value="{{ old('jumlah_limbah_masuk', $logPenyimpanan->jumlah_limbah_masuk) }}" step="0.01" min="0.01" 
-                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;" required>
-                                    @error('jumlah_limbah_masuk')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="perusahaan_nama" class="form-label" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
-                                    <input type="text" 
-                                           class="form-control @error('perusahaan_nama') is-invalid @enderror" 
-                                           id="perusahaan_nama" 
-                                           name="perusahaan_nama" 
-                                           value="{{ old('perusahaan_nama', $logPenyimpanan->perusahaan ? $logPenyimpanan->perusahaan->nama_perusahaan : '') }}"
-                                           list="perusahaan_list"
-                                           placeholder="Ketik nama perusahaan atau pilih dari daftar"
-                                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;">
-                                    <datalist id="perusahaan_list">
-                                        @foreach($perusahaanPenghasil as $perusahaan)
-                                            <option value="{{ $perusahaan->nama_perusahaan }}">
-                                        @endforeach
-                                    </datalist>
-                                    @error('perusahaan_nama')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="status_log" class="form-label">Status <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('status_log') is-invalid @enderror" 
-                                            id="status_log" name="status_log" required>
-                                        <option value="Tersimpan" {{ old('status_log', $logPenyimpanan->status_log) == 'Tersimpan' ? 'selected' : '' }}>Tersimpan</option>
-                                        <option value="Diangkut" {{ old('status_log', $logPenyimpanan->status_log) == 'Diangkut' ? 'selected' : '' }}>Diangkut</option>
-                                        <option value="Kadaluarsa" {{ old('status_log', $logPenyimpanan->status_log) == 'Kadaluarsa' ? 'selected' : '' }}>Kadaluarsa</option>
-                                    </select>
-                                    @error('status_log')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="tanggal_pengangkutan" class="form-label">Tanggal Pengangkutan</label>
-                                    <input type="date" class="form-control @error('tanggal_pengangkutan') is-invalid @enderror"
-                                           id="tanggal_pengangkutan" name="tanggal_pengangkutan" 
-                                           value="{{ old('tanggal_pengangkutan', $logPenyimpanan->tanggal_pengangkutan ? $logPenyimpanan->tanggal_pengangkutan->format('Y-m-d') : '') }}">
-                                    @error('tanggal_pengangkutan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Kosongkan jika limbah belum diangkut</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="jumlah_diangkut" class="form-label">Jumlah Diangkut (Kg)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control @error('jumlah_diangkut') is-invalid @enderror"
-                                           id="jumlah_diangkut" name="jumlah_diangkut" 
-                                           value="{{ old('jumlah_diangkut', $logPenyimpanan->jumlah_diangkut) }}">
-                                    @error('jumlah_diangkut')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Masukkan 0 jika limbah belum diangkut</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="detail_sumber_limbah" class="form-label" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-danger">*</span></label>
-                            <input type="text" 
-                                   class="form-control @error('detail_sumber_limbah') is-invalid @enderror" 
-                                   id="detail_sumber_limbah" 
-                                   name="detail_sumber_limbah" 
-                                   value="{{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) }}"
-                                   list="sumber_limbah_list"
-                                   placeholder="Ketik sumber kegiatan atau pilih dari daftar"
-                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text); transition: all 0.3s ease;"
-                                   required>
-                            <datalist id="sumber_limbah_list">
-                                @foreach($kategoriKegiatanSumber as $kategori)
-                                    <option value="{{ $kategori->nama_kategori }}">
-                                @endforeach
-                            </datalist>
-                            @error('detail_sumber_limbah')
-                                <div class="invalid-feedback">{{ $message }}</div>
+            <form action="{{ route('log-penyimpanan.update', $logPenyimpanan->log_id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <div class="space-y-6">
+                    <!-- Row 1: Tanggal dan Jenis Limbah -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="tanggal_limbah_masuk" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-red-500">*</span></label>
+                            <input type="date" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tanggal_limbah_masuk') border-red-500 @enderror" 
+                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                   id="tanggal_limbah_masuk" name="tanggal_limbah_masuk" 
+                                   value="{{ old('tanggal_limbah_masuk', $logPenyimpanan->tanggal_limbah_masuk) }}" required>
+                            @error('tanggal_limbah_masuk')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                        
+                        <div>
+                            <label for="kode_limbah" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jenis Limbah <span class="text-red-500">*</span></label>
+                            <input type="text" 
+                                   class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('kode_limbah') border-red-500 @enderror" 
+                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                   id="kode_limbah" 
+                                   name="kode_limbah" 
+                                   value="{{ old('kode_limbah', $logPenyimpanan->kode_limbah) }}" 
+                                   placeholder="Pilih jenis limbah"
+                                   list="jenis_limbah_list" 
+                                   required>
+                            
+                            <datalist id="jenis_limbah_list">
+                                @foreach($jenisLimbah as $jenis)
+                                    <option value="{{ $jenis->kode_limbah }}">{{ $jenis->kode_limbah }} - {{ $jenis->nama_limbah }}</option>
+                                @endforeach
+                            </datalist>
+                            
+                            @error('kode_limbah')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
 
-                        <!-- Transport Information (only show if status is Diangkut) -->
-                        <div id="transport-fields" class="{{ old('status_log', $logPenyimpanan->status_log) == 'Diangkut' ? '' : 'd-none' }}">
-                            <hr>
-                            <h5>Informasi Pengangkutan</h5>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="tanggal_pengangkutan" class="form-label">Tanggal Pengangkutan</label>
-                                        <input type="date" class="form-control @error('tanggal_pengangkutan') is-invalid @enderror" 
-                                               id="tanggal_pengangkutan" name="tanggal_pengangkutan" 
-                                               value="{{ old('tanggal_pengangkutan', $logPenyimpanan->tanggal_pengangkutan) }}">
-                                        @error('tanggal_pengangkutan')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="jumlah_diangkut" class="form-label">Jumlah Diangkut (Kg)</label>
-                                        <input type="number" class="form-control @error('jumlah_diangkut') is-invalid @enderror" 
-                                               id="jumlah_diangkut" name="jumlah_diangkut" 
-                                               value="{{ old('jumlah_diangkut', $logPenyimpanan->jumlah_diangkut) }}" step="0.01" min="0">
-                                        @error('jumlah_diangkut')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                    <!-- Row 2: Jumlah Limbah & Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="jumlah_limbah_masuk" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-red-500">*</span></label>
+                            <input type="number" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jumlah_limbah_masuk') border-red-500 @enderror" 
+                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                   id="jumlah_limbah_masuk" name="jumlah_limbah_masuk" 
+                                   value="{{ old('jumlah_limbah_masuk', $logPenyimpanan->jumlah_limbah_masuk) }}" step="0.01" min="0.01" required>
+                            @error('jumlah_limbah_masuk')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="status_log" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Status <span class="text-red-500">*</span></label>
+                            <select class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status_log') border-red-500 @enderror" 
+                                    style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                    id="status_log" name="status_log" required>
+                                <option value="Tersimpan" {{ old('status_log', $logPenyimpanan->status_log) == 'Tersimpan' ? 'selected' : '' }}>Tersimpan</option>
+                                <option value="Diangkut" {{ old('status_log', $logPenyimpanan->status_log) == 'Diangkut' ? 'selected' : '' }}>Diangkut</option>
+                                <option value="Kadaluarsa" {{ old('status_log', $logPenyimpanan->status_log) == 'Kadaluarsa' ? 'selected' : '' }}>Kadaluarsa</option>
+                            </select>
+                            @error('status_log')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Perusahaan Penghasil -->
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label for="perusahaan_nama" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
+                            <input type="text" 
+                                   class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('perusahaan_nama') border-red-500 @enderror" 
+                                   style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                   id="perusahaan_nama" 
+                                   name="perusahaan_nama" 
+                                   value="{{ old('perusahaan_nama', $logPenyimpanan->perusahaanPenghasil->nama_perusahaan ?? '') }}" 
+                                   placeholder="Masukkan nama perusahaan penghasil limbah"
+                                   list="perusahaan_list">
+                            
+                            <datalist id="perusahaan_list">
+                                @foreach($perusahaanPenghasil as $perusahaan)
+                                    <option value="{{ $perusahaan->nama_perusahaan }}">
+                                @endforeach
+                            </datalist>
+                            
+                            @error('perusahaan_nama')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Detail Sumber Limbah -->
+                    <div class="mt-6">
+                        <label for="detail_sumber_limbah" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-red-500">*</span></label>
+                        <input type="text" 
+                               class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('detail_sumber_limbah') border-red-500 @enderror" 
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                               id="detail_sumber_limbah" 
+                               name="detail_sumber_limbah" 
+                               value="{{ old('detail_sumber_limbah', $logPenyimpanan->detail_sumber_limbah) }}" 
+                               placeholder="Masukkan sumber kegiatan limbah"
+                               list="sumber_limbah_list" 
+                               required>
+                        
+                        <datalist id="sumber_limbah_list">
+                            @foreach($kategoriKegiatanSumber as $kategori)
+                                <option value="{{ $kategori->nama_kategori }}">
+                            @endforeach
+                        </datalist>
+                        
+                        @error('detail_sumber_limbah')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Transport Information -->
+                    <div id="transport-fields" class="{{ old('status_log', $logPenyimpanan->status_log) == 'Diangkut' ? '' : 'hidden' }}">
+                        <div class="my-6 border-t" style="border-color: var(--border-primary);"></div>
+                        <h3 class="mb-4 text-lg font-semibold" style="color: var(--text-primary);">Informasi Pengangkutan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="tanggal_pengangkutan" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Tanggal Pengangkutan</label>
+                                <input type="date" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tanggal_pengangkutan') border-red-500 @enderror" 
+                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                       id="tanggal_pengangkutan" name="tanggal_pengangkutan" 
+                                       value="{{ old('tanggal_pengangkutan', optional($logPenyimpanan->tanggal_pengangkutan)->format('Y-m-d')) }}">
+                                @error('tanggal_pengangkutan')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="jumlah_diangkut" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jumlah Diangkut (Kg)</label>
+                                <input type="number" step="0.01" min="0" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jumlah_diangkut') border-red-500 @enderror" 
+                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
+                                       id="jumlah_diangkut" name="jumlah_diangkut" 
+                                       value="{{ old('jumlah_diangkut', $logPenyimpanan->jumlah_diangkut) }}">
+                                @error('jumlah_diangkut')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
+                    </div>
 
-                        <div class="flex justify-end gap-3">
-                            <a href="{{ route('log-penyimpanan.show', $logPenyimpanan) }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">Batal</a>
-                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                                <i class="fas fa-save mr-2"></i> Update
-                            </button>
-                        </div>
-                    </form>
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-3 border-t pt-4 mt-6" style="border-color: var(--border-primary);">
+                        <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center rounded-xl px-6 py-3 font-medium transition-all duration-200" style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">Batal</a>
+                        <button type="submit" class="inline-flex items-center rounded-xl bg-blue-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl">
+                            <i class="fas fa-save mr-2"></i> Update
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -251,50 +215,14 @@ select, .form-select, .form-control, input[type="text"], input[type="number"], i
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Validasi untuk field kode_limbah
-    const kodeLimbahInput = document.getElementById('kode_limbah');
-    const jenisLimbahDatalist = document.getElementById('jenis_limbah_list');
-    
-    if (kodeLimbahInput && jenisLimbahDatalist) {
-        kodeLimbahInput.addEventListener('input', function() {
-            const value = this.value;
-            const options = Array.from(jenisLimbahDatalist.options).map(option => option.value);
-            
-            // Reset custom validity
-            this.setCustomValidity('');
-            
-            if (value && !options.includes(value)) {
-                this.setCustomValidity('Pilih jenis limbah yang tersedia dari daftar');
-            }
-        });
-    }
-    
-    // Validasi untuk field detail_sumber_limbah
-    const sumberLimbahInput = document.getElementById('detail_sumber_limbah');
-    const sumberLimbahDatalist = document.getElementById('sumber_limbah_list');
-    
-    if (sumberLimbahInput && sumberLimbahDatalist) {
-        sumberLimbahInput.addEventListener('input', function() {
-            const value = this.value;
-            const options = Array.from(sumberLimbahDatalist.options).map(option => option.value);
-            
-            // Reset custom validity
-            this.setCustomValidity('');
-            
-            if (value && !options.includes(value)) {
-                this.setCustomValidity('Pilih sumber kegiatan limbah yang tersedia dari daftar');
-            }
-        });
-    }
-    
     const statusSelect = document.getElementById('status_log');
     const transportFields = document.getElementById('transport-fields');
     
     statusSelect.addEventListener('change', function() {
         if (this.value === 'Diangkut') {
-            transportFields.classList.remove('d-none');
+            transportFields.classList.remove('hidden');
         } else {
-            transportFields.classList.add('d-none');
+            transportFields.classList.add('hidden');
         }
     });
 });

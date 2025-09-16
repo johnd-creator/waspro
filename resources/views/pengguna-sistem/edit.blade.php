@@ -5,18 +5,18 @@
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200">
+    <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary); margin-bottom: 1.5rem;">
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-primary);">
             <div class="flex justify-between items-start">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Pengguna Sistem</h1>
-                    <p class="text-slate-600">Perbarui informasi pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
+                    <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Edit Pengguna Sistem</h1>
+                    <p style="color: var(--text-secondary);">Perbarui informasi pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" class="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all duration-200">
+                    <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--success-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--success-hover)'" onmouseout="this.style.background='var(--success-bg)'">
                         <i class="fas fa-eye mr-2"></i>Lihat Detail
                     </a>
-                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                    <a href="{{ route('pengguna-sistem.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
@@ -26,13 +26,13 @@
 
     <!-- Form Section -->
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-            <div class="px-8 py-6 border-b border-slate-200">
-                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+        <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary);">
+            <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-primary);">
+                <h6 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center;">
                     <i class="fas fa-user-edit mr-2"></i>Form Edit Pengguna
                 </h6>
             </div>
-            <div class="px-8 py-6">
+            <div style="padding: 1.5rem 2rem;">
                     <form action="{{ route('pengguna-sistem.update', $penggunaSistem) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -40,28 +40,30 @@
                         <!-- Informasi Dasar -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <h6 style="color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
                                     <i class="fas fa-user me-2"></i>Informasi Dasar
                                 </h6>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="nama_lengkap" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                                <label for="nama_lengkap" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Nama Lengkap <span style="color: var(--danger-primary);">*</span></label>
                                 <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" 
                                        id="nama_lengkap" name="nama_lengkap" 
                                        value="{{ old('nama_lengkap', $penggunaSistem->nama_lengkap) }}" 
-                                       placeholder="Masukkan nama lengkap" required>
+                                       placeholder="Masukkan nama lengkap" required
+                                       style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 @error('nama_lengkap')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="email_address" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <label for="email_address" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Email Address <span style="color: var(--danger-primary);">*</span></label>
                                 <input type="email" class="form-control @error('email_address') is-invalid @enderror" 
                                        id="email_address" name="email_address" 
                                        value="{{ old('email_address', $penggunaSistem->email_address) }}" 
-                                       placeholder="contoh@email.com" required>
+                                       placeholder="contoh@email.com" required
+                                       style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 @error('email_address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -71,34 +73,38 @@
                         <!-- Keamanan -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <h6 style="color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
                                     <i class="fas fa-lock me-2"></i>Keamanan
-                                    <small class="text-muted">(Kosongkan jika tidak ingin mengubah kata sandi)</small>
+                                    <small style="color: var(--text-secondary);">(Kosongkan jika tidak ingin mengubah kata sandi)</small>
                                 </h6>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="kata_sandi" class="form-label">Kata Sandi Baru</label>
+                                <label for="kata_sandi" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Kata Sandi Baru</label>
                                 <div class="input-group">
                                     <input type="password" class="form-control @error('kata_sandi') is-invalid @enderror" 
-                                           id="kata_sandi" name="kata_sandi" placeholder="Minimal 8 karakter">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi')">
+                                           id="kata_sandi" name="kata_sandi" placeholder="Minimal 8 karakter"
+                                           style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem 0 0 0.5rem; padding: 0.75rem;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi')"
+                                            style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0 0.5rem 0.5rem 0;">
                                         <i class="fas fa-eye" id="kata_sandi-icon"></i>
                                     </button>
                                     @error('kata_sandi')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <small class="text-muted">Kosongkan jika tidak ingin mengubah kata sandi</small>
+                                <small style="color: var(--text-secondary);">Kosongkan jika tidak ingin mengubah kata sandi</small>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="kata_sandi_confirmation" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                                <label for="kata_sandi_confirmation" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Konfirmasi Kata Sandi Baru</label>
                                 <div class="input-group">
                                     <input type="password" class="form-control @error('kata_sandi_confirmation') is-invalid @enderror" 
                                            id="kata_sandi_confirmation" name="kata_sandi_confirmation" 
-                                           placeholder="Ulangi kata sandi baru">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi_confirmation')">
+                                           placeholder="Ulangi kata sandi baru"
+                                           style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem 0 0 0.5rem; padding: 0.75rem;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi_confirmation')"
+                                            style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0 0.5rem 0.5rem 0;">
                                         <i class="fas fa-eye" id="kata_sandi_confirmation-icon"></i>
                                     </button>
                                     @error('kata_sandi_confirmation')
@@ -111,15 +117,16 @@
                         <!-- Organisasi -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <h6 style="color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
                                     <i class="fas fa-building me-2"></i>Organisasi
                                 </h6>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="unit_id" class="form-label">Unit Pembangkit <span class="text-danger">*</span></label>
+                                <label for="unit_id" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Unit Pembangkit <span style="color: var(--danger-primary);">*</span></label>
                             <select class="form-select @error('unit_id') is-invalid @enderror"
-                                    id="unit_id" name="unit_id" required>
+                                    id="unit_id" name="unit_id" required
+                                    style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 <option value="">Pilih Unit Pembangkit</option>
                                 @foreach($unitList as $unit)
                                     <option value="{{ $unit->unit_id }}"
@@ -134,34 +141,34 @@
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Peran Pengguna <span class="text-danger">*</span></label>
-                                <div class="border rounded p-3 @error('peran_ids') border-danger @enderror">
+                                <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Peran Pengguna <span style="color: var(--danger-primary);">*</span></label>
+                                <div style="border: 1px solid var(--border-primary); border-radius: 0.5rem; padding: 0.75rem; background: var(--input-bg);" class="@error('peran_ids') border-danger @enderror">
                                     @foreach($peranList as $peran)
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" 
                                                    id="peran_{{ $peran->peran_id }}" 
                                                    name="peran_ids[]" value="{{ $peran->peran_id }}"
                                                    {{ in_array($peran->peran_id, old('peran_ids', $userPeranIds)) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="peran_{{ $peran->peran_id }}">
+                                            <label class="form-check-label" for="peran_{{ $peran->peran_id }}" style="color: var(--text-primary);">
                                                 <strong>{{ $peran->nama_peran }}</strong>
                                                 @if($peran->deskripsi_peran)
-                                                    <br><small class="text-muted">{{ $peran->deskripsi_peran }}</small>
+                                                    <br><small style="color: var(--text-secondary);">{{ $peran->deskripsi_peran }}</small>
                                                 @endif
                                             </label>
                                         </div>
                                     @endforeach
                                 </div>
                                 @error('peran_ids')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    <div style="color: var(--danger-primary); font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
                                 @enderror
-                                <small class="text-muted">Pilih minimal satu peran</small>
+                                <small style="color: var(--text-secondary);">Pilih minimal satu peran</small>
                             </div>
                         </div>
 
                         <!-- Status -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <h6 style="color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
                                     <i class="fas fa-toggle-on me-2"></i>Status
                                 </h6>
                             </div>
@@ -171,9 +178,9 @@
                                     <input class="form-check-input" type="checkbox" id="aktif" 
                                            name="aktif" value="1" 
                                            {{ old('aktif', $penggunaSistem->aktif) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="aktif">
+                                    <label class="form-check-label" for="aktif" style="color: var(--text-primary);">
                                         <strong>Status Aktif</strong>
-                                        <br><small class="text-muted">Pengguna dapat login dan mengakses sistem</small>
+                                        <br><small style="color: var(--text-secondary);">Pengguna dapat login dan mengakses sistem</small>
                                     </label>
                                 </div>
                             </div>
@@ -182,32 +189,34 @@
                         <!-- Informasi Tambahan -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                <h6 style="color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
                                     <i class="fas fa-info-circle me-2"></i>Informasi Tambahan
                                 </h6>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Dibuat Pada</label>
+                                <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Dibuat Pada</label>
                                 <input type="text" class="form-control" 
                                        value="{{ $penggunaSistem->created_at ? $penggunaSistem->created_at->format('d/m/Y H:i') : 'N/A' }}" 
-                                       readonly>
+                                       readonly
+                                       style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0.5rem; padding: 0.75rem;">
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Terakhir Diperbarui</label>
+                                <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Terakhir Diperbarui</label>
                                 <input type="text" class="form-control" 
                                        value="{{ $penggunaSistem->updated_at ? $penggunaSistem->updated_at->format('d/m/Y H:i') : 'N/A' }}" 
-                                       readonly>
+                                       readonly
+                                       style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0.5rem; padding: 0.75rem;">
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                            <a href="{{ route('pengguna-sistem.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
                                 <i class="fas fa-times mr-2"></i>Batal
                             </a>
-                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
                                 <i class="fas fa-save mr-2"></i>Perbarui Pengguna
                             </button>
                         </div>
@@ -224,12 +233,12 @@
 }
 
 .form-check-input:checked {
-    background-color: #4e73df;
-    border-color: #4e73df;
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
 }
 
 .border-bottom {
-    border-bottom: 2px solid #e3e6f0 !important;
+    border-bottom: 2px solid var(--border-secondary) !important;
 }
 
 .input-group .btn {
@@ -245,7 +254,7 @@
 }
 
 .form-control[readonly] {
-    background-color: #f8f9fc;
+    background-color: var(--secondary-bg-light);
     opacity: 1;
 }
 </style>

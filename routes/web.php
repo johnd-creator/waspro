@@ -119,7 +119,6 @@ Route::middleware('auth')->group(function () {
     // Expiry Report Management
     Route::middleware('unit.access')->prefix('expiry-reports')->name('expiry-reports.')->group(function () {
         Route::get('/', [App\Http\Controllers\ExpiryReportController::class, 'index'])->name('index');
-        Route::get('/dashboard', [App\Http\Controllers\ExpiryReportController::class, 'dashboard'])->name('dashboard');
         Route::get('/export', [App\Http\Controllers\ExpiryReportController::class, 'export'])->name('export');
     });
 

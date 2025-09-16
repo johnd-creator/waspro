@@ -8,7 +8,6 @@ use App\Models\LogPenyimpananLimbah;
 use App\Models\PerusahaanPenghasil;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExpiryReportController extends Controller
@@ -18,9 +17,27 @@ class ExpiryReportController extends Controller
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
             ->where('status_log', 'Tersimpan');
 
-        // Filter by expiry status
-        if ($request->filled('expiry_status')) {
-            $query->byExpiryStatus($request->expiry_status);
+        // Tampilkan data yang akan kadaluarsa dalam 30 hari ke depan
+        if (! $request->filled('expiry_status') && ! $request->filled('date_from') && ! $request->filled('date_to')) {
+            $today = Carbon::now();
+            $thirtyDaysLater = Carbon::now()->addDays(30);
+            $query->where(function ($q) use ($today, $thirtyDaysLater) {
+                $q->whereDate('tanggal_kadaluarsa', '>=', $today)
+                    ->whereDate('tanggal_kadaluarsa', '<=', $thirtyDaysLater);
+            });
+        } else {
+            // Filter by expiry status
+            if ($request->filled('expiry_status')) {
+                $query->where('expiry_status', $request->expiry_status);
+            }
+
+            // Filter by date range (tanggal masuk limbah)
+            if ($request->filled('date_from')) {
+                $query->whereDate('tanggal_limbah_masuk', '>=', $request->date_from);
+            }
+            if ($request->filled('date_to')) {
+                $query->whereDate('tanggal_limbah_masuk', '<=', $request->date_to);
+            }
         }
 
         // Filter by jenis limbah
@@ -30,15 +47,7 @@ class ExpiryReportController extends Controller
 
         // Filter by perusahaan
         if ($request->filled('perusahaan_id')) {
-            $query->where('perusahaan_penghasil_id', $request->perusahaan_id);
-        }
-
-        // Filter by date range
-        if ($request->filled('date_from')) {
-            $query->where('tanggal_kadaluarsa', '>=', $request->date_from);
-        }
-        if ($request->filled('date_to')) {
-            $query->where('tanggal_kadaluarsa', '<=', $request->date_to);
+            $query->where('perusahaan_id', $request->perusahaan_id);
         }
 
         // Sort by expiry date
@@ -63,19 +72,23 @@ class ExpiryReportController extends Controller
 
         // Apply same filters as index
         if ($request->filled('expiry_status')) {
-            $query->byExpiryStatus($request->expiry_status);
+            $query->where('expiry_status', $request->expiry_status);
         }
+
         if ($request->filled('jenis_limbah_id')) {
             $query->where('jenis_limbah_id', $request->jenis_limbah_id);
         }
+
         if ($request->filled('perusahaan_id')) {
-            $query->where('perusahaan_penghasil_id', $request->perusahaan_id);
+            $query->where('perusahaan_id', $request->perusahaan_id);
         }
+
         if ($request->filled('date_from')) {
-            $query->where('tanggal_kadaluarsa', '>=', $request->date_from);
+            $query->whereDate('tanggal_limbah_masuk', '>=', $request->date_from);
         }
+
         if ($request->filled('date_to')) {
-            $query->where('tanggal_kadaluarsa', '<=', $request->date_to);
+            $query->whereDate('tanggal_limbah_masuk', '<=', $request->date_to);
         }
 
         $query->orderBy('tanggal_kadaluarsa', 'asc');
@@ -86,53 +99,7 @@ class ExpiryReportController extends Controller
         return Excel::download(new ExpiryReportExport($logs), $filename);
     }
 
-    public function dashboard()
-    {
-        $today = Carbon::today();
-        $nextWeek = Carbon::today()->addWeek();
-        $nextMonth = Carbon::today()->addMonth();
-
-        // Get counts for dashboard cards
-        $expiredCount = LogPenyimpananLimbah::expired()->count();
-        $criticalCount = LogPenyimpananLimbah::critical()->count();
-        $warningCount = LogPenyimpananLimbah::warning()->count();
-        $safeCount = LogPenyimpananLimbah::byExpiryStatus('Safe')->count();
-
-        // Get recent expired items
-        $recentExpired = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil'])
-            ->expired()
-            ->orderBy('tanggal_kadaluarsa', 'desc')
-            ->limit(10)
-            ->get();
-
-        // Get items expiring soon
-        $expiringSoon = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil'])
-            ->where('status_log', 'Tersimpan')
-            ->where('tanggal_kadaluarsa', '>=', $today)
-            ->where('tanggal_kadaluarsa', '<=', $nextWeek)
-            ->orderBy('tanggal_kadaluarsa', 'asc')
-            ->limit(10)
-            ->get();
-
-        // Get chart data for expiry trends
-        $chartData = $this->getExpiryChartData();
-
-        // Create statistics array for the view
-        $statistics = [
-            'expired' => $expiredCount,
-            'critical' => $criticalCount,
-            'warning' => $warningCount,
-            'safe' => $safeCount,
-            'total' => $expiredCount + $criticalCount + $warningCount + $safeCount,
-        ];
-
-        return view('expiry-reports.dashboard', compact(
-            'expiredCount', 'criticalCount', 'warningCount', 'safeCount',
-            'statistics', 'recentExpired', 'expiringSoon', 'chartData'
-        ));
-    }
-
-    private function getExpiryStatistics($request = null)
+    private function getExpiryStatistics(Request $request)
     {
         $query = LogPenyimpananLimbah::where('status_log', 'Tersimpan');
 
@@ -142,7 +109,13 @@ class ExpiryReportController extends Controller
                 $query->where('jenis_limbah_id', $request->jenis_limbah_id);
             }
             if ($request->filled('perusahaan_id')) {
-                $query->where('perusahaan_penghasil_id', $request->perusahaan_id);
+                $query->where('perusahaan_id', $request->perusahaan_id);
+            }
+            if ($request->filled('date_from')) {
+                $query->where('tanggal_kadaluarsa', '>=', $request->date_from);
+            }
+            if ($request->filled('date_to')) {
+                $query->where('tanggal_kadaluarsa', '<=', $request->date_to);
             }
         }
 
@@ -153,31 +126,5 @@ class ExpiryReportController extends Controller
             'warning' => (clone $query)->warning()->count(),
             'safe' => (clone $query)->byExpiryStatus('Safe')->count(),
         ];
-    }
-
-    private function getExpiryChartData()
-    {
-        $data = LogPenyimpananLimbah::select(
-            DB::raw('DATE(tanggal_kadaluarsa) as date'),
-            DB::raw('COUNT(*) as count'),
-            'expiry_status'
-        )
-            ->where('status_log', 'Tersimpan')
-            ->whereNotNull('tanggal_kadaluarsa')
-            ->where('tanggal_kadaluarsa', '>=', Carbon::now()->subMonth())
-            ->where('tanggal_kadaluarsa', '<=', Carbon::now()->addMonth())
-            ->groupBy('date', 'expiry_status')
-            ->orderBy('date')
-            ->get();
-
-        return $data->groupBy('date')->map(function ($items, $date) {
-            return [
-                'date' => $date,
-                'expired' => $items->where('expiry_status', 'Expired')->sum('count'),
-                'critical' => $items->where('expiry_status', 'Critical')->sum('count'),
-                'warning' => $items->where('expiry_status', 'Warning')->sum('count'),
-                'safe' => $items->where('expiry_status', 'Safe')->sum('count'),
-            ];
-        })->values();
     }
 }

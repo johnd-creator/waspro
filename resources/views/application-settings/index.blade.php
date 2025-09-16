@@ -3,15 +3,15 @@
 @section('title', 'System Settings')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen py-8" style="background-color: var(--bg-primary);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+        <div class="rounded-lg shadow-sm border mb-8" style="background-color: var(--card-bg); border-color: var(--border-primary);">
             <div class="px-6 py-4">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="mb-4 sm:mb-0">
-                        <h1 class="text-2xl font-bold text-gray-900 mb-1">System Settings</h1>
-                        <p class="text-sm text-gray-600">Kelola pengaturan sistem aplikasi dengan mudah</p>
+                        <h1 class="text-2xl font-bold mb-1" style="color: var(--text-primary);">System Settings</h1>
+                        <p class="text-sm" style="color: var(--text-secondary);">Kelola pengaturan sistem aplikasi dengan mudah</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('application-settings.clear-cache') }}" 
@@ -36,14 +36,15 @@
 
         <!-- Settings Content -->
         @if($settingsByCategory->count() > 0)
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="rounded-lg shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
                 <!-- Tab Navigation -->
-                <div class="border-b border-gray-200">
+                <div class="border-b" style="border-color: var(--border-primary);">
                     <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
                         @foreach($settingsByCategory as $category => $settings)
-                            <button class="tab-button {{ $loop->first ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200" 
+                            <button class="tab-button {{ $loop->first ? 'border-blue-500 text-blue-600' : 'border-transparent hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200" 
                                     data-tab="{{ $category }}"
-                                    type="button">
+                                    type="button"
+                                    style="{{ !$loop->first ? 'color: var(--text-secondary);' : '' }} {{ !$loop->first ? 'hover:color: var(--text-primary);' : '' }}">
                                 <div class="flex items-center">
                                     @if($category === 'general')
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +65,7 @@
                                         </svg>
                                     @endif
                                     {{ ucfirst($category) }}
-                                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--secondary-bg-light); color: var(--text-secondary);">
                                         {{ $settings->count() }}
                                     </span>
                                 </div>
@@ -79,27 +80,27 @@
                         <div class="tab-content {{ $loop->first ? '' : 'hidden' }}" id="{{ $category }}-content">
                             <div class="overflow-hidden">
                                 <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
+                                    <table class="min-w-full divide-y" style="border-color: var(--border-primary);">
+                                        <thead style="background-color: var(--border-primary);">
                                             <tr>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Key</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Value</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Type</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Description</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Status</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-secondary);">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
+                                        <tbody class="divide-y" style="background-color: var(--card-bg); border-color: var(--border-primary);">
                                             @foreach($settings as $setting)
-                                                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                                <tr class="transition-colors duration-150" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
                                                     <td class="px-6 py-4 whitespace-nowrap">
-                                                        <code class="px-2 py-1 text-sm font-mono text-blue-600 bg-blue-50 rounded">{{ $setting->key }}</code>
+                                                        <code class="px-2 py-1 text-sm font-mono rounded" style="background-color: var(--accent-bg); color: var(--accent-primary);">{{ $setting->key }}</code>
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <div class="max-w-xs truncate" title="{{ $setting->value }}">
                                                             @if($setting->type === 'boolean')
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $setting->value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: {{ $setting->value ? 'var(--success-bg)' : 'var(--danger-bg)' }}; color: {{ $setting->value ? 'var(--success-primary)' : 'var(--danger-primary)' }};">
                                                                     @if($setting->value)
                                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -113,37 +114,37 @@
                                                                     @endif
                                                                 </span>
                                                             @elseif($setting->type === 'json')
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--secondary-bg-light); color: var(--text-secondary);">
                                                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                                                     </svg>
                                                                     JSON Object
                                                                 </span>
                                                             @else
-                                                                <span class="text-sm text-gray-900">{{ $setting->value }}</span>
+                                                                <span class="text-sm" style="color: var(--text-primary);">{{ $setting->value }}</span>
                                                             @endif
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
-                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--accent-bg); color: var(--accent-primary);">
                                                             {{ $setting->type }}
                                                         </span>
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <div class="max-w-xs truncate text-sm text-gray-500" title="{{ $setting->description }}">
+                                                        <div class="max-w-xs truncate text-sm" style="color: var(--text-secondary);" title="{{ $setting->description }}">
                                                             {{ $setting->description ?: '-' }}
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         @if($setting->is_active)
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--success-bg); color: var(--success-primary);">
                                                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                                                 </svg>
                                                                 Aktif
                                                             </span>
                                                         @else
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
                                                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                                                                 </svg>

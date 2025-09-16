@@ -39,14 +39,14 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-8 py-6" style="border-color: var(--border-primary);">
             <div>
-                <h1 class="text-2xl font-bold text-slate-800 mb-2">Tambah Log Penyimpanan Limbah</h1>
-                <p class="text-slate-600">Tambahkan data penyimpanan limbah baru ke sistem</p>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Tambah Log Penyimpanan Limbah</h1>
+                <p style="color: var(--text-secondary);">Tambahkan data penyimpanan limbah baru ke sistem</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center rounded-xl bg-slate-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:bg-slate-700 hover:shadow-xl">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali
                 </a>
             </div>
@@ -59,8 +59,8 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 1: Tanggal dan Jenis Limbah -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="tanggal_limbah_masuk" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-red-500">*</span></label>
-                                    <input type="date" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('tanggal_limbah_masuk') border-red-500 @enderror" 
+                                    <label for="tanggal_limbah_masuk" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Tanggal Limbah Masuk <span class="text-red-500">*</span></label>
+                                    <input type="date" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tanggal_limbah_masuk') border-red-500 @enderror" 
                                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="tanggal_limbah_masuk" name="tanggal_limbah_masuk" 
                                            value="{{ old('tanggal_limbah_masuk', date('Y-m-d')) }}" required>
@@ -70,9 +70,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                                 </div>
                                 
                                 <div>
-                                    <label for="kode_limbah" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Jenis Limbah <span class="text-red-500">*</span></label>
+                                    <label for="kode_limbah" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jenis Limbah <span class="text-red-500">*</span></label>
                                     <input type="text" 
-                                           class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('kode_limbah') border-red-500 @enderror" 
+                                           class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('kode_limbah') border-red-500 @enderror" 
                                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="kode_limbah" 
                                            name="kode_limbah" 
@@ -99,8 +99,8 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 2: Jumlah Limbah -->
                             <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label for="jumlah_limbah_masuk" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-red-500">*</span></label>
-                                    <input type="number" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('jumlah_limbah_masuk') border-red-500 @enderror" 
+                                    <label for="jumlah_limbah_masuk" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jumlah Limbah Masuk (Kg) <span class="text-red-500">*</span></label>
+                                    <input type="number" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jumlah_limbah_masuk') border-red-500 @enderror" 
                                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="jumlah_limbah_masuk" name="jumlah_limbah_masuk" 
                                            value="{{ old('jumlah_limbah_masuk') }}" step="0.01" min="0.01" required>
@@ -113,9 +113,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             <!-- Row 3: Perusahaan Penghasil -->
                             <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label for="perusahaan_nama" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
+                                    <label for="perusahaan_nama" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Perusahaan/Vendor Penghasil Limbah</label>
                                     <input type="text" 
-                                           class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('perusahaan_nama') border-red-500 @enderror" 
+                                           class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('perusahaan_nama') border-red-500 @enderror" 
                                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                            id="perusahaan_nama" 
                                            name="perusahaan_nama" 
@@ -139,9 +139,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
 
                             <!-- Row 4: Detail Sumber Limbah -->
                             <div class="mt-6">
-                                <label for="detail_sumber_limbah" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-red-500">*</span></label>
+                                <label for="detail_sumber_limbah" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Sumber Kegiatan Limbah <span class="text-red-500">*</span></label>
                                 <input type="text" 
-                                       class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('detail_sumber_limbah') border-red-500 @enderror" 
+                                       class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('detail_sumber_limbah') border-red-500 @enderror" 
                                        style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
                                        id="detail_sumber_limbah" 
                                        name="detail_sumber_limbah" 
@@ -163,9 +163,9 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
-                                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">Batal</a>
-                                <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <div class="flex justify-end gap-3 border-t pt-4" style="border-color: var(--border-primary);">
+                                <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center rounded-xl px-6 py-3 font-medium text-white transition-all duration-200" style="background-color: var(--text-secondary);">Batal</a>
+                                <button type="submit" class="inline-flex items-center rounded-xl bg-blue-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl">
                                     <i class="fas fa-save mr-2"></i> Simpan
                                 </button>
                             </div>
