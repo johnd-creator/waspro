@@ -25,34 +25,9 @@ class PenggunaSistemController extends Controller
             $query->where('unit_id', $currentUser->unit_id);
         }
 
-        // Filter berdasarkan pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_lengkap', 'like', "%{$search}%")
-                    ->orWhere('email_address', 'like', "%{$search}%")
-                    ->orWhereHas('unitPembangkit', function ($cb) use ($search) {
-                        $cb->where('nama_unit', 'like', "%{$search}%");
-                    });
-            });
-        }
+        $users = $query->orderBy('nama_lengkap')->paginate(10);
 
-        // Filter berdasarkan unit
-        if ($request->filled('unit_id')) {
-            $query->where('unit_id', $request->unit_id);
-        }
-
-        // Filter berdasarkan status
-        if ($request->filled('status')) {
-            $query->where('aktif', $request->status);
-        }
-
-        $users = $query->orderBy('nama_lengkap')->paginate(15);
-
-        // Data untuk filter
-        $unitList = UnitPembangkit::orderBy('nama_unit')->get();
-
-        return view('pengguna-sistem.index', compact('users', 'unitList'));
+        return view('pengguna-sistem.index', compact('users'));
     }
 
     /**

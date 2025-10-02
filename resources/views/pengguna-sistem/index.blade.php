@@ -1,252 +1,167 @@
 @extends('layouts.app')
 
-@section('title', 'Pengelolaan Pengguna Sistem')
-
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
+    @if(session('success'))
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span>{{ session('success') }}</span>
+            <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Pengguna Sistem</h1>
-                    <p class="text-slate-600">Kelola pengguna sistem berdasarkan unit pembangkit</p>
-                </div>
-                <a href="{{ route('pengguna-sistem.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2"></i> Tambah Pengguna
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Pengguna Sistem</h1>
+                <p style="color: var(--text-secondary);">Kelola dan pantau data pengguna sistem</p>
+            </div>
+            <div>
+                <a href="{{ route('pengguna-sistem.create') }}" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    <span>Tambah Pengguna</span>
                 </a>
             </div>
         </div>
-    </div>
-
-
-
-    <!-- Filter Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6">
-            <form method="GET" action="{{ route('pengguna-sistem.index') }}" class="row g-3">
-                <div class="col-md-4">
-                    <label for="search" class="form-label">Pencarian</label>
-                    <input type="text" class="form-control" id="search" name="search" 
-                           value="{{ request('search') }}" placeholder="Nama, email, atau unit...">
-                </div>
-                <div class="col-md-3">
-                    <label for="unit_id" class="form-label">Unit Pembangkit</label>
-                    <select class="form-select" id="unit_id" name="unit_id">
-                        <option value="">Semua Unit</option>
-                        @foreach($unitList as $unit)
-                            <option value="{{ $unit->unit_id }}"
-                                    {{ request('unit_id') == $unit->unit_id ? 'selected' : '' }}>
-                                {{ $unit->nama_unit }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">Semua Status</option>
-                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
-                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">&nbsp;</label>
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-outline-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <a href="{{ route('pengguna-sistem.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-            </form>
+        <div class="px-6 py-6">
+            <p style="color: var(--text-secondary);">Daftar pengguna sistem yang terdaftar dalam aplikasi</p>
         </div>
     </div>
 
-    <!-- Users Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-        <div class="px-8 py-6 border-b border-slate-200">
-            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
-                <i class="fas fa-users mr-2"></i>Daftar Pengguna Sistem
-                <span class="ml-2 px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full">{{ $users->total() }} pengguna</span>
-            </h6>
-        </div>
-        <div class="px-8 py-6">
-            @if($users->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Lengkap</th>
-                                <th>Email</th>
-                                <th>Unit Pembangkit</th>
-                                <th>Peran</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($users as $index => $user)
-                                <tr>
-                                    <td>{{ $users->firstItem() + $index }}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm me-3">
-                                                <div class="avatar-title bg-primary text-white rounded-circle">
-                                                    {{ strtoupper(substr($user->nama_lengkap, 0, 1)) }}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-0">{{ $user->nama_lengkap }}</h6>
-                                                <small class="text-muted">ID: {{ $user->user_id }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ $user->email_address }}</td>
-                                    <td>
-                                        <span class="badge bg-info text-dark">
-                                            {{ $user->unitPembangkit->nama_unit ?? 'N/A' }}
+    <!-- Tabel Pengguna Sistem -->
+    <div class="overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="overflow-x-auto">
+            <table class="min-w-full w-full">
+                <thead style="background-color: var(--border-primary);">
+                    <tr>
+                        <th class="w-16 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">No</th>
+                        <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Lengkap</th>
+                        <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Email</th>
+                        <th class="min-w-[180px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Unit Pembangkit</th>
+                        <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Peran</th>
+                        <th class="min-w-[100px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
+                        <th class="min-w-[160px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y" style="border-color: var(--border-primary);">
+                    @forelse($users as $index => $user)
+                        <tr class="transition-colors duration-200 border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                            <td class="px-4 py-4 text-center text-sm font-medium" style="color: var(--text-secondary);">
+                                {{ $users->firstItem() + $index }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background-color: var(--accent-bg);">
+                                        <span class="font-semibold text-sm" style="color: var(--accent-primary);">
+                                            {{ strtoupper(substr($user->nama_lengkap, 0, 1)) }}
                                         </span>
-                                    </td>
-                                    <td>
-                                        @foreach($user->peranPengguna as $peran)
-                                            <span class="badge bg-secondary me-1">{{ $peran->nama_peran }}</span>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @if($user->aktif)
-                                            <span class="badge bg-success">
-                                                <i class="fas fa-check-circle me-1"></i>Aktif
-                                            </span>
-                                        @else
-                                            <span class="badge bg-danger">
-                                                <i class="fas fa-times-circle me-1"></i>Nonaktif
-                                            </span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold" style="color: var(--text-primary);">{{ $user->nama_lengkap }}</div>
+                                        @if($user->username)
+                                            <div class="mt-1 text-xs" style="color: var(--text-tertiary);">
+                                                <i class="fas fa-user mr-1"></i> {{ $user->username }}
+                                            </div>
                                         @endif
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('pengguna-sistem.show', $user) }}" 
-                                               class="btn btn-sm btn-info" title="Lihat Detail">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('pengguna-sistem.edit', $user) }}" 
-                                               class="btn btn-sm btn-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('pengguna-sistem.toggle-status', $user) }}" 
-                                                  method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" 
-                                                        class="btn btn-sm {{ $user->aktif ? 'btn-secondary' : 'btn-success' }}" 
-                                                        title="{{ $user->aktif ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                                    <i class="fas {{ $user->aktif ? 'fa-ban' : 'fa-check' }}"></i>
-                                                </button>
-                                            </form>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete('{{ $user->user_id }}', '{{ $user->nama_lengkap }}')"
-                                                    title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="text-muted">
-                        Menampilkan {{ $users->firstItem() }} sampai {{ $users->lastItem() }} 
-                        dari {{ $users->total() }} pengguna
-                    </div>
-                    {{ $users->links() }}
-                </div>
-            @else
-                <div class="text-center py-5">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Tidak ada pengguna ditemukan</h5>
-                    <p class="text-muted">Silakan tambah pengguna baru atau ubah filter pencarian.</p>
-                    <a href="{{ route('pengguna-sistem.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Tambah Pengguna Pertama
-                    </a>
-                </div>
-            @endif
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm" style="color: var(--text-secondary);">
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope mr-2" style="color: var(--text-tertiary);"></i>
+                                    {{ $user->email }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium" style="color: var(--text-primary);">
+                                @if($user->unitPembangkit)
+                                    <div class="flex items-center">
+                                        <i class="fas fa-building mr-2" style="color: var(--text-tertiary);"></i>
+                                        {{ $user->unitPembangkit->nama_unit }}
+                                    </div>
+                                @else
+                                    <span style="color: var(--text-tertiary);">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($user->peranPengguna && $user->peranPengguna->count() > 0)
+                                    @foreach($user->peranPengguna as $peran)
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium mb-1 mr-1" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                            {{ $peran->nama_peran }}
+                                        </span>
+                                    @endforeach
+                                @else
+                                    <span style="color: var(--text-tertiary);">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($user->status_aktif)
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-1">
+                                    <a href="{{ route('pengguna-sistem.show', $user) }}"
+                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                       style="color: var(--accent-primary); background-color: var(--accent-bg);"
+                                       onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';"
+                                       onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';"
+                                       title="Lihat Detail ({{ $user->nama_lengkap }})"
+                                       target="_self">
+                                        <i class="fas fa-eye text-sm"></i>
+                                    </a>
+                                    <a href="{{ route('pengguna-sistem.edit', $user) }}"
+                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                       style="color: var(--accent-secondary); background-color: var(--accent-bg-secondary);"
+                                       onmouseover="this.style.backgroundColor='var(--accent-secondary)'; this.style.color='white';"
+                                       onmouseout="this.style.backgroundColor='var(--accent-bg-secondary)'; this.style.color='var(--accent-secondary)';"
+                                       title="Edit ({{ $user->nama_lengkap }})">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </a>
+                                    <form action="{{ route('pengguna-sistem.destroy', $user) }}"
+                                          method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                                style="color: var(--danger-primary); background-color: var(--danger-bg);"
+                                                onmouseover="this.style.backgroundColor='var(--danger-primary)'; this.style.color='white';"
+                                                onmouseout="this.style.backgroundColor='var(--danger-bg)'; this.style.color='var(--danger-primary)';"
+                                                title="Hapus ({{ $user->nama_lengkap }})"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center" style="color: var(--text-tertiary);">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i class="fas fa-folder-open text-4xl mb-3 opacity-50"></i>
+                                    <p class="text-lg font-medium mb-1">Belum ada data pengguna</p>
+                                    <p class="text-sm">Silakan tambahkan pengguna baru</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+        
+        @if($users->hasPages())
+            <div class="border-t px-6 py-4" style="border-color: var(--border-primary);">
+                {{ $users->links() }}
+            </div>
+        @endif
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus pengguna <strong id="userName"></strong>?</p>
-                <p class="text-danger"><small>Tindakan ini tidak dapat dibatalkan.</small></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form id="deleteForm" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.avatar-sm {
-    width: 40px;
-    height: 40px;
-}
-
-.avatar-title {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #5a5c69;
-}
-
-.btn-group .btn {
-    border-radius: 0.25rem;
-    margin-right: 2px;
-}
-
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-    border: none;
-}
-
-.badge {
-    font-size: 0.75em;
-}
-</style>
-
-<script>
-function confirmDelete(userId, userName) {
-    document.getElementById('userName').textContent = userName;
-    document.getElementById('deleteForm').action = `/pengguna-sistem/${userId}`;
-    document.getElementById('deleteModal').classList.remove('hidden');
-}
-</script>
 @endsection

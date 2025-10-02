@@ -1,149 +1,139 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
+    @if(session('success'))
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span>{{ session('success') }}</span>
+            <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Manajemen Peran Pengguna</h1>
-                    <p class="text-slate-600">Kelola peran dan hak akses pengguna sistem</p>
-                </div>
-                <div>
-                    <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <i class="fas fa-plus mr-2"></i>Tambah Peran
-                    </a>
-                </div>
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Peran Pengguna</h1>
+                <p style="color: var(--text-secondary);">Kelola dan pantau peran pengguna sistem</p>
+            </div>
+            <div>
+                <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5" style="background-color: var(--accent-primary);">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    <span>Tambah Peran</span>
+                </a>
             </div>
         </div>
-    </div>
-
-    <!-- Filter Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6">
-                    <!-- Search and Filter Form -->
-                    <form method="GET" action="{{ route('peran-pengguna.index') }}" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="search" class="form-control" 
-                                           placeholder="Cari nama peran atau deskripsi..." 
-                                           value="{{ request('search') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="status" class="form-control">
-                                        <option value="">Semua Status</option>
-                                        <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
-                                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn btn-info mr-2">
-                                    <i class="fas fa-search"></i> Cari
-                                </button>
-                                <a href="{{ route('peran-pengguna.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-times"></i> Reset
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+        <div class="px-6 py-6">
+            <p style="color: var(--text-secondary);">Daftar peran pengguna yang terdaftar dalam sistem</p>
         </div>
     </div>
 
-    <!-- Success/Error Messages -->
-    <x-session-messages />
-
-    <!-- Table Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-        <div class="px-8 py-6 border-b border-slate-200">
-            <h6 class="text-lg font-semibold text-slate-900 flex items-center">
-                <i class="fas fa-list mr-2"></i>Daftar Peran Pengguna
-                <span class="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">{{ $peranPengguna->count() }}</span>
-            </h6>
+    <!-- Tabel Peran Pengguna -->
+    <div class="overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="overflow-x-auto">
+            <table class="min-w-full w-full">
+                <thead style="background-color: var(--border-primary);">
+                    <tr>
+                        <th class="w-16 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">No</th>
+                        <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Peran</th>
+                        <th class="min-w-[300px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Deskripsi</th>
+                        <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
+                        <th class="min-w-[160px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y" style="border-color: var(--border-primary);">
+                    @forelse($peranPengguna as $index => $peran)
+                        <tr class="transition-colors duration-200 border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                            <td class="px-4 py-4 text-center text-sm font-medium" style="color: var(--text-secondary);">
+                                {{ $peranPengguna->firstItem() + $index }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background-color: var(--accent-bg);">
+                                        <i class="fas fa-user-tag" style="color: var(--accent-primary);"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold" style="color: var(--text-primary);">{{ $peran->nama_peran }}</div>
+                                        <div class="mt-1 text-xs" style="color: var(--text-tertiary);">
+                                            ID: {{ $peran->peran_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm" style="color: var(--text-secondary);">
+                                <div class="max-w-md">
+                                    {{ $peran->deskripsi ?? '-' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($peran->is_active)
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-1">
+                                    <a href="{{ route('peran-pengguna.show', $peran->peran_id) }}"
+                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                       style="color: var(--accent-primary); background-color: var(--accent-bg);"
+                                       onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';"
+                                       onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';"
+                                       title="Lihat Detail ({{ $peran->nama_peran }})"
+                                       target="_self">
+                                        <i class="fas fa-eye text-sm"></i>
+                                    </a>
+                                    <a href="{{ route('peran-pengguna.edit', $peran->peran_id) }}"
+                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                       style="color: var(--accent-secondary); background-color: var(--accent-bg-secondary);"
+                                       onmouseover="this.style.backgroundColor='var(--accent-secondary)'; this.style.color='white';"
+                                       onmouseout="this.style.backgroundColor='var(--accent-bg-secondary)'; this.style.color='var(--accent-secondary)';"
+                                       title="Edit ({{ $peran->nama_peran }})">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </a>
+                                    <form action="{{ route('peran-pengguna.destroy', $peran->peran_id) }}"
+                                          method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                                style="color: var(--danger-primary); background-color: var(--danger-bg);"
+                                                onmouseover="this.style.backgroundColor='var(--danger-primary)'; this.style.color='white';"
+                                                onmouseout="this.style.backgroundColor='var(--danger-bg)'; this.style.color='var(--danger-primary)';"
+                                                title="Hapus ({{ $peran->nama_peran }})"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus peran ini?')">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center" style="color: var(--text-tertiary);">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i class="fas fa-folder-open text-4xl mb-3 opacity-50"></i>
+                                    <p class="text-lg font-medium mb-1">Belum ada data peran pengguna</p>
+                                    <p class="text-sm">Silakan tambahkan peran pengguna baru</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-        <div class="px-8 py-6">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-slate-200">
-                            <thead>
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th>Nama Peran</th>
-                                    <th>Deskripsi</th>
-                                    <th width="10%">Status</th>
-                                    <th width="15%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($peranPengguna as $index => $peran)
-                                    <tr>
-                                        <td>{{ $peranPengguna->firstItem() + $index }}</td>
-                                        <td>{{ $peran->nama_peran }}</td>
-                                        <td>{{ $peran->deskripsi ?? '-' }}</td>
-                                        <td>
-                                            @if($peran->is_active)
-                                                <span class="badge badge-success">Aktif</span>
-                                            @else
-                                                <span class="badge badge-danger">Tidak Aktif</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('peran-pengguna.show', $peran->peran_id) }}" 
-                                                   class="btn btn-info btn-sm" title="Lihat">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('peran-pengguna.edit', $peran->peran_id) }}" 
-                                                   class="btn btn-warning btn-sm" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('peran-pengguna.toggle-status', $peran->peran_id) }}" 
-                                                      method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" 
-                                                            class="btn btn-{{ $peran->is_active ? 'secondary' : 'success' }} btn-sm" 
-                                                            title="{{ $peran->is_active ? 'Nonaktifkan' : 'Aktifkan' }}"
-                                                            onclick="return handleDeleteConfirm(event, 'Apakah Anda yakin ingin @if($peran->is_active) menonaktifkan @else mengaktifkan @endif peran ini?')">
-                                                        <i class="fas fa-{{ $peran->is_active ? 'times' : 'check' }}"></i>
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('peran-pengguna.destroy', $peran->peran_id) }}" 
-                                                      method="POST" style="display: inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" 
-                                                            title="Hapus"
-                                                            onclick="return handleDeleteConfirm(event, 'Apakah Anda yakin ingin menghapus peran ini?')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">Tidak ada data peran pengguna</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex justify-between items-center mt-6">
-                        <div class="text-sm text-slate-600">
-                            Menampilkan {{ $peranPengguna->firstItem() ?? 0 }} sampai {{ $peranPengguna->lastItem() ?? 0 }} 
-                            dari {{ $peranPengguna->total() }} data
-                        </div>
-                        <div>
-                            {{ $peranPengguna->appends(request()->query())->links() }}
-                        </div>
-                    </div>
-        </div>
+        
+        @if($peranPengguna->hasPages())
+            <div class="border-t px-6 py-4" style="border-color: var(--border-primary);">
+                {{ $peranPengguna->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

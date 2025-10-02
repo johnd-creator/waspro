@@ -3,177 +3,150 @@
 @section('title', 'Laporan Unit Pembangkit')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Laporan Unit Pembangkit</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('reports.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-6 py-5" style="border-color: var(--border-primary);">
+            <h3 class="text-xl font-semibold" style="color: var(--text-primary);">Laporan Unit Pembangkit</h3>
+            <a href="{{ route('reports.index') }}" class="inline-flex items-center gap-2 rounded-lg px-3 py-2" style="background-color: var(--border-primary); color: var(--text-secondary);">
+                <i class="fas fa-arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+        </div>
+        <div class="p-6">
+            <!-- Filter Form -->
+            <form method="GET" action="{{ route('reports.unit') }}" class="mb-6">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    <div>
+                        <label for="unit_id" class="mb-1 block text-sm font-medium" style="color: var(--text-secondary);">Unit Pembangkit</label>
+                        <select name="unit_id" id="unit_id" class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                            <option value="">Semua Unit</option>
+                            @foreach($units as $unit)
+                                <option value="{{ $unit->unit_id }}" {{ request('unit_id') == $unit->unit_id ? 'selected' : '' }}>
+                                    {{ $unit->nama_unit }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date_from" class="mb-1 block text-sm font-medium" style="color: var(--text-secondary);">Dari Tanggal</label>
+                        <input type="date" name="date_from" id="date_from" class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" value="{{ request('date_from') }}">
+                    </div>
+                    <div>
+                        <label for="date_to" class="mb-1 block text-sm font-medium" style="color: var(--text-secondary);">Sampai Tanggal</label>
+                        <input type="date" name="date_to" id="date_to" class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" value="{{ request('date_to') }}">
+                    </div>
+                    <div class="flex md:items-end">
+                        <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white shadow-sm hover:bg-blue-700">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
                     </div>
                 </div>
-                <div class="card-body">
-                    <!-- Filter Form -->
-                    <form method="GET" action="{{ route('reports.unit') }}" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="unit_id" class="form-label">Unit Pembangkit</label>
-                                <select name="unit_id" id="unit_id" class="form-control">
-                                    <option value="">Semua Unit</option>
-                                    @foreach($units as $unit)
-                                        <option value="{{ $unit->unit_id }}" 
-                                                {{ request('unit_id') == $unit->unit_id ? 'selected' : '' }}>
-                                            {{ $unit->nama_unit }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="date_from" class="form-label">Dari Tanggal</label>
-                                <input type="date" name="date_from" id="date_from" class="form-control" 
-                                       value="{{ request('date_from') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="date_to" class="form-label">Sampai Tanggal</label>
-                                <input type="date" name="date_to" id="date_to" class="form-control" 
-                                       value="{{ request('date_to') }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">&nbsp;</label>
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+            </form>
 
-                    @if(isset($data))
-                    <!-- Export Buttons -->
-                    <div class="mb-3">
-                        <div class="btn-group" role="group">
-                            <a href="{{ route('reports.unit.export', ['format' => 'pdf']) }}?{{ http_build_query(request()->all()) }}" 
-                               class="btn btn-danger">
-                                <i class="fas fa-file-pdf"></i> Export PDF
-                            </a>
-                            <a href="{{ route('reports.unit.export', ['format' => 'excel']) }}?{{ http_build_query(request()->all()) }}" 
-                               class="btn btn-success">
-                                <i class="fas fa-file-excel"></i> Export Excel
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Summary by Unit -->
-                    @if(isset($data['unitSummary']) && count($data['unitSummary']) > 0)
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title">Ringkasan per Unit Pembangkit</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Unit Pembangkit</th>
-                                                    <th>Total Log</th>
-                                                    <th>Total Berat (Ton)</th>
-                                                    <th>Tersimpan</th>
-                                                    <th>Diangkut</th>
-                                                    <th>Jenis Limbah Terbanyak</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($data['unitSummary'] as $summary)
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{ $summary->nama_unit }}</strong>
-                                                    </td>
-                                                    <td>{{ $summary->total_logs }}</td>
-                                                    <td>{{ number_format($summary->total_weight, 2) }}</td>
-                                                    <td>{{ $summary->stored_count }}</td>
-                                                    <td>{{ $summary->transported_count }}</td>
-                                                    <td>
-                                                        <small class="text-muted">{{ $summary->top_waste_type ?? '-' }}</small>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Data Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Unit Pembangkit</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Jenis Limbah</th>
-                                    <th>Kode Limbah</th>
-                                    <th>Perusahaan</th>
-                                    <th>Jumlah (Kg)</th>
-                                    <th>Status</th>
-                                    <th>Tanggal Pengangkutan</th>
-                                    <th>Sumber Limbah</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data['logs'] as $index => $log)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>
-                                        <strong class="text-info">{{ $log->unitPembangkit->nama_unit ?? 'Unknown' }}</strong>
-                                    </td>
-                                    <td>{{ $log->tanggal_limbah_masuk }}</td>
-                                    <td>{{ $log->jenisLimbah->nama_limbah ?? 'Unknown' }}</td>
-                                    <td>{{ $log->kode_limbah }}</td>
-                                    <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'Internal' }}</td>
-                                    <td>{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $log->status_log === 'DIANGKUT' ? 'success' : 'warning' }}">
-                                            {{ $log->status_log }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $log->tanggal_pengangkutan ?: '-' }}</td>
-                                    <td>
-                                        <small class="text-muted">{{ Str::limit($log->detail_sumber_limbah, 50) }}</small>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="10" class="text-center">Tidak ada data untuk filter yang dipilih</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if(method_exists($data['logs'], 'links'))
-                        <div class="flex justify-center mt-6">
-                            {{ $data['logs']->appends(request()->query())->links() }}
-                        </div>
-                    @endif
-                    @else
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Silakan pilih filter untuk menampilkan laporan.
-                    </div>
-                    @endif
-                </div>
+            @php $hasData = isset($logs) && count($logs) > 0; @endphp
+            @if($hasData)
+            <!-- Export Buttons -->
+            <div class="mb-4 flex items-center gap-2">
+                <a href="{{ route('reports.unit.export', array_merge(request()->all(), ['format' => 'pdf'])) }}" class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-white hover:bg-red-700">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="{{ route('reports.unit.export', array_merge(request()->all(), ['format' => 'excel'])) }}" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-white hover:bg-emerald-700">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
             </div>
+            @endif
         </div>
     </div>
+
+    @if($hasData)
+    <!-- Summary by Unit -->
+    @if(isset($unitStats) && count($unitStats) > 0)
+    <div class="mb-6 overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="border-b px-4 py-3" style="background-color: var(--border-primary); border-color: var(--border-primary);">
+            <h5 class="text-sm font-semibold" style="color: var(--text-primary);">Ringkasan per Unit</h5>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full w-full">
+                <thead style="background-color: var(--card-secondary-bg);">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Unit</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Total Log</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Total Berat (Kg)</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Efisiensi (%)</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Rata-rata Hari Penyimpanan</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Tersimpan</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Diangkut</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Jenis Limbah Terbanyak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($unitStats as $stats)
+                    <tr class="border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td class="px-4 py-3 text-sm font-medium" style="color: var(--text-primary);">{{ $stats['nama_unit'] }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $stats['total_logs'] }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ number_format($stats['total_quantity'], 2) }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ number_format($stats['efficiency_rate'], 2) }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ number_format($stats['avg_storage_days'], 1) }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $stats['status_breakdown']['Tersimpan'] ?? 0 }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $stats['status_breakdown']['Diangkut'] ?? 0 }}</td>
+                        <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">@php $top = $stats['waste_types']->first(); @endphp {{ $top['nama_limbah'] ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
+    <!-- Data Table -->
+    <div class="mt-2 overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <table class="min-w-full w-full">
+            <thead style="background-color: var(--border-primary);">
+                <tr>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">No</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Unit</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Tanggal Masuk</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Jenis Limbah</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Kode Limbah</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Jumlah (Kg)</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Status</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Tanggal Pengangkutan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($logs as $index => $log)
+                <tr class="border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $index + 1 }}</td>
+                    <td class="px-4 py-3 text-sm font-medium" style="color: var(--text-primary);">{{ $log->unitPembangkit->nama_unit ?? '-' }}</td>
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->jenisLimbah->nama_limbah ?? 'Unknown' }}</td>
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->kode_limbah }}</td>
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-primary);">{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
+                    <td class="px-4 py-3">
+                        @php $isTransported = strtoupper($log->status_log) === 'DIANGKUT'; @endphp
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" style="{{ $isTransported ? 'background-color: var(--accent-bg-secondary); color: var(--accent-secondary);' : 'background-color: var(--danger-bg); color: var(--danger-primary);' }}">
+                            {{ $log->status_log }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->tanggal_pengangkutan ? \Carbon\Carbon::parse($log->tanggal_pengangkutan)->format('d M Y') : '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="8" class="px-4 py-6 text-center text-sm" style="color: var(--text-secondary);">Tidak ada data untuk filter yang dipilih</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+        @if(method_exists($logs, 'links'))
+            <div class="border-t p-4" style="border-color: var(--border-primary);">
+                {{ $logs->appends(request()->query())->links() }}
+            </div>
+        @endif
+    </div>
+    @else
+    <div class="mt-2 rounded-xl p-4" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+        <i class="fas fa-info-circle mr-2"></i> Silakan pilih filter untuk menampilkan laporan.
+    </div>
+    @endif
 </div>
 @endsection

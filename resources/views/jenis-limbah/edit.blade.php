@@ -3,18 +3,18 @@
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200">
+    <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary); margin-bottom: 1.5rem;">
+        <div style="padding: 2rem; border-bottom: 1px solid var(--border-primary);">
             <div class="flex justify-between items-start">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Edit Jenis Limbah</h1>
-                    <p class="text-slate-600">Perbarui informasi jenis limbah yang sudah ada</p>
+                    <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Edit Jenis Limbah</h1>
+                    <p style="color: var(--text-secondary);">Perbarui informasi jenis limbah yang sudah ada</p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
                         <i class="fas fa-eye mr-2"></i> Lihat
                     </a>
-                    <a href="{{ route('jenis-limbah.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">
+                    <a href="{{ route('jenis-limbah.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali
                     </a>
                 </div>
@@ -23,8 +23,8 @@
     </div>
     
     <!-- Form Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-        <div class="p-8">
+    <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary);">
+        <div style="padding: 2rem;">
                     <form action="{{ route('jenis-limbah.update', $jenisLimbah) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -32,27 +32,31 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="mb-6">
-                                    <label for="kode_limbah" class="block text-sm font-medium text-gray-700 mb-2">Kode Limbah <span class="text-red-500">*</span></label>
-                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('kode_limbah') border-red-500 @enderror" 
+                                    <label for="kode_limbah" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Kode Limbah <span style="color: var(--danger-primary);">*</span></label>
+                                    <input type="text" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('kode_limbah') border-color: var(--danger-primary); @enderror" 
                                            id="kode_limbah" name="kode_limbah" 
                                            value="{{ old('kode_limbah', $jenisLimbah->kode_limbah) }}" 
-                                           placeholder="Contoh: A101" maxlength="10" required>
-                                    <p class="mt-1 text-sm text-gray-500">Kode unik untuk jenis limbah (maksimal 10 karakter)</p>
+                                           placeholder="Contoh: A101" maxlength="10" required
+                                           onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                           onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">
+                                    <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--text-tertiary);">Kode unik untuk jenis limbah (maksimal 10 karakter)</p>
                                     @error('kode_limbah')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                             
                             <div>
                                 <div class="mb-6">
-                                    <label for="nama_limbah" class="block text-sm font-medium text-gray-700 mb-2">Nama Limbah <span class="text-red-500">*</span></label>
-                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('nama_limbah') border-red-500 @enderror" 
+                                    <label for="nama_limbah" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Nama Limbah <span style="color: var(--danger-primary);">*</span></label>
+                                    <input type="text" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('nama_limbah') border-color: var(--danger-primary); @enderror" 
                                            id="nama_limbah" name="nama_limbah" 
                                            value="{{ old('nama_limbah', $jenisLimbah->nama_limbah) }}" 
-                                           placeholder="Contoh: Limbah Medis Infeksius" maxlength="100" required>
+                                           placeholder="Contoh: Limbah Medis Infeksius" maxlength="100" required
+                                           onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                           onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">
                                     @error('nama_limbah')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
@@ -61,9 +65,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="mb-6">
-                                    <label for="karakteristik_id" class="block text-sm font-medium text-gray-700 mb-2">Karakteristik Limbah</label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('karakteristik_id') border-red-500 @enderror" 
-                                            id="karakteristik_id" name="karakteristik_id">
+                                    <label for="karakteristik_id" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Karakteristik Limbah</label>
+                                    <select style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('karakteristik_id') border-color: var(--danger-primary); @enderror" 
+                                            id="karakteristik_id" name="karakteristik_id"
+                                            onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                            onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">
                                         <option value="">Pilih Karakteristik (Opsional)</option>
                                         @foreach($karakteristikLimbah as $karakteristik)
                                             <option value="{{ $karakteristik->karakteristik_id }}" 
@@ -73,7 +79,7 @@
                                         @endforeach
                                     </select>
                                     @error('karakteristik_id')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
@@ -82,50 +88,56 @@
                         </div>
 
                         <div class="mb-6">
-                            <label for="deskripsi_limbah" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Limbah</label>
-                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('deskripsi_limbah') border-red-500 @enderror" 
+                            <label for="deskripsi_limbah" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Deskripsi Limbah</label>
+                            <textarea style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('deskripsi_limbah') border-color: var(--danger-primary); @enderror" 
                                       id="deskripsi_limbah" name="deskripsi_limbah" 
                                       rows="4" maxlength="500" 
-                                      placeholder="Deskripsi detail tentang jenis limbah ini...">{{ old('deskripsi_limbah', $jenisLimbah->deskripsi_limbah) }}</textarea>
-                            <p class="mt-1 text-sm text-gray-500">Maksimal 500 karakter</p>
+                                      placeholder="Deskripsi detail tentang jenis limbah ini..."
+                                      onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                      onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">{{ old('deskripsi_limbah', $jenisLimbah->deskripsi_limbah) }}</textarea>
+                            <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--text-tertiary);">Maksimal 500 karakter</p>
                             @error('deskripsi_limbah')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="mb-6">
-                                    <label for="waktu_penyimpanan_hari" class="block text-sm font-medium text-gray-700 mb-2">Waktu Penyimpanan (Hari) <span class="text-red-500">*</span></label>
-                                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('waktu_penyimpanan_hari') border-red-500 @enderror" 
+                                    <label for="waktu_penyimpanan_hari" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Waktu Penyimpanan (Hari) <span style="color: var(--danger-primary);">*</span></label>
+                                    <input type="number" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('waktu_penyimpanan_hari') border-color: var(--danger-primary); @enderror" 
                                            id="waktu_penyimpanan_hari" name="waktu_penyimpanan_hari" 
                                            value="{{ old('waktu_penyimpanan_hari', $jenisLimbah->waktu_penyimpanan_hari) }}" 
-                                           min="1" max="365" placeholder="Contoh: 90" required>
-                                    <p class="mt-1 text-sm text-gray-500">Maksimal penyimpanan dalam hari (1-365 hari)</p>
+                                           min="1" max="365" placeholder="Contoh: 90" required
+                                           onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                           onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">
+                                    <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--text-tertiary);">Maksimal penyimpanan dalam hari (1-365 hari)</p>
                                     @error('waktu_penyimpanan_hari')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                             
                             <div>
                                 <div class="mb-6">
-                                    <label for="status_aktif" class="block text-sm font-medium text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('status_aktif') border-red-500 @enderror" 
-                                            id="status_aktif" name="status_aktif" required>
+                                    <label for="status_aktif" style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem;">Status <span style="color: var(--danger-primary);">*</span></label>
+                                    <select style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-primary); border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); background: var(--input-bg); color: var(--text-primary); transition: all 0.2s; @error('status_aktif') border-color: var(--danger-primary); @enderror" 
+                                            id="status_aktif" name="status_aktif" required
+                                            onfocus="this.style.outline='none'; this.style.borderColor='var(--accent-primary)'; this.style.boxShadow='0 0 0 2px var(--accent-bg)'"
+                                            onblur="this.style.borderColor='var(--border-primary)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)'">
                                         <option value="1" {{ old('status_aktif', $jenisLimbah->status_aktif) == '1' ? 'selected' : '' }}>Aktif</option>
                                         <option value="0" {{ old('status_aktif', $jenisLimbah->status_aktif) == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                                     </select>
                                     @error('status_aktif')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--danger-primary);">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" class="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-all duration-200">Batal</a>
-                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">Batal</a>
+                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
                                 <i class="fas fa-save mr-2"></i> Update
                             </button>
                         </div>

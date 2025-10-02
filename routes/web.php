@@ -48,6 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('unit.access')->group(function () {
         Route::get('pengangkutan-limbah', [App\Http\Controllers\PengangkutanLimbahController::class, 'index'])
             ->name('pengangkutan-limbah.index');
+        Route::get('pengangkutan-limbah/create', [App\Http\Controllers\PengangkutanLimbahController::class, 'create'])
+            ->name('pengangkutan-limbah.create');
+        Route::post('pengangkutan-limbah', [App\Http\Controllers\PengangkutanLimbahController::class, 'store'])
+            ->name('pengangkutan-limbah.store');
         Route::get('pengangkutan-limbah/diangkut', [App\Http\Controllers\PengangkutanLimbahController::class, 'diangkut'])
             ->name('pengangkutan-limbah.diangkut');
         Route::post('pengangkutan-limbah/{id}/approve', [App\Http\Controllers\PengangkutanLimbahController::class, 'approve'])
@@ -83,23 +87,23 @@ Route::middleware('auth')->group(function () {
 
         // Monthly/Yearly Reports
         Route::get('/monthly', [App\Http\Controllers\ReportController::class, 'monthly'])->name('monthly');
-        Route::get('/monthly/export/{format}', [App\Http\Controllers\ReportController::class, 'exportMonthly'])->name('monthly.export');
+        Route::get('/monthly/export/{format}', [App\Http\Controllers\ReportController::class, 'monthly'])->name('monthly.export');
 
         // Status Reports
         Route::get('/status', [App\Http\Controllers\ReportController::class, 'status'])->name('status');
-        Route::get('/status/export/{format}', [App\Http\Controllers\ReportController::class, 'exportStatus'])->name('status.export');
+        Route::get('/status/export/{format}', [App\Http\Controllers\ReportController::class, 'status'])->name('status.export');
 
         // Waste Type Reports
         Route::get('/waste-type', [App\Http\Controllers\ReportController::class, 'wasteType'])->name('waste-type');
-        Route::get('/waste-type/export/{format}', [App\Http\Controllers\ReportController::class, 'exportWasteType'])->name('waste-type.export');
+        Route::get('/waste-type/export/{format}', [App\Http\Controllers\ReportController::class, 'wasteType'])->name('waste-type.export');
 
         // Company Reports
         Route::get('/company', [App\Http\Controllers\ReportController::class, 'company'])->name('company');
-        Route::get('/company/export/{format}', [App\Http\Controllers\ReportController::class, 'exportCompany'])->name('company.export');
+        Route::get('/company/export/{format}', [App\Http\Controllers\ReportController::class, 'company'])->name('company.export');
 
         // Unit Reports
         Route::get('/unit', [App\Http\Controllers\ReportController::class, 'unit'])->name('unit');
-        Route::get('/unit/export/{format}', [App\Http\Controllers\ReportController::class, 'exportUnit'])->name('unit.export');
+        Route::get('/unit/export/{format}', [App\Http\Controllers\ReportController::class, 'unit'])->name('unit.export');
 
         // Cache Management
         Route::post('/clear-cache', [App\Http\Controllers\ReportController::class, 'clearCache'])->name('clear-cache');
@@ -115,7 +119,6 @@ Route::middleware('auth')->group(function () {
     // Expiry Report Management
     Route::middleware('unit.access')->prefix('expiry-reports')->name('expiry-reports.')->group(function () {
         Route::get('/', [App\Http\Controllers\ExpiryReportController::class, 'index'])->name('index');
-        Route::get('/dashboard', [App\Http\Controllers\ExpiryReportController::class, 'dashboard'])->name('dashboard');
         Route::get('/export', [App\Http\Controllers\ExpiryReportController::class, 'export'])->name('export');
     });
 

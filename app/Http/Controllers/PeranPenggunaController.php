@@ -20,23 +20,7 @@ class PeranPenggunaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = PeranPengguna::query();
-
-        // Search functionality
-        if ($request->has('search') && ! empty($request->search)) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_peran', 'like', '%'.$search.'%')
-                    ->orWhere('deskripsi', 'like', '%'.$search.'%');
-            });
-        }
-
-        // Filter by status
-        if ($request->has('status') && $request->status !== '') {
-            $query->where('is_active', $request->status);
-        }
-
-        $peranPengguna = $query->orderBy('nama_peran')->paginate(10);
+        $peranPengguna = PeranPengguna::orderBy('nama_peran')->paginate(10);
 
         return view('peran-pengguna.index', compact('peranPengguna'));
     }

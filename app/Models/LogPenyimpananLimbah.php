@@ -34,11 +34,11 @@ class LogPenyimpananLimbah extends Model
         'expiry_status',
     ];
 
-    protected $dates = [
-        'tanggal_limbah_masuk',
-        'maksimal_penyimpanan_tanggal',
-        'tanggal_pengangkutan',
-        'tanggal_kadaluarsa',
+    protected $casts = [
+        'tanggal_limbah_masuk' => 'datetime',
+        'maksimal_penyimpanan_tanggal' => 'datetime',
+        'tanggal_pengangkutan' => 'datetime',
+        'tanggal_kadaluarsa' => 'datetime',
     ];
 
     /**
@@ -156,7 +156,7 @@ class LogPenyimpananLimbah extends Model
         } elseif ($daysUntilExpiry <= 7) {
             $status = 'Warning';
         } else {
-            $status = 'Normal';
+            $status = 'Safe';
         }
 
         $this->update([
@@ -229,16 +229,48 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
+     * Scope for safe waste
+     */
+    public function scopeSafe($query)
+    {
+        return $query->where('expiry_status', 'Safe');
+    }
+
+    /**
+     * Get expiry status badge class for UI
+     */
+    public function getStatusLogBadgeClass(): string
+    {
+        return match (strtoupper($this->status_log)) {
+            'TERSIMPAN' => 'bg-blue-100 text-blue-800',
+            'DIANGKUT' => 'bg-purple-100 text-purple-800',
+            default => 'bg-gray-100 text-gray-800',
+        };
+    }
+
+    /**
+     * Get expiry status text for display
+     */
+    public function getStatusLogText(): string
+    {
+        return match (strtoupper($this->status_log)) {
+            'TERSIMPAN' => 'Tersimpan',
+            'DIANGKUT' => 'Diangkut',
+            default => 'Unknown',
+        };
+    }
+
+    /**
      * Get expiry status badge class for UI
      */
     public function getExpiryStatusBadgeClass(): string
     {
-        return match ($this->expiry_status) {
-            'Normal' => 'badge-success',
-            'Warning' => 'badge-warning',
-            'Critical' => 'badge-danger',
-            'Expired' => 'badge-secondary',
-            default => 'badge-light'
+        return match (ucfirst(strtolower($this->expiry_status))) {
+            'Safe' => 'bg-green-100 text-green-800',
+            'Warning' => 'bg-yellow-100 text-yellow-800',
+            'Critical' => 'bg-orange-100 text-orange-800',
+            'Expired' => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800',
         };
     }
 
@@ -247,14 +279,12 @@ class LogPenyimpananLimbah extends Model
      */
     public function getExpiryStatusText(): string
     {
-        $daysLeft = $this->getDaysUntilExpiry();
-
-        return match ($this->expiry_status) {
-            'Normal' => $daysLeft > 0 ? "Sisa {$daysLeft} hari" : 'Normal',
-            'Warning' => $daysLeft > 0 ? "Peringatan: {$daysLeft} hari lagi" : 'Peringatan',
-            'Critical' => $daysLeft > 0 ? "Kritis: {$daysLeft} hari lagi" : 'Kritis',
-            'Expired' => $daysLeft < 0 ? 'Kadaluarsa '.abs($daysLeft).' hari' : 'Kadaluarsa',
-            default => 'Unknown'
+        return match (ucfirst(strtolower($this->expiry_status))) {
+            'Safe' => 'Aman',
+            'Warning' => 'Peringatan',
+            'Critical' => 'Kritis',
+            'Expired' => 'Kadaluarsa',
+            default => 'Unknown',
         };
     }
 }

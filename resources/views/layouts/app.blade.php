@@ -15,7 +15,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <!-- Tailwind CSS will be loaded via Vite -->
-    
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -56,7 +56,7 @@
             --danger-bg-light: #fee2e2;
             --danger-hover: #b91c1c;
         }
-        
+
         /* Dark theme colors */
         [data-theme="dark"] {
             --bg-primary: #111827;
@@ -91,30 +91,30 @@
             --danger-bg-light: #7f1d1d;
             --danger-hover: #dc2626;
         }
-        
+
         /* Apply theme variables */
         body {
             background-color: var(--bg-primary) !important;
             color: var(--text-primary) !important;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
         /* Force CSS variables application */
         * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
-        
+
         /* Ensure div elements use CSS variables */
         div[style*="var(--card-bg)"] {
             background: var(--card-bg) !important;
         }
-        
+
         div[style*="var(--border-primary)"] {
             border-color: var(--border-primary) !important;
         }
-        
+
         /* Custom styles */
-        
+
         /* Safari input text color fix */
         input[type="text"],
         input[type="email"],
@@ -133,7 +133,7 @@
             opacity: 1 !important;
             -webkit-opacity: 1 !important;
         }
-        
+
         /* Safari autofill background fix */
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -142,32 +142,32 @@
             -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
             -webkit-text-fill-color: var(--input-text) !important;
         }
-        
+
         /* Placeholder text color for Safari */
         input::placeholder,
         textarea::placeholder {
             color: var(--input-placeholder) !important;
             opacity: 1 !important;
         }
-        
+
         /* Safari compatibility fixes for dashboard header */
         .safari-gradient-fallback {
             background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #f3e8ff 100%);
         }
-        
+
         /* Safari backdrop-blur fallback */
         @supports not (backdrop-filter: blur(10px)) {
             .bg-white\/80 {
                 background-color: rgba(255, 255, 255, 0.95) !important;
             }
         }
-        
+
         /* Safari transform and animation fixes */
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
             .animate-pulse {
                 animation: safari-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
             }
-            
+
             @keyframes safari-pulse {
                 0%, 100% {
                     opacity: 1;
@@ -177,13 +177,58 @@
                 }
             }
         }
-        
+
         /* Ensure proper rendering on Safari */
         .dashboard-header {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
+        }
+
+        /* Safari dropdown/select styling fixes */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 0.65rem auto;
+            padding-right: 2.5rem !important;
+            min-height: 2.5rem !important;
+            line-height: 1.5 !important;
+        }
+
+        /* Safari specific select fixes */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            select {
+                background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 0.7rem center;
+                background-size: 0.65rem auto;
+                padding-right: 2.5rem !important;
+                min-height: 2.5rem !important;
+                line-height: 1.5 !important;
+                border-radius: 0.375rem !important;
+                border: 1px solid #d1d5db !important;
+            }
+
+            /* Fix for Tailwind select classes */
+            .form-select,
+            select.form-control,
+            select[class*="border"],
+            select[class*="rounded"] {
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>') !important;
+                background-repeat: no-repeat !important;
+                background-position: right 0.7rem center !important;
+                background-size: 0.65rem auto !important;
+                padding-right: 2.5rem !important;
+                min-height: 2.5rem !important;
+                line-height: 1.5 !important;
+            }
         }
 
     </style>
@@ -200,13 +245,13 @@
             <nav class="h-full flex flex-col">
                 <div class="flex items-center justify-center h-16 px-4 border-b border-slate-700/50 bg-slate-800/50 backdrop-blur-sm">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-recycle text-white text-lg"></i>
+                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                            <i class="fas fa-recycle text-2xl text-emerald-400"></i>
                         </div>
                         <span class="text-white text-xl font-bold tracking-wide">WASPRO</span>
                     </div>
                 </div>
-                
+
                 <div class="flex-1 px-2 py-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
                     <div class="space-y-3">
                         <!-- Menu Dashboard -->
@@ -218,9 +263,9 @@
                                 <span class="text-sm font-medium">Dashboard</span>
                             </a>
                         </div>
-                        
+
                         <!-- Menu Notifikasi -->
-                        <div class="space-y-1">
+                        <!-- <div class="space-y-1">
                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('notifications.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('notifications.index') }}">
                                 <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200 relative">
                                     <i class="fas fa-bell text-xs"></i>
@@ -228,8 +273,8 @@
                                 </div>
                                 <span class="text-sm font-medium">Notifikasi</span>
                             </a>
-                        </div>
-                        
+                        </div> -->
+
                         <!-- Menu Log Penyimpanan -->
                         <div class="space-y-1">
                             <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('log-penyimpanan.*') ? 'bg-green-600/80 text-white shadow-lg shadow-green-600/25' : '' }}" href="{{ route('log-penyimpanan.index') }}">
@@ -251,66 +296,74 @@
                             </a>
                         </div>
                         @endif
-                        
+
                          <!-- Section LAPORAN -->
                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                              <i class="fas fa-chart-bar mr-1"></i>LAPORAN
                          </div>
-                         
+                          <div class="space-y-1">
+                            <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('reports.index') }}">
+                                <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-purple-500/50 transition-colors duration-200 relative">
+                                    <i class="fas fa-file-alt text-xs"></i>
+                                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center" id="sidebar-notification-badge" style="display: none;"></span>
+                                </div>
+                                <span class="text-sm font-medium">Dashboard Report</span>
+                            </a>
+                        </div>
                          <!-- Menu Laporan Bulanan -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.monthly') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.monthly') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-calendar-alt text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Bulanan</span>
                              </a>
-                         </div>
-                         
+                         </div> -->
+
                          <!-- Menu Laporan Status -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.status') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.status') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-info-circle text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Status</span>
                              </a>
-                         </div>
-                         
+                         </div> -->
+
                          <!-- Menu Laporan Jenis Limbah -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.waste-type') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.waste-type') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-recycle text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Jenis Limbah</span>
                              </a>
-                         </div>
-                         
+                         </div> -->
+
                          <!-- Menu Laporan Perusahaan -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.company') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.company') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-building text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Perusahaan</span>
                              </a>
-                         </div>
-                         
+                         </div> -->
+
                          <!-- Menu Laporan Unit -->
-                         <div class="space-y-1">
+                         <!-- <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('reports.unit') ? 'bg-emerald-600/80 text-white shadow-lg shadow-emerald-600/25' : '' }}" href="{{ route('reports.unit') }}">
                                  <div class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-emerald-500/50 transition-colors duration-200">
                                      <i class="fas fa-industry text-xs"></i>
                                  </div>
                                  <span class="text-sm font-medium">Laporan Unit</span>
                              </a>
-                         </div>
+                         </div> -->
                          <!-- Section MASTER DATA -->
                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                              <i class="fas fa-database mr-1"></i>MASTER DATA
                          </div>
-                         
+
                          <!-- Menu Perusahaan Penghasil -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('perusahaan-penghasil.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('perusahaan-penghasil.index') }}">
@@ -320,7 +373,7 @@
                                  <span class="text-sm font-medium">Perusahaan Penghasil</span>
                              </a>
                          </div>
-                         
+
                          <!-- Menu Unit Pembangkit -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('unit-pembangkit.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('unit-pembangkit.index') }}">
@@ -330,7 +383,7 @@
                                  <span class="text-sm font-medium">Unit Pembangkit</span>
                              </a>
                          </div>
-                         
+
                          <!-- Menu Pengelolaan Users -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('pengguna-sistem.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('pengguna-sistem.index') }}">
@@ -340,7 +393,7 @@
                                  <span class="text-sm font-medium">Pengelolaan Users</span>
                              </a>
                          </div>
-                         
+
                          <!-- Menu Peran Pengguna -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('peran-pengguna.*') ? 'bg-purple-600/80 text-white shadow-lg shadow-purple-600/25' : '' }}" href="{{ route('peran-pengguna.index') }}">
@@ -350,12 +403,12 @@
                                  <span class="text-sm font-medium">Peran Pengguna</span>
                              </a>
                          </div>
-                         
+
                          <!-- Section LIMBAH -->
                          <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                              <i class="fas fa-recycle mr-1"></i>LIMBAH
                          </div>
-                         
+
                          <!-- Menu Jenis Limbah -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('jenis-limbah.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('jenis-limbah.index') }}">
@@ -365,7 +418,7 @@
                                  <span class="text-sm font-medium">Jenis Limbah</span>
                              </a>
                          </div>
-                         
+
                          <!-- Menu Karakteristik Limbah -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('karakteristik-limbah.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('karakteristik-limbah.index') }}">
@@ -375,7 +428,7 @@
                                  <span class="text-sm font-medium">Karakteristik Limbah</span>
                              </a>
                          </div>
-                         
+
                          <!-- Menu Kategori Kegiatan Limbah -->
                          <div class="space-y-1">
                              <a class="nav-link group flex items-center px-3 py-2 text-slate-200 rounded-lg transition-all duration-200 hover:bg-slate-700/50 hover:text-white hover:shadow-lg hover:scale-105 {{ request()->routeIs('kategori-kegiatan-sumber.*') ? 'bg-orange-600/80 text-white shadow-lg shadow-orange-600/25' : '' }}" href="{{ route('kategori-kegiatan-sumber.index') }}">
@@ -385,14 +438,14 @@
                                  <span class="text-sm font-medium">Kategori Kegiatan Limbah</span>
                              </a>
                          </div>
-                         
 
-                         
+
+
                          <!-- Section PENGATURAN -->
                           <div class="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/30 mb-2 mt-4">
                               <i class="fas fa-cog mr-1"></i>PENGATURAN
                           </div>
-                          
+
                           @if(Auth::guard('web')->user() && Auth::guard('web')->user()->isSuperAdmin())
                           <!-- Menu System Settings -->
                           <div class="space-y-1">
@@ -404,7 +457,7 @@
                               </a>
                           </div>
                           @endif
-                          
+
                           <!-- Menu Logout -->
                           <div class="space-y-1">
                               <form method="POST" action="{{ route('logout') }}">
@@ -438,7 +491,7 @@
                                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-32 h-16 object-contain">
                             </div>
                         </div>                    </div>
-                    
+
                     <!-- Right side -->                    <div class="flex items-center space-x-4">                        <!-- Search -->
                         <div class="hidden md:flex items-center">
                             <div class="relative group">
@@ -448,14 +501,14 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Dark Mode Toggle -->
                          <div class="relative">
                              <button class="flex items-center justify-center w-10 h-10 focus:outline-none rounded-xl transition-all duration-200" id="darkModeToggle" onclick="toggleDarkMode()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent'">
                                  <i class="fas fa-sun text-lg" id="darkModeIcon"></i>
                              </button>
                          </div>
-                         
+
                          <!-- Notifications -->
                          <div class="relative">
                              <button class="flex items-center justify-center w-10 h-10 focus:outline-none rounded-xl transition-all duration-200 relative" id="notification-bell" onclick="toggleNotificationDropdown()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent'">
@@ -481,7 +534,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- User Dropdown -->                        <div class="relative">                            <button class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl transition-all duration-200" id="userDropdown" onclick="toggleUserDropdown()" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'; this.style.backgroundColor='var(--hover-bg)';" onmouseout="this.style.color='var(--text-secondary)'; this.style.backgroundColor='transparent';">                                <div class="flex items-center space-x-3">                                    <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-lg">                                        {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name, 0, 1)) }}                                    </div>                                    <div class="hidden md:block text-left">
                                         <div class="font-semibold text-sm" style="color: var(--text-primary);">{{ Auth::user()->nama_lengkap ?? Auth::user()->name }}</div>
                                         <div class="text-xs" style="color: var(--text-secondary);">{{ Auth::user()->unitPembangkit->nama_unit ?? 'N/A' }}</div>
@@ -554,7 +607,7 @@
                             </button>
                         </div>
                     @endif
-                    
+
                     @if(session('warning'))
                         <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
                             <div class="flex items-center">
@@ -566,7 +619,7 @@
                             </button>
                         </div>
                     @endif
-                    
+
                     @if(session('info'))
                         <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
                             <div class="flex items-center">
@@ -582,7 +635,7 @@
                     @yield('content')
                 </div>
             </main>
-            
+
             <!-- Footer -->
             <footer class="py-6 mt-auto" style="background-color: var(--card-bg); border-top: 1px solid var(--border-primary);">
                 <div class="px-4">
@@ -629,7 +682,7 @@
                     </div>
                 </div>
             </nav>
-            
+
             <!-- Main Content for Guests -->
             <main class="py-6">
                 @if(session('success'))
@@ -645,7 +698,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @if(session('error'))
                     <div class="px-4 mb-4">
                         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between" role="alert">
@@ -659,7 +712,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @yield('content')
             </main>
         </div>
@@ -672,16 +725,16 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.querySelector('.main-content');
-            
+
             sidebar.classList.toggle('-translate-x-full');
             mainContent.classList.toggle('md:ml-0');
         }
-        
+
         // Toggle submenu
         function toggleSubmenu(submenuId) {
             const submenu = document.getElementById(submenuId);
             const icon = document.getElementById(submenuId + '-icon');
-            
+
             if (submenu.classList.contains('hidden')) {
                 submenu.classList.remove('hidden');
                 submenu.classList.add('block');
@@ -692,31 +745,31 @@
                 icon.style.transform = 'rotate(0deg)';
             }
         }
-        
+
         // Toggle user dropdown
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             dropdown.classList.toggle('hidden');
         }
-        
+
         // Toggle mobile menu
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         }
-        
+
         // Sidebar toggle for mobile
         document.getElementById('sidebarToggle')?.addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('-translate-x-full');
         });
-        
+
         // Notification functions
          function toggleNotificationDropdown() {
              const dropdown = document.getElementById('notification-dropdown');
              dropdown.classList.toggle('hidden');
          }
-        
+
         function loadNotifications() {
             fetch('/notifications/get-count')
                 .then(response => response.json())
@@ -725,7 +778,7 @@
                     updateNotificationHeader(data.count);
                 })
                 .catch(error => console.error('Error loading notification count:', error));
-                
+
             fetch('/notifications/get-expiry-notifications')
                 .then(response => response.json())
                 .then(data => {
@@ -733,46 +786,46 @@
                 })
                 .catch(error => console.error('Error loading notifications:', error));
         }
-        
+
         function updateNotificationBadge(count) {
              const badge = document.getElementById('notification-count');
              const sidebarBadge = document.getElementById('sidebar-notification-badge');
-             
+
              if (count > 0) {
                  badge.textContent = count > 99 ? '99+' : count;
                  badge.style.display = 'flex';
-                 
+
                  if (sidebarBadge) {
                      sidebarBadge.style.display = 'flex';
                  }
              } else {
                  badge.style.display = 'none';
-                 
+
                  if (sidebarBadge) {
                      sidebarBadge.style.display = 'none';
                  }
              }
          }
-        
+
         function updateNotificationHeader(count) {
             const header = document.getElementById('notification-header');
             header.textContent = count + ' Notifikasi';
         }
-        
+
         function updateNotificationList(notifications) {
             const list = document.getElementById('notification-list');
-            
+
             if (notifications.length === 0) {
                 list.innerHTML = '<div class="px-6 py-8 text-center text-gray-500"><i class="fas fa-bell-slash text-3xl mb-2"></i><p>Tidak ada notifikasi</p></div>';
                 return;
             }
-            
+
             let html = '';
             notifications.forEach(notification => {
                 const statusClass = getStatusClass(notification.expiry_status);
                 const statusText = getStatusText(notification.expiry_status);
                 const timeText = getTimeText(notification.days_until_expiry);
-                
+
                 html += `
                     <div class="px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
                         <div class="flex items-start space-x-3">
@@ -797,10 +850,10 @@
                     </div>
                 `;
             });
-            
+
             list.innerHTML = html;
         }
-        
+
         function getStatusClass(status) {
             switch(status) {
                 case 'expired': return 'bg-red-500';
@@ -810,7 +863,7 @@
                 default: return 'bg-gray-500';
             }
         }
-        
+
         function getStatusText(status) {
             switch(status) {
                 case 'expired': return 'Kadaluarsa';
@@ -820,7 +873,7 @@
                 default: return 'Normal';
             }
         }
-        
+
         function getTimeText(days) {
             if (days < 0) {
                 return Math.abs(days) + ' hari yang lalu';
@@ -830,16 +883,16 @@
                 return days + ' hari lagi';
             }
         }
-        
+
         function refreshNotifications() {
             loadNotifications();
         }
-        
+
         // Close notification dropdown when clicking outside
          document.addEventListener('click', function(event) {
              const notificationDropdown = document.getElementById('notification-dropdown');
              const notificationButton = event.target.closest('#notification-bell');
-             
+
              if (!notificationButton && notificationDropdown && !notificationDropdown.contains(event.target)) {
                  notificationDropdown.classList.add('hidden');
              }
@@ -850,25 +903,25 @@
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
+
             if (newTheme === 'light') {
                 html.removeAttribute('data-theme');
             } else {
                 html.setAttribute('data-theme', newTheme);
             }
-            
+
             // Force reflow to apply CSS variables
             document.body.style.display = 'none';
             document.body.offsetHeight; // Trigger reflow
             document.body.style.display = '';
-            
+
             localStorage.setItem('theme', newTheme);
             updateDarkModeIcon(newTheme);
-            
+
             // Debug: Log theme change
             console.log('Theme changed to:', newTheme, 'Data-theme attribute:', html.getAttribute('data-theme'));
         }
-        
+
         function updateDarkModeIcon(theme) {
             const icon = document.getElementById('darkModeIcon');
             if (theme === 'dark') {
@@ -877,48 +930,48 @@
                 icon.className = 'fas fa-sun text-lg';
             }
         }
-        
+
         function initDarkMode() {
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-            
+
             // Ensure theme is applied immediately
             if (theme === 'light') {
                 document.documentElement.removeAttribute('data-theme');
             } else {
                 document.documentElement.setAttribute('data-theme', theme);
             }
-            
+
             // Force reflow to apply CSS variables
             document.body.style.display = 'none';
             document.body.offsetHeight; // Trigger reflow
             document.body.style.display = '';
-            
+
             updateDarkModeIcon(theme);
-            
+
             // Debug: Log current theme
             console.log('Current theme:', theme, 'Data-theme attribute:', document.documentElement.getAttribute('data-theme'));
         }
-        
+
         // Initialize theme immediately (before DOM load)
         (function() {
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-            
+
             if (theme === 'light') {
                 document.documentElement.removeAttribute('data-theme');
             } else {
                 document.documentElement.setAttribute('data-theme', theme);
             }
         })();
-        
+
         // Initialize dark mode on page load
         document.addEventListener('DOMContentLoaded', function() {
             initDarkMode();
         });
-        
+
         // Listen for system theme changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!localStorage.getItem('theme')) {
@@ -928,14 +981,14 @@
                 } else {
                     document.documentElement.setAttribute('data-theme', theme);
                 }
-                
+
                 // Force reflow to apply CSS variables
                 document.body.style.display = 'none';
                 document.body.offsetHeight; // Trigger reflow
                 document.body.style.display = '';
-                
+
                 updateDarkModeIcon(theme);
-                
+
                 // Debug: Log system theme change
                 console.log('System theme changed to:', theme, 'Data-theme attribute:', document.documentElement.getAttribute('data-theme'));
             }
@@ -951,26 +1004,26 @@
                 }, 300);
             });
         }, 5000);
-        
+
         // Initialize event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             // Mobile menu button event
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', toggleMobileMenu);
             }
-            
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', function(event) {
                 const userDropdown = document.getElementById('userDropdownMenu');
                 const userButton = event.target.closest('#userDropdown');
-                
+
                 if (!userButton && userDropdown && !userDropdown.contains(event.target)) {
                     userDropdown.classList.add('hidden');
                 }
             });
-            
+
             // Safari-compatible logout handler
              window.handleLogout = function(e) {
                  e.preventDefault();
@@ -978,7 +1031,7 @@
                      document.getElementById('logout-form').submit();
                  }
              };
-             
+
              // Global delete confirmation handler
              window.handleDeleteConfirm = function(e, message) {
                  e.preventDefault();
@@ -988,7 +1041,7 @@
                  }
                  return false;
              };
-             
+
              // Global form submission confirmation handler
              window.handleFormConfirm = function(form, message) {
                  if (confirm(message || 'Apakah Anda yakin?')) {
@@ -996,15 +1049,15 @@
                  }
                  return false;
              };
-             
+
              // Load notifications on page load
              loadNotifications();
-             
+
              // Auto-refresh notifications every 30 seconds
              setInterval(loadNotifications, 30000);
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>

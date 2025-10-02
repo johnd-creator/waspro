@@ -3,243 +3,160 @@
 @section('title', 'Pengangkutan Limbah')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Pengangkutan Limbah</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('pengangkutan-limbah.diangkut') }}" class="btn btn-info btn-sm">
-                            <i class="fas fa-truck"></i> Limbah Diangkut
-                        </a>
-                    </div>
-                </div>
+<div class="p-4 sm:p-6 lg:p-8">
+    @if(session('success'))
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span>{{ session('success') }}</span>
+            <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    @endif
 
-                <!-- Filter Form -->
-                <div class="card-body">
-                    <form method="GET" action="{{ route('pengangkutan-limbah.index') }}" class="mb-3">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <select name="jenis_limbah" class="form-control form-control-sm">
-                                    <option value="">Semua Jenis Limbah</option>
-                                    @foreach($jenisLimbah as $jenis)
-                                        <option value="{{ $jenis->kode_limbah }}" 
-                                            {{ request('jenis_limbah') == $jenis->kode_limbah ? 'selected' : '' }}>
-                                            {{ $jenis->nama_limbah }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select name="perusahaan" class="form-control form-control-sm">
-                                    <option value="">Semua Perusahaan</option>
-                                    @foreach($perusahaan as $p)
-                                        <option value="{{ $p->perusahaan_id }}" 
-                                            {{ request('perusahaan') == $p->perusahaan_id ? 'selected' : '' }}>
-                                            {{ $p->nama_perusahaan }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select name="status" class="form-control form-control-sm">
-                                    <option value="">Semua Status</option>
-                                    @foreach($statusOptions as $status)
-                                        <option value="{{ $status }}" 
-                                            {{ request('status') == $status ? 'selected' : '' }}>
-                                            {{ ucfirst(str_replace('_', ' ', $status)) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="date" name="tanggal_mulai" class="form-control form-control-sm" 
-                                    value="{{ request('tanggal_mulai') }}" placeholder="Tanggal Mulai">
-                            </div>
-                            <div class="col-md-2">
-                                <input type="date" name="tanggal_akhir" class="form-control form-control-sm" 
-                                    value="{{ request('tanggal_akhir') }}" placeholder="Tanggal Akhir">
-                            </div>
-                            <div class="col-md-2">
-                                <div class="input-group">
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-search"></i> Filter
-                                    </button>
-                                    <a href="{{ route('pengangkutan-limbah.index') }}" class="btn btn-secondary btn-sm ml-1">
-                                        <i class="fas fa-times"></i> Reset
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-3">
-                                <input type="text" name="kode_identitas" class="form-control form-control-sm" 
-                                    value="{{ request('kode_identitas') }}" placeholder="Cari Kode Identitas...">
-                            </div>
-                        </div>
-                    </form>
-
-                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                    <!-- Bulk Action Form -->
-                    <form id="bulkApproveForm" method="POST" action="{{ route('pengangkutan-limbah.bulk-approve') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <button type="button" id="selectAll" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-check-square"></i> Pilih Semua
-                            </button>
-                            <button type="button" id="deselectAll" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-square"></i> Batal Pilih
-                            </button>
-                            <button type="submit" id="bulkApproveBtn" class="btn btn-sm btn-success" disabled>
-                                <i class="fas fa-truck"></i> Setujui Pengangkutan Terpilih
-                            </button>
-                        </div>
-                    @endif
-
-                    <!-- Data Table -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                                    <th width="30">
-                                        <input type="checkbox" id="masterCheckbox">
-                                    </th>
-                                    @endif
-                                    <th>Kode Identitas</th>
-                                    <th>Jenis Limbah</th>
-                                    <th>Perusahaan</th>
-                                    <th>Unit</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Jumlah (Kg)</th>
-                                    <th>Status</th>
-                                    <th>Sisa Hari</th>
-                                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                                    <th>Aksi</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($logPenyimpanan as $log)
-                                <tr>
-                                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                                    <td>
-                                        <input type="checkbox" name="selected_logs[]" value="{{ $log->log_id }}" class="log-checkbox">
-                                    </td>
-                                    @endif
-                                    <td>{{ $log->kode_identitas }}</td>
-                                    <td>{{ $log->jenisLimbah->nama_limbah ?? '-' }}</td>
-                                    <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? '-' }}</td>
-                                    <td>{{ $log->unitPembangkit->nama_unit ?? '-' }}</td>
-                                    <td>{{ $log->tanggal_limbah_masuk->format('d/m/Y') }}</td>
-                                    <td>{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
-                                    <td>
-                                        <span class="badge {{ $log->getStatusBadgeClass() }}">
-                                            {{ $log->getStatusText() }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($log->getSisaHariKadaluarsa() !== null)
-                                            {{ $log->getSisaHariKadaluarsa() }} hari
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                                    <td>
-                                        <form method="POST" action="{{ route('pengangkutan-limbah.approve', $log->log_id) }}" 
-                                              style="display: inline;" 
-                                              onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengangkutan limbah ini?')">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-xs">
-                                                <i class="fas fa-check"></i> Setujui
-                                            </button>
-                                        </form>
-                                    </td>
-                                    @endif
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="{{ auth()->user()->isSupervisor() || auth()->user()->isAdmin() ? '10' : '8' }}" class="text-center">
-                                        Tidak ada data limbah yang ditemukan.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    @if(auth()->user()->isSupervisor() || auth()->user()->isAdmin())
-                    </form>
-                    @endif
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                            Menampilkan {{ $logPenyimpanan->firstItem() ?? 0 }} sampai {{ $logPenyimpanan->lastItem() ?? 0 }} 
-                            dari {{ $logPenyimpanan->total() }} data
-                        </div>
-                        <div>
-                            {{ $logPenyimpanan->appends(request()->query())->links() }}
-                        </div>
-                    </div>
-                </div>
+    <!-- Header & Filters -->
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Pengangkutan Limbah</h1>
+                <p style="color: var(--text-secondary);">Kelola proses pengangkutan limbah dengan mudah</p>
+            </div>
+            <div>
+                <a href="{{ route('pengangkutan-limbah.diangkut') }}" class="inline-flex items-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
+                    <i class="fas fa-truck mr-2"></i>
+                    <span>Limbah Diangkut</span>
+                </a>
             </div>
         </div>
+        <!-- Filter -->
+        <div class="px-6 py-6">
+            <form method="GET" action="{{ route('pengangkutan-limbah.index') }}" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div>
+                    <div class="relative">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                            <i class="fas fa-search" style="color: var(--text-tertiary);"></i>
+                        </div>
+                        <input type="text" name="kode_identitas" value="{{ request('kode_identitas') }}" placeholder="Cari Kode Identitas..." class="w-full rounded-xl border py-3 pl-12 pr-4 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" />
+                    </div>
+                </div>
+                <div>
+                    <select name="status_diangkut" class="w-full rounded-xl border px-3 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                        <option value="">Semua Status</option>
+                        <option value="0" {{ request('status_diangkut') == '0' ? 'selected' : '' }}>Belum Diangkut</option>
+                        <option value="1" {{ request('status_diangkut') == '1' ? 'selected' : '' }}>Sudah Diangkut</option>
+                    </select>
+                </div>
+                <div class="flex items-stretch gap-3">
+                    <button type="submit" class="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
+                        <i class="fas fa-filter mr-2"></i> Filter
+                    </button>
+                    @if(request()->hasAny(['kode_identitas','status_diangkut']))
+                        <a href="{{ route('pengangkutan-limbah.index') }}" class="rounded-xl px-6 py-3 font-medium transition-colors" style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">
+                            Reset
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <form id="bulk-angkut-form" method="POST" action="{{ route('pengangkutan-limbah.bulk-approve') }}">
+            @csrf
+            <div class="overflow-x-auto">
+                <table class="min-w-full w-full">
+                    <thead style="background-color: var(--border-primary);">
+                        <tr>
+                            <th class="w-12 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">
+                                <input type="checkbox" id="select-all" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" style="background-color: var(--input-bg); border-color: var(--border-secondary);">
+                            </th>
+                            <th class="w-16 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Kode Identitas</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Perusahaan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Jenis Limbah</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Tanggal Masuk</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Jumlah (Kg)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($logPenyimpanan as $key => $log)
+                            <tr class="border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" name="selected_logs[]" value="{{ $log->log_id ?? $log->id }}" class="log-checkbox h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" style="background-color: var(--input-bg); border-color: var(--border-secondary);">
+                                </td>
+                                <td class="px-4 py-3 text-center text-sm font-medium" style="color: var(--text-secondary);">{{ $logPenyimpanan->firstItem() + $key }}</td>
+                                <td class="px-6 py-3 text-sm" style="color: var(--text-primary);">{{ $log->kode_identitas }}</td>
+                                <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->perusahaanPenghasil->nama_perusahaan ?? $log->perusahaan->nama_perusahaan }}</td>
+                                <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->jenisLimbah->nama_limbah }}</td>
+                                <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
+                                <td class="px-6 py-3 text-right text-sm font-bold" style="color: var(--text-primary);">
+                                    <span class="rounded-lg px-3 py-1" style="background-color: var(--accent-bg); color: var(--accent-primary);">{{ number_format($log->jumlah_limbah_masuk, 2) }}</span>
+                                </td>
+                                <td class="px-6 py-3">
+                                    @if(strtolower($log->status_log) === 'diangkut')
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">Sudah Diangkut</span>
+                                    @else
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">Belum Diangkut</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-3">
+                                    @if(strtolower($log->status_log) !== 'diangkut')
+                                        <button type="button" class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 angkut-btn" data-id="{{ $log->log_id ?? $log->id }}">
+                                            <i class="fas fa-truck mr-2"></i> Angkut
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-truck-loading mb-4 text-6xl" style="color: var(--text-tertiary);"></i>
+                                        <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Tidak ada data</h3>
+                                        <p style="color: var(--text-secondary);">Tidak ada data pengangkutan limbah yang tersedia.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex items-center justify-between gap-3 p-4" style="background-color: var(--card-bg); border-top: 1px solid var(--border-primary);">
+                <button type="submit" class="inline-flex items-center rounded-lg bg-emerald-600 px-5 py-2.5 font-medium text-white hover:bg-emerald-700" id="bulk-angkut-btn">
+                    <i class="fas fa-check mr-2"></i> Angkut Terpilih
+                </button>
+                <div>
+                    {{ $logPenyimpanan->links() }}
+                </div>
+            </div>
+        </form>
     </div>
 </div>
-@endsection
 
 @push('scripts')
 <script>
-$(document).ready(function() {
-    // Master checkbox functionality
-    $('#masterCheckbox').change(function() {
-        $('.log-checkbox').prop('checked', this.checked);
-        toggleBulkApproveButton();
-    });
-
-    // Individual checkbox functionality
-    $('.log-checkbox').change(function() {
-        var totalCheckboxes = $('.log-checkbox').length;
-        var checkedCheckboxes = $('.log-checkbox:checked').length;
-        
-        $('#masterCheckbox').prop('checked', totalCheckboxes === checkedCheckboxes);
-        toggleBulkApproveButton();
-    });
-
-    // Select all button
-    $('#selectAll').click(function() {
-        $('.log-checkbox').prop('checked', true);
-        $('#masterCheckbox').prop('checked', true);
-        toggleBulkApproveButton();
-    });
-
-    // Deselect all button
-    $('#deselectAll').click(function() {
-        $('.log-checkbox').prop('checked', false);
-        $('#masterCheckbox').prop('checked', false);
-        toggleBulkApproveButton();
-    });
-
-    // Toggle bulk approve button
-    function toggleBulkApproveButton() {
-        var checkedCount = $('.log-checkbox:checked').length;
-        $('#bulkApproveBtn').prop('disabled', checkedCount === 0);
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.querySelectorAll('.log-checkbox');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
     }
 
-    // Bulk approve form submission
-    $('#bulkApproveForm').submit(function(e) {
-        var checkedCount = $('.log-checkbox:checked').length;
-        if (checkedCount === 0) {
-            e.preventDefault();
-            alert('Pilih minimal satu limbah untuk disetujui pengangkutannya.');
-            return false;
-        }
-        
-        return confirm('Apakah Anda yakin ingin menyetujui pengangkutan ' + checkedCount + ' limbah yang dipilih?');
+    document.querySelectorAll('.angkut-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            let logId = this.getAttribute('data-id');
+            let form = document.getElementById('bulk-angkut-form');
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_logs[]';
+            input.value = logId;
+            form.appendChild(input);
+            form.submit();
+        });
     });
-});
 </script>
 @endpush
+@endsection

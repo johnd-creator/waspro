@@ -3,15 +3,18 @@
 @section('content')
 <div class="px-2 py-4">
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
+    <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="px-8 py-6">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Tambah Peran Pengguna</h1>
-                    <p class="text-slate-600">Buat peran baru untuk pengguna sistem</p>
+                    <h1 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Tambah Peran Pengguna</h1>
+                    <p style="color: var(--text-secondary);">Buat peran baru untuk pengguna sistem</p>
                 </div>
                 <div>
-                    <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                    <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200"
+                       style="background-color: var(--secondary-bg);"
+                       onmouseover="this.style.backgroundColor='var(--secondary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
+                       onmouseout="this.style.backgroundColor='var(--secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
@@ -21,9 +24,9 @@
 
     <!-- Form Section -->
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-            <div class="px-8 py-6 border-b border-slate-200">
-                <h6 class="text-lg font-semibold text-slate-900 flex items-center">
+        <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+            <div class="px-8 py-6 border-b" style="border-color: var(--border-primary);">
+                <h6 class="text-lg font-semibold flex items-center" style="color: var(--text-primary);">
                     <i class="fas fa-user-plus mr-2"></i>Form Tambah Peran
                 </h6>
             </div>
@@ -44,7 +47,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="is_active">Status</label>
+                                    <label for="is_active" style="color: var(--text-primary);">Status</label>
                                     <div class="form-check">
                                         <input type="checkbox" 
                                                class="form-check-input" 
@@ -52,7 +55,7 @@
                                                name="is_active" 
                                                value="1" 
                                                {{ old('is_active', true) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_active">
+                                        <label class="form-check-label" for="is_active" style="color: var(--text-primary);">
                                             Aktif
                                         </label>
                                     </div>
@@ -75,10 +78,16 @@
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white font-medium rounded-xl transition-all duration-200">
+                            <a href="{{ route('peran-pengguna.index') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200"
+                               style="background-color: var(--secondary-bg);"
+                               onmouseover="this.style.backgroundColor='var(--secondary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
+                               onmouseout="this.style.backgroundColor='var(--secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-times mr-2"></i>Batal
                             </a>
-                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                    style="background-color: var(--primary-bg);"
+                                    onmouseover="this.style.backgroundColor='var(--primary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
+                                    onmouseout="this.style.backgroundColor='var(--primary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-save mr-2"></i>Simpan
                             </button>
                         </div>

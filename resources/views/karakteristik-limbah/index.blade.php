@@ -1,92 +1,130 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
+    @if(session('success'))
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span>{{ session('success') }}</span>
+            <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- Header Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-6">
-        <div class="px-8 py-6 border-b border-slate-200">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900 mb-2">Data Karakteristik Limbah</h1>
-                    <p class="text-slate-600">Kelola data karakteristik limbah dalam sistem</p>
-                </div>
-                <a href="{{ route('karakteristik-limbah.create') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <i class="fas fa-plus mr-2"></i> Tambah Karakteristik
+    <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Data Karakteristik Limbah</h1>
+                <p style="color: var(--text-secondary);">Kelola dan pantau data karakteristik limbah dengan mudah</p>
+            </div>
+            <div>
+                <a href="{{ route('karakteristik-limbah.create') }}" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    <span>Tambah Karakteristik</span>
                 </a>
             </div>
         </div>
-    </div>
-    
-    <!-- Table Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
-        <div class="p-8">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th width="50%">Nama Karakteristik</th>
-                                    <th width="25%">Status</th>
-                                    <th width="20%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($karakteristikLimbah as $index => $karakteristik)
-                                    <tr>
-                                        <td>{{ $karakteristikLimbah->firstItem() + $index }}</td>
-                                        <td>{{ $karakteristik->nama_karakteristik }}</td>
-                                        <td>
-                                            @if($karakteristik->status_aktif)
-                                                <span class="badge bg-success">Aktif</span>
-                                            @else
-                                                <span class="badge bg-danger">Tidak Aktif</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('karakteristik-limbah.show', $karakteristik) }}" 
-                                                   class="btn btn-info btn-sm" title="Lihat">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('karakteristik-limbah.edit', $karakteristik) }}" 
-                                                   class="btn btn-warning btn-sm" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('karakteristik-limbah.destroy', $karakteristik) }}" 
-                                                      method="POST" class="d-inline" 
-                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus karakteristik limbah ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center">
-                                            <div class="py-4">
-                                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                                <p class="text-muted">Belum ada data karakteristik limbah</p>
-                                                <a href="{{ route('karakteristik-limbah.create') }}" class="btn btn-primary">
-                                                    <i class="fas fa-plus"></i> Tambah Karakteristik Pertama
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    @if($karakteristikLimbah->hasPages())
-                        <div class="flex justify-center mt-6">
-                            {{ $karakteristikLimbah->links() }}
-                        </div>
-                    @endif
+        <div class="px-6 py-6">
+            <p style="color: var(--text-secondary);">Daftar karakteristik limbah yang terdaftar dalam sistem</p>
         </div>
+    </div>
+
+    <!-- Tabel Karakteristik Limbah -->
+    <div class="overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="overflow-x-auto">
+            <table class="min-w-full w-full">
+                <thead style="background-color: var(--border-primary);">
+                    <tr>
+                        <th class="w-16 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">No</th>
+                        <th class="min-w-[300px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Karakteristik</th>
+                        <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
+                        <th class="min-w-[160px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y" style="border-color: var(--border-primary);">
+                    @forelse($karakteristikLimbah as $index => $karakteristik)
+                        <tr class="transition-colors duration-200 border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
+                            <td class="px-4 py-4 text-center text-sm font-medium" style="color: var(--text-secondary);">
+                                {{ $karakteristikLimbah->firstItem() + $index }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                        <i class="fas fa-atom"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold" style="color: var(--text-primary);">{{ $karakteristik->nama_karakteristik }}</div>
+                                        <div class="mt-1 text-xs" style="color: var(--text-tertiary);">
+                                            ID: {{ $karakteristik->karakteristik_limbah_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($karakteristik->status_aktif)
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-1">
+                                    <a href="{{ route('karakteristik-limbah.show', $karakteristik) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors" style="color: var(--accent-primary); background-color: var(--accent-bg);" onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';" title="Lihat Detail">
+                                        <i class="fas fa-eye text-sm"></i>
+                                    </a>
+                                    <a href="{{ route('karakteristik-limbah.edit', $karakteristik) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors" style="color: var(--accent-secondary); background-color: var(--accent-bg-secondary);" onmouseover="this.style.backgroundColor='var(--accent-secondary)'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--accent-bg-secondary)'; this.style.color='var(--accent-secondary)';" title="Edit">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </a>
+                                    <form action="{{ route('karakteristik-limbah.destroy', $karakteristik) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors" style="color: var(--danger-primary); background-color: var(--danger-bg);" onmouseover="this.style.backgroundColor='var(--danger-primary)'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--danger-bg)'; this.style.color='var(--danger-primary)';" title="Hapus" onclick="return confirm('Anda yakin ingin menghapus karakteristik limbah {{ $karakteristik->nama_karakteristik }}?')">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <i class="fas fa-atom mb-4 text-6xl" style="color: var(--text-tertiary);"></i>
+                                    <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Belum ada data karakteristik limbah</h3>
+                                    <p class="mb-4" style="color: var(--text-secondary);">Mulai dengan menambahkan karakteristik limbah pertama Anda</p>
+                                    <a href="{{ route('karakteristik-limbah.create') }}" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
+                                        <i class="fas fa-plus mr-2"></i> Tambah Karakteristik Pertama
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if($karakteristikLimbah->hasPages())
+            <div class="border-t p-4" style="border-color: var(--border-primary); background-color: var(--card-bg);">
+                {{ $karakteristikLimbah->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function handleDeleteConfirm(event, message) {
+        event.preventDefault();
+        if (confirm(message)) {
+            event.target.closest('form').submit();
+        }
+        return false;
+    }
+</script>
+@endpush

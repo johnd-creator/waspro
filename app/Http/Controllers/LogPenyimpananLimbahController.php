@@ -21,6 +21,9 @@ class LogPenyimpananLimbahController extends Controller
         // UnitScope akan otomatis memfilter berdasarkan unit user
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unit', 'penggunaSistem']);
 
+        // Filter untuk tidak menampilkan log dengan status 'diangkut'
+        $query->whereRaw("LOWER(status_log) != 'diangkut'");
+
         // Search filters
         if ($request->filled('search_jenis')) {
             $query->whereHas('jenisLimbah', function ($q) use ($request) {
@@ -79,7 +82,7 @@ class LogPenyimpananLimbahController extends Controller
             'detail_sumber_limbah' => 'required|string',
             'jumlah_limbah_masuk' => 'required|numeric|min:0.01',
             'kode_limbah' => 'required|exists:jenis_limbah,kode_limbah',
-            'perusahaan_id' => 'nullable|exists:perusahaan_penghasil,perusahaan_id',
+            'perusahaan_nama' => 'nullable|string|max:255',
         ]);
 
         // Gunakan unit_id dari user yang login
@@ -99,6 +102,22 @@ class LogPenyimpananLimbahController extends Controller
         $tanggalMasuk = Carbon::parse($validated['tanggal_limbah_masuk']);
         $maksimalPenyimpanan = $tanggalMasuk->addDays($jenisLimbah->waktu_penyimpanan_hari);
 
+        // Handle perusahaan_nama - cari atau buat perusahaan baru jika diperlukan
+        $perusahaanId = null;
+        if (! empty($validated['perusahaan_nama'])) {
+            $perusahaan = PerusahaanPenghasil::where('nama_perusahaan', $validated['perusahaan_nama'])->first();
+            if (! $perusahaan) {
+                // Buat perusahaan baru jika tidak ditemukan
+                $perusahaan = PerusahaanPenghasil::create([
+                    'nama_perusahaan' => $validated['perusahaan_nama'],
+                    'alamat_perusahaan' => 'Alamat belum diisi',
+                    'kontak_perusahaan' => 'Kontak belum diisi',
+                    'is_active' => true,
+                ]);
+            }
+            $perusahaanId = $perusahaan->perusahaan_id;
+        }
+
         $log = LogPenyimpananLimbah::create([
             'tanggal_limbah_masuk' => $validated['tanggal_limbah_masuk'],
             'detail_sumber_limbah' => $validated['detail_sumber_limbah'],
@@ -107,7 +126,7 @@ class LogPenyimpananLimbahController extends Controller
             'status_log' => 'Tersimpan',
             'user_id' => Auth::user()->user_id,
             'kode_limbah' => $validated['kode_limbah'],
-            'perusahaan_id' => $validated['perusahaan_id'],
+            'perusahaan_id' => $perusahaanId,
             'unit_id' => $unitId,
         ]);
 
@@ -159,7 +178,7 @@ class LogPenyimpananLimbahController extends Controller
             'detail_sumber_limbah' => 'required|string|max:1000',
             'jumlah_limbah_masuk' => 'required|numeric|min:0.01',
             'kode_limbah' => 'required|exists:jenis_limbah,kode_limbah',
-            'perusahaan_id' => 'nullable|exists:perusahaan_penghasil,perusahaan_id',
+            'perusahaan_nama' => 'nullable|string|max:255',
             'tanggal_pengangkutan' => 'nullable|date',
             'jumlah_diangkut' => 'nullable|numeric|min:0',
             'status_log' => 'required|in:Tersimpan,Diangkut,Kadaluarsa',
@@ -167,6 +186,23 @@ class LogPenyimpananLimbahController extends Controller
 
         // Unit_id tidak dapat diubah, tetap menggunakan yang sudah ada
         $validated['unit_id'] = $logPenyimpanan->unit_id;
+
+        // Handle perusahaan_nama - cari atau buat perusahaan baru jika diperlukan
+        $perusahaanId = null;
+        if (! empty($validated['perusahaan_nama'])) {
+            $perusahaan = PerusahaanPenghasil::where('nama_perusahaan', $validated['perusahaan_nama'])->first();
+            if (! $perusahaan) {
+                // Buat perusahaan baru jika tidak ditemukan
+                $perusahaan = PerusahaanPenghasil::create([
+                    'nama_perusahaan' => $validated['perusahaan_nama'],
+                    'alamat_perusahaan' => 'Alamat belum diisi',
+                    'kontak_perusahaan' => 'Kontak belum diisi',
+                    'is_active' => true,
+                ]);
+            }
+            $perusahaanId = $perusahaan->perusahaan_id;
+        }
+        $validated['perusahaan_id'] = $perusahaanId;
 
         // Recalculate maximum storage date if waste entry date or type changed
         if ($logPenyimpanan->kode_limbah !== $validated['kode_limbah'] || $logPenyimpanan->tanggal_limbah_masuk !== $validated['tanggal_limbah_masuk']) {
@@ -179,6 +215,8 @@ class LogPenyimpananLimbahController extends Controller
             $validated['maksimal_penyimpanan_tanggal'] = $tanggalMasuk->addDays($jenisLimbah->waktu_penyimpanan_hari);
         }
 
+        // Remove perusahaan_nama from validated data before updating
+        unset($validated['perusahaan_nama']);
         $logPenyimpanan->update($validated);
 
         return redirect()->route('log-penyimpanan.index')

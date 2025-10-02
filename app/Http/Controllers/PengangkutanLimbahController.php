@@ -18,7 +18,7 @@ class PengangkutanLimbahController extends Controller
     }
 
     /**
-     * Tampilkan semua limbah kecuali yang berstatus 'diangkut'
+     * Tampilkan semua limbah kecuali yang berstatus 'Diangkut'
      */
     public function index(Request $request)
     {
@@ -43,8 +43,8 @@ class PengangkutanLimbahController extends Controller
             $query->where('unit_id', $user->unit_id);
         }
 
-        // Tampilkan semua status kecuali 'diangkut'
-        $query->where('status_log', '!=', 'diangkut');
+        // Tampilkan semua status kecuali 'Diangkut' (case-insensitive)
+        $query->whereRaw("LOWER(status_log) != 'diangkut'");
 
         // Filter berdasarkan jenis limbah jika ada
         if ($request->filled('jenis_limbah')) {
@@ -79,7 +79,7 @@ class PengangkutanLimbahController extends Controller
         // Data untuk filter dropdown
         $jenisLimbah = JenisLimbah::where('is_active', true)->get();
         $perusahaan = PerusahaanPenghasil::where('is_active', true)->get();
-        $statusOptions = ['tersimpan', 'kadaluarsa', 'hampir_kadaluarsa'];
+        $statusOptions = ['Tersimpan', 'Kadaluarsa', 'Hampir Kadaluarsa'];
 
         return view('pengangkutan-limbah.index', compact(
             'logPenyimpanan',
@@ -90,7 +90,7 @@ class PengangkutanLimbahController extends Controller
     }
 
     /**
-     * Tampilkan semua limbah yang berstatus 'diangkut'
+     * Tampilkan semua limbah yang berstatus 'Diangkut'
      */
     public function diangkut(Request $request)
     {
@@ -115,8 +115,8 @@ class PengangkutanLimbahController extends Controller
             $query->where('unit_id', $user->unit_id);
         }
 
-        // Hanya tampilkan yang berstatus 'diangkut'
-        $query->where('status_log', 'diangkut');
+        // Hanya tampilkan yang berstatus 'Diangkut' (case-insensitive)
+        $query->whereRaw("LOWER(status_log) = 'diangkut'");
 
         // Filter berdasarkan jenis limbah jika ada
         if ($request->filled('jenis_limbah')) {
@@ -169,14 +169,14 @@ class PengangkutanLimbahController extends Controller
 
         $log = LogPenyimpananLimbah::findOrFail($id);
 
-        // Pastikan limbah belum diangkut
-        if ($log->status_log === 'diangkut') {
+        // Pastikan limbah belum diangkut (case-insensitive)
+        if (strtolower($log->status_log) === 'diangkut') {
             return redirect()->back()->with('error', 'Limbah sudah dalam status diangkut.');
         }
 
-        // Update status menjadi diangkut
+        // Update status menjadi Diangkut
         $log->update([
-            'status_log' => 'diangkut',
+            'status_log' => 'Diangkut',
             'tanggal_pengangkutan' => now(),
             'jumlah_diangkut' => $log->jumlah_limbah_masuk,
         ]);
@@ -203,13 +203,13 @@ class PengangkutanLimbahController extends Controller
         ]);
 
         $logs = LogPenyimpananLimbah::whereIn('log_id', $request->selected_logs)
-            ->where('status_log', '!=', 'diangkut')
+            ->whereRaw("LOWER(status_log) != 'diangkut'")
             ->get();
 
         $approvedCount = 0;
         foreach ($logs as $log) {
             $log->update([
-                'status_log' => 'diangkut',
+                'status_log' => 'Diangkut',
                 'tanggal_pengangkutan' => now(),
                 'jumlah_diangkut' => $log->jumlah_limbah_masuk,
             ]);
@@ -217,5 +217,68 @@ class PengangkutanLimbahController extends Controller
         }
 
         return redirect()->back()->with('success', "Berhasil menyetujui pengangkutan {$approvedCount} limbah.");
+    }
+
+    /**
+     * Tampilkan form untuk membuat data pengangkutan limbah baru
+     */
+    public function create()
+    {
+        /** @var PenggunaSistem|null $user */
+        $user = Auth::guard('web')->user();
+
+        // Hanya Supervisor dan Admin yang bisa mengakses
+        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Data untuk dropdown
+        $jenisLimbah = JenisLimbah::where('is_active', true)->get();
+        $perusahaan = PerusahaanPenghasil::where('is_active', true)->get();
+
+        return view('pengangkutan-limbah.create', compact(
+            'jenisLimbah',
+            'perusahaan'
+        ));
+    }
+
+    /**
+     * Simpan data pengangkutan limbah baru
+     */
+    public function store(Request $request)
+    {
+        /** @var PenggunaSistem|null $user */
+        $user = Auth::guard('web')->user();
+
+        // Hanya Supervisor dan Admin yang bisa mengakses
+        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $request->validate([
+            'kode_limbah' => 'required|exists:jenis_limbah,kode_limbah',
+            'perusahaan_id' => 'required|exists:perusahaan_penghasil,perusahaan_id',
+            'jumlah_limbah_masuk' => 'required|numeric|min:0',
+            'tanggal_limbah_masuk' => 'required|date',
+            'keterangan' => 'nullable|string|max:255',
+        ]);
+
+        // Buat log penyimpanan baru dengan status Diangkut
+        $log = new LogPenyimpananLimbah;
+        $log->kode_limbah = $request->kode_limbah;
+        $log->perusahaan_id = $request->perusahaan_id;
+        $log->unit_id = $user->unit_id;
+        $log->jumlah_limbah_masuk = $request->jumlah_limbah_masuk;
+        $log->tanggal_limbah_masuk = $request->tanggal_limbah_masuk;
+        $log->keterangan = $request->keterangan;
+        $log->status_log = 'Diangkut';
+        $log->tanggal_pengangkutan = now();
+        $log->jumlah_diangkut = $request->jumlah_limbah_masuk;
+        $log->user_id = $user->user_id;
+        $log->kode_identitas = 'ANG-'.date('YmdHis').'-'.rand(1000, 9999);
+        $log->save();
+
+        return redirect()->route('pengangkutan-limbah.diangkut')
+            ->with('success', 'Data pengangkutan limbah berhasil ditambahkan.');
     }
 }
