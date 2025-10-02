@@ -9,111 +9,105 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-11.x-red.svg" alt="Laravel Version">
+  <img src="https://img.shields.io/badge/Laravel-12.x-red.svg" alt="Laravel Version">
   <img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP Version">
-  <img src="https://img.shields.io/badge/Tailwind-3.x-cyan.svg" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Tailwind-4.x-cyan.svg" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Version-0.1.2-brightgreen.svg" alt="App Version">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </p>
 
 ## 📋 Tentang WASPRO
 
-WASPRO (Waste Management System for Occupational Health and Safety) adalah sistem informasi berbasis web yang dirancang khusus untuk mengelola limbah industri dengan standar Keselamatan dan Kesehatan Kerja (K3). Sistem ini membantu perusahaan dalam:
+WASPRO (Waste Management System for Occupational Health and Safety) adalah sistem informasi berbasis web yang dirancang untuk mengelola siklus hidup limbah industri sesuai standar Keselamatan dan Kesehatan Kerja (K3). Sistem ini membantu perusahaan dalam:
 
-- 📊 **Monitoring Real-time** - Pemantauan status limbah secara real-time
-- 🗂️ **Manajemen Data Limbah** - Pencatatan dan kategorisasi jenis limbah
-- ⚠️ **Sistem Peringatan** - Notifikasi otomatis untuk limbah mendekati expired
-- 📈 **Laporan Komprehensif** - Generate laporan bulanan, tahunan, dan custom
-- 🚛 **Tracking Pengangkutan** - Monitoring proses pengangkutan limbah
-- 👥 **Multi-User Management** - Sistem role-based access control
-- 🏢 **Multi-Unit Support** - Mendukung multiple unit pembangkit
+- 📊 **Monitoring Real-time** – Memantau status limbah, stok, dan pipeline pengangkutan
+- 🗂️ **Manajemen Data Limbah** – Pencatatan jenis, karakteristik, dan sumber limbah
+- ⚠️ **Sistem Peringatan** – Notifikasi otomatis untuk limbah yang mendekati tanggal kedaluwarsa
+- 📈 **Laporan Komprehensif** – Laporan PDF/Excel untuk perusahaan, unit, status, dan tipe limbah
+- 🚛 **Tracking Pengangkutan** – Monitoring proses pengangkutan termasuk histori dan bukti dokumen
+- 👥 **Multi-User Management** – Role-based access control lengkap dengan audit aktivitas
+- 🏢 **Multi-Unit Support** – Manajemen data multi perusahaan / unit pembangkit
 
-## ✨ Fitur Utama
+## ✨ Apa yang baru di v0.1.2
 
-### 🎯 Dashboard Interaktif
-- Statistik real-time limbah per kategori
-- Grafik trend penyimpanan limbah
-- Alert limbah mendekati expired
-- Quick actions untuk operasi harian
+- Desain dashboard dan laporan diperbarui dengan Tailwind 4, termasuk dark mode yang lebih stabil
+- Penambahan komponen statistik, tema, dan header halaman reusable
+- Perbaikan modul pengangkutan limbah serta PDF report baru (company, monthly, status, unit, waste type)
+- Optimalisasi refresh data laporan dan perbaikan masa simpan limbah
 
-### 📝 Manajemen Limbah
-- **Jenis Limbah**: Kategorisasi berdasarkan karakteristik dan bahaya
-- **Log Penyimpanan**: Pencatatan detail setiap aktivitas penyimpanan
-- **Tracking Expired**: Monitoring otomatis tanggal kadaluarsa
-- **Pengangkutan**: Manajemen proses pengangkutan dan disposal
+## 🚀 Teknologi Utama
 
-### 📊 Sistem Pelaporan
-- Laporan bulanan per unit/perusahaan
-- Export ke Excel/PDF
-- Laporan compliance K3
-- Analytics dan insights
+- **Backend**: Laravel 12.x, PHP 8.2+
+- **Frontend**: Tailwind CSS 4.x, Vite, Blade components
+- **Database**: MySQL 8+ (SQLite alternatif untuk pengembangan)
+- **Queue & Schedule**: Database queue driver + Artisan scheduler
+- **Export & PDF**: Laravel Excel & DomPDF
+- **Authentication**: Session-based Laravel auth dengan role management
 
-### 🔐 Keamanan & Akses
-- Role-based permissions (Super Admin, Admin Unit, Operator)
-- Audit trail untuk semua aktivitas
-- Session management yang aman
-- Data encryption
-
-## 🚀 Teknologi
-
-- **Backend**: Laravel 11.x dengan PHP 8.2+
-- **Frontend**: Tailwind CSS 3.x + Alpine.js
-- **Database**: MySQL 8.0+
-- **Build Tool**: Vite
-- **Authentication**: Laravel Sanctum
-- **Export**: Laravel Excel, DomPDF
-
-## 📦 Instalasi
+## 📦 Instalasi Lokal
 
 ### Persyaratan Sistem
-- PHP 8.2 atau lebih tinggi
-- Composer
-- Node.js & NPM
-- MySQL 8.0+
-- Web server (Apache/Nginx)
+- PHP 8.2 atau lebih tinggi dengan ekstensi `mbstring`, `openssl`, `pdo_mysql`, `fileinfo`, `bcmath`, `intl`, `gd`
+- Composer 2.x
+- Node.js 18 LTS atau lebih baru & npm
+- MySQL / MariaDB (atau SQLite)
+- Redis opsional untuk cache/queue (default menggunakan database)
 
-### Langkah Instalasi
+### Langkah Setup
 
-1. **Clone Repository**
+1. **Clone Repository & Checkout Rilis**
    ```bash
    git clone https://github.com/johnd-creator/waspro.git
    cd waspro
+   git checkout v0.1.2
    ```
 
 2. **Install Dependencies**
    ```bash
-   composer install
+   composer install --no-interaction --prefer-dist
    npm install
    ```
 
-3. **Environment Setup**
+3. **Konfigurasi Environment**
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
+   - Edit `.env` untuk menyesuaikan koneksi database, mail, dan konfigurasi spesifik
+   - Opsi SQLite dev: set `DB_CONNECTION=sqlite` dan isi `DB_DATABASE=/absolute/path/database.sqlite`
 
-4. **Database Configuration**
+4. **Migrasi & Seeder**
    ```bash
-   # Edit .env file dengan konfigurasi database
-   php artisan migrate
-   php artisan db:seed
+   php artisan migrate --seed
    ```
 
-5. **Build Assets**
+5. **Utility Tambahan**
+   ```bash
+   php artisan storage:link
+   ```
+   - Jalankan queue worker saat fitur notifikasi/refresh diperlukan: `php artisan queue:work`
+
+6. **Menjalankan Aplikasi**
+   ```bash
+   # Development terpisah
+   npm run dev
+   php artisan serve
+
+   # Atau jalankan semuanya sekaligus
+   composer run dev
+   ```
+
+7. **Build Produksi (opsional)**
    ```bash
    npm run build
-   # atau untuk development
-   npm run dev
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
    ```
 
-6. **Start Server**
-   ```bash
-   php artisan serve
-   ```
+## 🔧 Konfigurasi Penting
 
-## 🔧 Konfigurasi
-
-### Database
-Edit file `.env` untuk konfigurasi database:
+### Database (MySQL contoh)
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -123,53 +117,63 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-### Email (Opsional)
-Untuk fitur notifikasi email:
+### Email / Notifikasi
 ```env
 MAIL_MAILER=smtp
-MAIL_HOST=your_smtp_host
-MAIL_PORT=587
-MAIL_USERNAME=your_email
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_username
 MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="noreply@k3limbah.com"
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-## 👥 Default Users
+### Queue & Cache
+```env
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+SESSION_DRIVER=database
+```
 
-Setelah seeding, gunakan akun berikut:
+## 👥 Akun Default
+
+Seeder bawaan menambahkan akun berikut untuk pengujian:
 
 | Role | Username | Password |
 |------|----------|----------|
 | Super Admin | superadmin | password |
-| Admin Unit | admin | password |
-| Operator | operator | password |
+| Admin Unit  | admin       | password |
+| Operator    | operator    | password |
 
-## 📚 Dokumentasi
+Gunakan akun ini hanya di lingkungan pengembangan.
 
-- [User Manual](docs/user-manual.md)
-- [API Documentation](docs/api.md)
-- [Deployment Guide](docs/deployment.md)
-- [Changelog](CHANGELOG.md)
+## 📚 Dokumentasi Tambahan
+
+- `docs/user-manual.md` – Panduan pengguna (UI & fitur)
+- `docs/api.md` – Referensi endpoint API
+- `docs/deployment.md` – Panduan deployment produksi
+- `CHANGELOG.md` – Riwayat perilisan (termasuk v0.1.2)
 
 ## 🤝 Kontribusi
 
-Kami menerima kontribusi dari komunitas! Silakan:
-
 1. Fork repository ini
-2. Buat feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buat Pull Request
+2. Buat branch fitur (`git switch -c feature/nama-fitur`)
+3. Commit perubahan (`git commit -m "feat: tambah nama fitur"`)
+4. Push branch (`git push origin feature/nama-fitur`)
+5. Ajukan Pull Request ke `main`
+
+Silakan sertakan screenshot / GIF untuk perubahan UI dan jelaskan langkah testing yang dilakukan.
 
 ## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+Proyek ini berlisensi MIT – lihat [LICENSE](LICENSE).
 
-## 📞 Support
+## 📞 Support & Feedback
 
-Jika Anda membutuhkan bantuan:
 - 📧 Email: support@waspro.com
-- 📱 WhatsApp: +62-xxx-xxxx-xxxx
-- 🐛 Issues: [GitHub Issues](https://github.com/johnd-creator/waspro/issues)
+- 🐛 Laporkan bug: [GitHub Issues](https://github.com/johnd-creator/waspro/issues)
+- 💬 Diskusi internal: gunakan kanal komunikasi tim
 
 ---
 
