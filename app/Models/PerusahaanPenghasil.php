@@ -19,11 +19,16 @@ class PerusahaanPenghasil extends Model
         'jenis_perusahaan',
         'telepon',
         'email',
+        'npwp',
         'kota',
         'alamat_perusahaan',
         'person_in_charge',
         'status_aktif',
         'keterangan',
+    ];
+
+    protected $casts = [
+        'status_aktif' => 'boolean',
     ];
 
     /**

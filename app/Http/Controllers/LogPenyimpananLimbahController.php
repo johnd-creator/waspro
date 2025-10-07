@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WasteDocumentUploaded;
+use App\Helpers\K3Logger;
 use App\Models\JenisLimbah;
 use App\Models\KategoriKegiatanSumber;
 use App\Models\LogPenyimpananLimbah;
@@ -9,7 +11,9 @@ use App\Models\PerusahaanPenghasil;
 use App\Models\UnitPembangkit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class LogPenyimpananLimbahController extends Controller
 {
@@ -83,6 +87,7 @@ class LogPenyimpananLimbahController extends Controller
             'jumlah_limbah_masuk' => 'required|numeric|min:0.01',
             'kode_limbah' => 'required|exists:jenis_limbah,kode_limbah',
             'perusahaan_nama' => 'nullable|string|max:255',
+            'dokumen_limbah' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:'.config('app.max_upload_size', 10240),
         ]);
 
         // Gunakan unit_id dari user yang login
@@ -107,18 +112,21 @@ class LogPenyimpananLimbahController extends Controller
         if (! empty($validated['perusahaan_nama'])) {
             $perusahaan = PerusahaanPenghasil::where('nama_perusahaan', $validated['perusahaan_nama'])->first();
             if (! $perusahaan) {
-                // Buat perusahaan baru jika tidak ditemukan
                 $perusahaan = PerusahaanPenghasil::create([
                     'nama_perusahaan' => $validated['perusahaan_nama'],
                     'alamat_perusahaan' => 'Alamat belum diisi',
-                    'kontak_perusahaan' => 'Kontak belum diisi',
-                    'is_active' => true,
+                    'jenis_perusahaan' => 'Belum ditentukan',
+                    'status_aktif' => true,
                 ]);
             }
             $perusahaanId = $perusahaan->perusahaan_id;
         }
 
-        $log = LogPenyimpananLimbah::create([
+        $documentMeta = $request->file('dokumen_limbah')
+            ? $this->uploadWasteDocument($request->file('dokumen_limbah'))
+            : null;
+
+        $log = LogPenyimpananLimbah::create(array_merge([
             'tanggal_limbah_masuk' => $validated['tanggal_limbah_masuk'],
             'detail_sumber_limbah' => $validated['detail_sumber_limbah'],
             'jumlah_limbah_masuk' => $validated['jumlah_limbah_masuk'],
@@ -128,7 +136,12 @@ class LogPenyimpananLimbahController extends Controller
             'kode_limbah' => $validated['kode_limbah'],
             'perusahaan_id' => $perusahaanId,
             'unit_id' => $unitId,
-        ]);
+        ], $documentMeta['attributes'] ?? []));
+
+        if ($documentMeta) {
+            K3Logger::fileOperation('UPLOAD', $documentMeta['original_name'], $documentMeta['attributes']['dokumen_path']);
+            WasteDocumentUploaded::dispatch($log, $documentMeta['attributes']['dokumen_path'], $documentMeta['original_name'], $documentMeta['size']);
+        }
 
         return redirect()->route('log-penyimpanan.index')
             ->with('success', 'Log penyimpanan limbah berhasil ditambahkan.');
@@ -182,6 +195,7 @@ class LogPenyimpananLimbahController extends Controller
             'tanggal_pengangkutan' => 'nullable|date',
             'jumlah_diangkut' => 'nullable|numeric|min:0',
             'status_log' => 'required|in:Tersimpan,Diangkut,Kadaluarsa',
+            'dokumen_limbah' => 'sometimes|nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:'.config('app.max_upload_size', 10240),
         ]);
 
         // Unit_id tidak dapat diubah, tetap menggunakan yang sudah ada
@@ -192,12 +206,11 @@ class LogPenyimpananLimbahController extends Controller
         if (! empty($validated['perusahaan_nama'])) {
             $perusahaan = PerusahaanPenghasil::where('nama_perusahaan', $validated['perusahaan_nama'])->first();
             if (! $perusahaan) {
-                // Buat perusahaan baru jika tidak ditemukan
                 $perusahaan = PerusahaanPenghasil::create([
                     'nama_perusahaan' => $validated['perusahaan_nama'],
                     'alamat_perusahaan' => 'Alamat belum diisi',
-                    'kontak_perusahaan' => 'Kontak belum diisi',
-                    'is_active' => true,
+                    'jenis_perusahaan' => 'Belum ditentukan',
+                    'status_aktif' => true,
                 ]);
             }
             $perusahaanId = $perusahaan->perusahaan_id;
@@ -216,8 +229,20 @@ class LogPenyimpananLimbahController extends Controller
         }
 
         // Remove perusahaan_nama from validated data before updating
-        unset($validated['perusahaan_nama']);
+        $documentMeta = null;
+        if ($request->hasFile('dokumen_limbah')) {
+            $this->deleteWasteDocument($logPenyimpanan);
+            $documentMeta = $this->uploadWasteDocument($request->file('dokumen_limbah'));
+            $validated = array_merge($validated, $documentMeta['attributes']);
+        }
+
+        unset($validated['perusahaan_nama'], $validated['dokumen_limbah']);
         $logPenyimpanan->update($validated);
+
+        if ($documentMeta) {
+            K3Logger::fileOperation('UPLOAD', $documentMeta['original_name'], $documentMeta['attributes']['dokumen_path']);
+            WasteDocumentUploaded::dispatch($logPenyimpanan->fresh(), $documentMeta['attributes']['dokumen_path'], $documentMeta['original_name'], $documentMeta['size']);
+        }
 
         return redirect()->route('log-penyimpanan.index')
             ->with('success', 'Log penyimpanan limbah berhasil diperbarui.');
@@ -231,10 +256,60 @@ class LogPenyimpananLimbahController extends Controller
         // Policy akan otomatis mengecek akses
         $this->authorize('delete', $logPenyimpanan);
 
+        $this->deleteWasteDocument($logPenyimpanan);
+
         $logPenyimpanan->delete();
 
         return redirect()->route('log-penyimpanan.index')
             ->with('success', 'Log penyimpanan limbah berhasil dihapus.');
+    }
+
+    /**
+     * Upload waste document to storage and prepare model attributes.
+     */
+    private function uploadWasteDocument(UploadedFile $file): array
+    {
+        $directory = 'limbah-documents/'.now()->format('Y/m');
+        $path = $file->store($directory, 'public');
+
+        return [
+            'attributes' => [
+                'dokumen_path' => $path,
+                'dokumen_original_name' => $file->getClientOriginalName(),
+                'dokumen_mime' => $file->getClientMimeType(),
+                'dokumen_size' => (int) $file->getSize(),
+                'dokumen_uploaded_at' => now(),
+            ],
+            'original_name' => $file->getClientOriginalName(),
+            'size' => (int) $file->getSize(),
+        ];
+    }
+
+    /**
+     * Delete waste document from storage if present.
+     */
+    private function deleteWasteDocument(LogPenyimpananLimbah $log): void
+    {
+        if (! $log->dokumen_path) {
+            return;
+        }
+
+        if (Storage::disk('public')->exists($log->dokumen_path)) {
+            Storage::disk('public')->delete($log->dokumen_path);
+            K3Logger::fileOperation(
+                'DELETE',
+                $log->dokumen_original_name ?? basename($log->dokumen_path),
+                $log->dokumen_path
+            );
+        }
+
+        $log->fill([
+            'dokumen_path' => null,
+            'dokumen_original_name' => null,
+            'dokumen_mime' => null,
+            'dokumen_size' => null,
+            'dokumen_uploaded_at' => null,
+        ])->saveQuietly();
     }
 
     /**

@@ -52,7 +52,7 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
             </div>
         </div>
         <div class="px-8 py-6">
-            <form action="{{ route('log-penyimpanan.update', $logPenyimpanan->log_id) }}" method="POST">
+            <form action="{{ route('log-penyimpanan.update', $logPenyimpanan->log_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 
@@ -196,6 +196,35 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                                 @enderror
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Dokumen Pendukung -->
+                    <div class="mt-6 space-y-3">
+                        <label for="dokumen_limbah" class="block text-sm font-medium" style="color: var(--text-primary);">Dokumen Pendukung</label>
+                        @if($logPenyimpanan->dokumen_path)
+                            <div class="rounded-lg border px-4 py-3 text-sm" style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--text-secondary);">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium" style="color: var(--text-primary);">{{ $logPenyimpanan->dokumen_original_name ?? basename($logPenyimpanan->dokumen_path) }}</p>
+                                        <p class="text-xs">Ukuran: {{ number_format(($logPenyimpanan->dokumen_size ?? 0) / 1024, 2) }} KB · Diunggah {{ optional($logPenyimpanan->dokumen_uploaded_at)->diffForHumans() }}</p>
+                                    </div>
+                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
+                                        <i class="fas fa-download mr-1"></i> Unduh
+                                    </a>
+                                </div>
+                                <p class="mt-2 text-xs">Mengunggah file baru akan menggantikan dokumen saat ini.</p>
+                            </div>
+                        @endif
+                        <input type="file"
+                               id="dokumen_limbah"
+                               name="dokumen_limbah"
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                               class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('dokumen_limbah') border-red-500 @enderror"
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                        <p class="text-sm text-slate-500">Format diperbolehkan: PDF, Word, Excel, atau gambar (maksimal {{ number_format(config('app.max_upload_size', 10240) / 1024, 1) }} MB).</p>
+                        @error('dokumen_limbah')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Action Buttons -->

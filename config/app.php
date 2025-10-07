@@ -123,4 +123,19 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Rate Limiting
+    |--------------------------------------------------------------------------
+    |
+    | These values control the default rate limiting behaviour for API routes.
+    |
+    */
+
+    'api_rate_limit' => (int) env('API_RATE_LIMIT', 120),
+
+    'api_rate_limit_decay' => (int) env('API_RATE_LIMIT_DECAY_SECONDS', 60),
+
+    'max_upload_size' => (int) env('APP_MAX_UPLOAD_SIZE', 10240),
+
 ];

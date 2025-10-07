@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\HasApiTokens;
 
 class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
-    use CanResetPasswordTrait, HasFactory, Notifiable;
+    use CanResetPasswordTrait, HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'pengguna_sistem';
 

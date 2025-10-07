@@ -191,27 +191,19 @@
                     <canvas id="statusChart"></canvas>
                 </div>
                 <div class="space-y-2">
+                    @forelse($statusSummary as $status)
                     <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
                         <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <span style="color: var(--text-primary);" class="font-medium text-sm">Tersimpan</span>
+                            <div class="w-3 h-3 rounded-full {{ $status['dot_class'] ?? 'bg-slate-400' }}"></div>
+                            <span style="color: var(--text-primary);" class="font-medium text-sm">{{ $status['label'] }}</span>
                         </div>
-                        <span class="font-bold text-blue-600 text-sm">65%</span>
+                        <span class="font-bold text-sm {{ $status['text_class'] ?? 'text-slate-600' }}">{{ $status['percentage'] }}%</span>
                     </div>
-                    <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                            <span style="color: var(--text-primary);" class="font-medium text-sm">Diangkut</span>
-                        </div>
-                        <span class="font-bold text-emerald-600 text-sm">25%</span>
+                    @empty
+                    <div style="background: var(--card-secondary-bg); color: var(--text-secondary);" class="p-3 rounded-lg text-sm">
+                        Belum ada data status limbah.
                     </div>
-                    <div style="background: var(--card-secondary-bg);" class="flex items-center justify-between p-2 rounded-lg">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span style="color: var(--text-primary);" class="font-medium text-sm">Kadaluarsa</span>
-                        </div>
-                        <span class="font-bold text-red-600 text-sm">10%</span>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -488,6 +480,15 @@
 @push('scripts')
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
+const dashboardChartData = {
+    monthlyLabels: @json($monthlyChartLabels ?? []),
+    monthlyValues: @json($monthlyChartValues ?? []),
+    statusLabels: @json($statusChartLabels ?? []),
+    statusValues: @json($statusChartValues ?? []),
+    statusBackgroundColors: @json($statusChartBackgroundColors ?? []),
+    statusBorderColors: @json($statusChartBorderColors ?? []),
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize AOS
     AOS.init({
@@ -533,14 +534,25 @@ function initializeCharts() {
 
     // Monthly Chart
     const monthlyCtx = document.getElementById('monthlyChart');
-    if (monthlyCtx) {
-        const monthlyChart = new Chart(monthlyCtx.getContext('2d'), {
+    if (monthlyCtx && typeof Chart !== 'undefined') {
+        const monthlyLabels = Array.isArray(dashboardChartData.monthlyLabels) && dashboardChartData.monthlyLabels.length
+            ? dashboardChartData.monthlyLabels
+            : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        const monthlyValues = (Array.isArray(dashboardChartData.monthlyValues) && dashboardChartData.monthlyValues.length
+            ? dashboardChartData.monthlyValues
+            : new Array(monthlyLabels.length).fill(0)).map(function(value) {
+                const numeric = Number(value);
+                return Number.isFinite(numeric) ? Number(numeric.toFixed(2)) : 0;
+            });
+
+        new Chart(monthlyCtx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: monthlyLabels,
                 datasets: [{
-                    label: 'Total Limbah (Ton)',
-                    data: [12, 19, 3, 5, 2, 3, 15, 8, 12, 7, 9, 11],
+                    label: 'Total Limbah (Kg)',
+                    data: monthlyValues,
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 3,
@@ -559,6 +571,14 @@ function initializeCharts() {
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = Number(context.parsed.y ?? 0);
+                                return `${context.dataset.label}: ${value.toLocaleString('id-ID', { maximumFractionDigits: 2 })} Kg`;
+                            }
+                        }
                     }
                 },
                 scales: {
@@ -584,54 +604,74 @@ function initializeCharts() {
         });
     }
 
-    // Status Chart - Hardcoded sample data
-      var statusLabels = ['Tersimpan', 'Diangkut', 'Kadaluarsa'];
-      var statusData = [65, 25, 10];
-     
-     const statusCtx = document.getElementById('statusChart');
-     
-     if (statusCtx && typeof Chart !== 'undefined') {
-         try {
-             const statusChart = new Chart(statusCtx, {
-                 type: 'doughnut',
-                 data: {
-                     labels: statusLabels,
-                     datasets: [{
-                         data: statusData,
-                         backgroundColor: [
-                             'rgba(59, 130, 246, 0.8)',   // blue-500 untuk Tersimpan
-                             'rgba(16, 185, 129, 0.8)',   // emerald-500 untuk Diangkut
-                             'rgba(239, 68, 68, 0.8)'     // red-500 untuk Kadaluarsa
-                         ],
-                         borderColor: [
-                             'rgba(59, 130, 246, 1)',     // blue-500 untuk Tersimpan
-                             'rgba(16, 185, 129, 1)',     // emerald-500 untuk Diangkut
-                             'rgba(239, 68, 68, 1)'       // red-500 untuk Kadaluarsa
-                         ],
-                         borderWidth: 2
-                     }]
-                 },
-                 options: {
-                     responsive: true,
-                     maintainAspectRatio: false,
-                     plugins: {
-                         legend: {
-                             position: 'bottom',
-                             labels: {
-                                 padding: 20,
-                                 usePointStyle: true,
-                                 font: {
-                                     size: 12
-                                 }
-                             }
-                         }
-                     }
-                 }
-             });
-         } catch (error) {
-             // Handle chart creation error silently
-         }
-     }
+    // Status Chart
+    const statusCtx = document.getElementById('statusChart');
+
+    if (statusCtx && typeof Chart !== 'undefined') {
+        const statusLabels = Array.isArray(dashboardChartData.statusLabels) && dashboardChartData.statusLabels.length
+            ? dashboardChartData.statusLabels
+            : ['Tersimpan', 'Diangkut', 'Kadaluarsa'];
+
+        const statusValues = (Array.isArray(dashboardChartData.statusValues) && dashboardChartData.statusValues.length
+            ? dashboardChartData.statusValues
+            : new Array(statusLabels.length).fill(0)).map(function(value) {
+                return Number.isFinite(Number(value)) ? Number(value) : 0;
+            });
+
+        const backgroundColors = Array.isArray(dashboardChartData.statusBackgroundColors) && dashboardChartData.statusBackgroundColors.length
+            ? dashboardChartData.statusBackgroundColors
+            : ['rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)'];
+
+        const borderColors = Array.isArray(dashboardChartData.statusBorderColors) && dashboardChartData.statusBorderColors.length
+            ? dashboardChartData.statusBorderColors
+            : ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)', 'rgba(239, 68, 68, 1)'];
+
+        try {
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusValues,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce(function(sum, value) {
+                                        const numeric = Number(value);
+                                        return sum + (Number.isFinite(numeric) ? numeric : 0);
+                                    }, 0);
+                                    const value = Number(context.parsed ?? 0);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${context.label}: ${value.toLocaleString('id-ID')} log (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            // Handle chart creation error silently
+        }
+    }
     
     // Real-time clock and date function
     function updateDateTime() {

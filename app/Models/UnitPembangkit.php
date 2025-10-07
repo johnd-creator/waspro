@@ -19,6 +19,13 @@ class UnitPembangkit extends Model
         'alamat_unit',
         'kota',
         'kode_pos',
+        'telepon_unit',
+        'keterangan',
+        'status_aktif',
+    ];
+
+    protected $casts = [
+        'status_aktif' => 'boolean',
     ];
 
     /**

@@ -55,6 +55,84 @@ class DashboardController extends Controller
             ->groupBy('status_log')
             ->get();
 
+        // Prepare status chart data (ordered and with color mappings)
+        $statusTotals = $statusDistribution->pluck('total', 'status_log');
+        $statusOrder = ['Tersimpan', 'Diangkut', 'Kadaluarsa'];
+        $defaultColor = [
+            'dot' => 'bg-slate-400',
+            'text' => 'text-slate-600',
+            'background' => 'rgba(148, 163, 184, 0.8)',
+            'border' => 'rgba(148, 163, 184, 1)',
+        ];
+        $statusColorMap = [
+            'Tersimpan' => [
+                'dot' => 'bg-blue-500',
+                'text' => 'text-blue-600',
+                'background' => 'rgba(59, 130, 246, 0.8)',
+                'border' => 'rgba(59, 130, 246, 1)',
+            ],
+            'Diangkut' => [
+                'dot' => 'bg-emerald-500',
+                'text' => 'text-emerald-600',
+                'background' => 'rgba(16, 185, 129, 0.8)',
+                'border' => 'rgba(16, 185, 129, 1)',
+            ],
+            'Kadaluarsa' => [
+                'dot' => 'bg-red-500',
+                'text' => 'text-red-600',
+                'background' => 'rgba(239, 68, 68, 0.8)',
+                'border' => 'rgba(239, 68, 68, 1)',
+            ],
+        ];
+
+        $statusChartLabels = [];
+        $statusChartValues = [];
+        $statusChartBackgroundColors = [];
+        $statusChartBorderColors = [];
+        $statusSummary = [];
+        $statusTotalCount = (int) $statusTotals->sum();
+
+        $appendStatusData = function (string $status) use (
+            $statusTotals,
+            $statusColorMap,
+            $defaultColor,
+            &$statusChartLabels,
+            &$statusChartValues,
+            &$statusChartBackgroundColors,
+            &$statusChartBorderColors,
+            &$statusSummary,
+            $statusTotalCount
+        ) {
+            $count = (int) ($statusTotals[$status] ?? 0);
+            $colors = $statusColorMap[$status] ?? $defaultColor;
+
+            $statusChartLabels[] = $status;
+            $statusChartValues[] = $count;
+            $statusChartBackgroundColors[] = $colors['background'];
+            $statusChartBorderColors[] = $colors['border'];
+
+            $statusSummary[] = [
+                'label' => $status,
+                'count' => $count,
+                'percentage' => $statusTotalCount > 0
+                    ? round(($count / $statusTotalCount) * 100)
+                    : 0,
+                'dot_class' => $colors['dot'],
+                'text_class' => $colors['text'],
+            ];
+        };
+
+        foreach ($statusOrder as $status) {
+            $appendStatusData($status);
+        }
+
+        // Include any additional statuses that might appear outside the default order
+        foreach ($statusTotals->keys() as $status) {
+            if (! in_array($status, $statusOrder, true)) {
+                $appendStatusData($status);
+            }
+        }
+
         // Waste storage by month (last 12 months) - UnitScope akan otomatis memfilter
         $monthlyData = LogPenyimpananLimbah::select(
             DB::raw('strftime("%Y", tanggal_limbah_masuk) as year'),
@@ -67,6 +145,24 @@ class DashboardController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
+
+        // Normalize monthly data so the chart always shows the latest 12 months in order
+        $monthlyChartLabels = [];
+        $monthlyChartValues = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $year = $date->format('Y');
+            $month = $date->format('m');
+
+            $monthlyChartLabels[] = $date->translatedFormat('M y');
+
+            $match = $monthlyData->first(function ($item) use ($year, $month) {
+                return $item->year === $year && $item->month === $month;
+            });
+
+            $monthlyChartValues[] = $match ? (float) $match->total_waste : 0;
+        }
 
         // Top waste types by quantity - UnitScope akan otomatis memfilter
         $topWasteTypes = LogPenyimpananLimbah::select(
@@ -146,7 +242,14 @@ class DashboardController extends Controller
             'totalUsers',
             'totalNearExpiry',
             'statusDistribution',
+            'statusSummary',
+            'statusChartLabels',
+            'statusChartValues',
+            'statusChartBackgroundColors',
+            'statusChartBorderColors',
             'monthlyData',
+            'monthlyChartLabels',
+            'monthlyChartValues',
             'topWasteTypes',
             'topCompanies',
             'wasteByBranch',

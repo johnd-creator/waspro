@@ -96,6 +96,22 @@
                                     </div>
                                 </div>
                                 @endif
+                                @if($logPenyimpanan->dokumen_path)
+                                <div style="border-bottom: 1px solid var(--border-secondary);" class="py-2">
+                                    <span style="color: var(--text-secondary);" class="font-medium block">Dokumen Pendukung:</span>
+                                    <div class="mt-2 rounded-lg border px-4 py-3 text-sm" style="background-color: var(--input-bg); border-color: var(--border-primary);">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div>
+                                                <p class="font-medium" style="color: var(--text-primary);">{{ $logPenyimpanan->dokumen_original_name ?? basename($logPenyimpanan->dokumen_path) }}</p>
+                                                <p class="text-xs" style="color: var(--text-secondary);">Ukuran: {{ number_format(($logPenyimpanan->dokumen_size ?? 0) / 1024, 2) }} KB · Diunggah {{ optional($logPenyimpanan->dokumen_uploaded_at)->diffForHumans() }}</p>
+                                            </div>
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
+                                                <i class="fas fa-download mr-1"></i> Unduh
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                         

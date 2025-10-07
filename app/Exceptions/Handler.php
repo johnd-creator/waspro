@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use App\Helpers\K3Logger;
+use App\Support\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -67,6 +69,16 @@ class Handler extends ExceptionHandler
             return $this->handleAuthenticationException($request, $e);
         }
 
+        if ($this->wantsJson($request)) {
+            return ApiResponse::error(
+                'Terjadi kesalahan internal server.',
+                500,
+                [],
+                null,
+                config('app.debug') ? ['exception' => get_class($e)] : []
+            );
+        }
+
         return parent::render($request, $e);
     }
 
@@ -75,12 +87,8 @@ class Handler extends ExceptionHandler
      */
     protected function handleValidationException(Request $request, ValidationException $e)
     {
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Data yang diberikan tidak valid.',
-                'errors' => $e->errors(),
-                'status' => 'validation_error',
-            ], 422);
+        if ($this->wantsJson($request)) {
+            return ApiResponse::validationError($e->errors());
         }
 
         return redirect()->back()
@@ -105,12 +113,14 @@ class Handler extends ExceptionHandler
             ]);
         }
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => $this->getHttpErrorMessage($statusCode),
-                'status' => 'http_error',
-                'code' => $statusCode,
-            ], $statusCode);
+        if ($this->wantsJson($request)) {
+            return ApiResponse::error(
+                $this->getHttpErrorMessage($statusCode),
+                $statusCode,
+                [],
+                null,
+                ['code' => $statusCode]
+            );
         }
 
         // Check if custom error view exists
@@ -132,11 +142,14 @@ class Handler extends ExceptionHandler
             'query' => $this->extractQueryFromException($e),
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Terjadi kesalahan pada database. Silakan coba lagi.',
-                'status' => 'database_error',
-            ], 500);
+        if ($this->wantsJson($request)) {
+            return ApiResponse::error(
+                'Terjadi kesalahan pada database. Silakan coba lagi.',
+                500,
+                [],
+                null,
+                config('app.debug') ? ['exception' => get_class($e)] : []
+            );
         }
 
         return response()->view('errors.database', [
@@ -147,18 +160,15 @@ class Handler extends ExceptionHandler
     /**
      * Handle authentication exceptions
      */
-    protected function handleAuthenticationException(Request $request, Throwable $e)
+    protected function handleAuthenticationException(Request $request, AuthenticationException $e)
     {
         K3Logger::securityEvent('AUTHENTICATION_FAILED', [
             'url' => $request->fullUrl(),
             'method' => $request->method(),
         ]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Anda harus login untuk mengakses halaman ini.',
-                'status' => 'authentication_required',
-            ], 401);
+        if ($this->wantsJson($request)) {
+            return ApiResponse::unauthorized();
         }
 
         return redirect()->route('login')
@@ -181,7 +191,15 @@ class Handler extends ExceptionHandler
      */
     protected function isAuthenticationException(Throwable $e): bool
     {
-        return $e instanceof \Illuminate\Auth\AuthenticationException;
+        return $e instanceof AuthenticationException;
+    }
+
+    /**
+     * Determine if the request should receive a JSON response.
+     */
+    protected function wantsJson(Request $request): bool
+    {
+        return $request->expectsJson() || $request->is('api/*');
     }
 
     /**

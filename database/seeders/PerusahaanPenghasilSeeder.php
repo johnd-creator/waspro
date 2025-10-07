@@ -30,10 +30,22 @@ class PerusahaanPenghasilSeeder extends Seeder
             ['nama_perusahaan' => 'PT. Sido Muncul Tbk', 'alamat_perusahaan' => 'Jl. Kaligawe Km. 4, Semarang, Jawa Tengah', 'jenis_perusahaan' => 'Industri'],
         ];
 
-        foreach ($perusahaan as $item) {
+        foreach ($perusahaan as $index => $item) {
+            $domain = preg_replace('/[^a-z0-9]+/', '', strtolower($item['nama_perusahaan'])) ?: 'perusahaan'.$index;
+            $alamatParts = array_map('trim', explode(',', $item['alamat_perusahaan']));
+            $kota = trim($alamatParts[count($alamatParts) - 1] ?? 'Jakarta');
+
             PerusahaanPenghasil::firstOrCreate(
                 ['nama_perusahaan' => $item['nama_perusahaan']],
-                $item
+                array_merge($item, [
+                    'npwp' => sprintf('01.%03d.%03d.8-%03d.000', $index + 1, $index + 11, $index + 101),
+                    'telepon' => '021'.str_pad((string) ($index + 1000), 7, '0', STR_PAD_LEFT),
+                    'email' => 'kontak@'.$domain.'.co.id',
+                    'kota' => $kota,
+                    'person_in_charge' => 'PIC '.preg_replace('/^PT\.\s*/', '', $item['nama_perusahaan']),
+                    'status_aktif' => true,
+                    'keterangan' => 'Seeder contoh perusahaan penghasil.',
+                ])
             );
         }
     }

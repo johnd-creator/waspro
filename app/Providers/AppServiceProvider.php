@@ -2,6 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\WasteDocumentUploaded;
+use App\Listeners\SendWasteDocumentNotification;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +26,33 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->configureRateLimiting($this->app);
+
+        Event::listen(
+            WasteDocumentUploaded::class,
+            [SendWasteDocumentNotification::class, 'handle']
+        );
+    }
+
+    /**
+     * Register API rate limiting rules.
+     */
+    protected function configureRateLimiting(Application $app): void
+    {
+        $maxAttempts = (int) $app['config']->get('app.api_rate_limit', 120);
+        $decaySeconds = max(1, (int) $app['config']->get('app.api_rate_limit_decay', 60));
+        $decayMinutes = max(1, (int) ceil($decaySeconds / 60));
+
+        RateLimiter::for('api', function (Request $request) use ($maxAttempts, $decayMinutes) {
+            $key = $request->user()?->user_id ?? $request->ip();
+
+            return Limit::perMinutes($decayMinutes, $maxAttempts)
+                ->by($key)
+                ->response(function () {
+                    return response()->json([
+                        'message' => 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat.',
+                    ], 429);
+                });
+        });
     }
 }

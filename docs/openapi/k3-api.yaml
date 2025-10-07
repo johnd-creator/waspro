@@ -1,0 +1,693 @@
+openapi: 3.0.3
+info:
+  title: 'WASPRO API Documentation'
+  description: 'API endpoints for K3 waste management including authentication, master data, and reporting modules.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: '<p>Gunakan token Sanctum yang dihasilkan melalui endpoint <code>POST /api/login</code>. Sertakan pada header Authorization dengan format <code>Bearer {token}</code>.</p>'
+security:
+  -
+    default: []
+paths:
+  /api/login:
+    post:
+      summary: 'Handle an API login request and return a Sanctum token.'
+      operationId: handleAnAPILoginRequestAndReturnASanctumToken
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Kredensial tidak valid.'
+                  data: null
+                  errors:
+                    email_address:
+                      - 'Kredensial yang diberikan tidak cocok dengan catatan kami.'
+                  meta: null
+                  timestamp: '2025-10-07T11:54:09+00:00'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Kredensial tidak valid.'
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      email_address:
+                        type: array
+                        example:
+                          - 'Kredensial yang diberikan tidak cocok dengan catatan kami.'
+                        items:
+                          type: string
+                  meta:
+                    type: string
+                    example: null
+                  timestamp:
+                    type: string
+                    example: '2025-10-07T11:54:09+00:00'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_address:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbailey@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: ''
+                  example: '|]|{+-'
+                  nullable: false
+              required:
+                - email_address
+                - password
+  /api/logout:
+    post:
+      summary: 'Revoke the current access token.'
+      operationId: revokeTheCurrentAccessToken
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/jenis-limbah:
+    get:
+      summary: 'Display a paginated listing of jenis limbah.'
+      operationId: displayAPaginatedListingOfJenisLimbah
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/jenis-limbah/{id}':
+    get:
+      summary: 'Display the specified jenis limbah.'
+      operationId: displayTheSpecifiedJenisLimbah
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the jenis limbah.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/karakteristik-limbah:
+    get:
+      summary: 'Display a paginated listing of karakteristik limbah.'
+      operationId: displayAPaginatedListingOfKarakteristikLimbah
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/karakteristik-limbah/{id}':
+    get:
+      summary: 'Display the specified karakteristik limbah.'
+      operationId: displayTheSpecifiedKarakteristikLimbah
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the karakteristik limbah.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/kategori-kegiatan-sumber:
+    get:
+      summary: 'Display a paginated listing of kategori kegiatan sumber.'
+      operationId: displayAPaginatedListingOfKategoriKegiatanSumber
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/kategori-kegiatan-sumber/{id}':
+    get:
+      summary: 'Display the specified kategori kegiatan sumber.'
+      operationId: displayTheSpecifiedKategoriKegiatanSumber
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the kategori kegiatan sumber.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/unit-pembangkit:
+    get:
+      summary: 'Display a paginated listing of unit pembangkit.'
+      operationId: displayAPaginatedListingOfUnitPembangkit
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: 'Store a newly created unit pembangkit.'
+      operationId: storeANewlyCreatedUnitPembangkit
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_unit:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                alamat_unit:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                kota:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                kode_pos:
+                  type: string
+                  description: 'Must not be greater than 10 characters.'
+                  example: gzmiyv
+                  nullable: true
+                telepon_unit:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: dljnikhwaykcmyuw
+                  nullable: true
+                keterangan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                status_aktif:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: true
+              required:
+                - nama_unit
+  '/api/unit-pembangkit/{id}':
+    get:
+      summary: 'Display the specified unit pembangkit.'
+      operationId: displayTheSpecifiedUnitPembangkit
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    put:
+      summary: 'Update the specified unit pembangkit.'
+      operationId: updateTheSpecifiedUnitPembangkit
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_unit:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                alamat_unit:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                kota:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                kode_pos:
+                  type: string
+                  description: 'Must not be greater than 10 characters.'
+                  example: gzmiyv
+                  nullable: true
+                telepon_unit:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: dljnikhwaykcmyuw
+                  nullable: true
+                keterangan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+                status_aktif:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+    delete:
+      summary: 'Remove the specified unit pembangkit.'
+      operationId: removeTheSpecifiedUnitPembangkit
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the unit pembangkit.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/perusahaan-penghasil:
+    get:
+      summary: 'Display a paginated listing of perusahaan penghasil.'
+      operationId: displayAPaginatedListingOfPerusahaanPenghasil
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: 'Store a newly created perusahaan penghasil.'
+      operationId: storeANewlyCreatedPerusahaanPenghasil
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_perusahaan:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                jenis_perusahaan:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                npwp:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: gzmiyvdljnikhway
+                  nullable: true
+                telepon:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: kcmyuwpwlvqwrsit
+                  nullable: true
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 100 characters.'
+                  example: okeefe.isidro@example.org
+                  nullable: true
+                kota:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: l
+                  nullable: true
+                alamat_perusahaan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+                person_in_charge:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                status_aktif:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: true
+                keterangan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+              required:
+                - nama_perusahaan
+                - alamat_perusahaan
+  '/api/perusahaan-penghasil/{id}':
+    get:
+      summary: 'Display the specified perusahaan penghasil.'
+      operationId: displayTheSpecifiedPerusahaanPenghasil
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    put:
+      summary: 'Update the specified perusahaan penghasil.'
+      operationId: updateTheSpecifiedPerusahaanPenghasil
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_perusahaan:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                  nullable: false
+                jenis_perusahaan:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                npwp:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: gzmiyvdljnikhway
+                  nullable: true
+                telepon:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: kcmyuwpwlvqwrsit
+                  nullable: true
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 100 characters.'
+                  example: okeefe.isidro@example.org
+                  nullable: true
+                kota:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: l
+                  nullable: true
+                alamat_perusahaan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+                person_in_charge:
+                  type: string
+                  description: 'Must not be greater than 100 characters.'
+                  example: 'n'
+                  nullable: true
+                status_aktif:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+                keterangan:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: true
+              required:
+                - alamat_perusahaan
+    delete:
+      summary: 'Remove the specified perusahaan penghasil.'
+      operationId: removeTheSpecifiedPerusahaanPenghasil
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the perusahaan penghasil.'
+        example: 1
+        required: true
+        schema:
+          type: integer

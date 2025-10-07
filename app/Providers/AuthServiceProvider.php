@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\LogPenyimpananLimbah;
 use App\Models\PenggunaSistem;
+use App\Models\PerusahaanPenghasil;
 use App\Models\UnitPembangkit;
 use App\Policies\LogPenyimpananPolicy;
 use App\Policies\PenggunaSistemPolicy;
+use App\Policies\PerusahaanPenghasilPolicy;
 use App\Policies\UnitPembangkitPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -22,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider
         LogPenyimpananLimbah::class => LogPenyimpananPolicy::class,
         PenggunaSistem::class => PenggunaSistemPolicy::class,
         UnitPembangkit::class => UnitPembangkitPolicy::class,
+        PerusahaanPenghasil::class => PerusahaanPenghasilPolicy::class,
     ];
 
     /**

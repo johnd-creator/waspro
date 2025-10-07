@@ -32,6 +32,11 @@ class LogPenyimpananLimbah extends Model
         'unit_id',
         'tanggal_kadaluarsa',
         'expiry_status',
+        'dokumen_path',
+        'dokumen_original_name',
+        'dokumen_mime',
+        'dokumen_size',
+        'dokumen_uploaded_at',
     ];
 
     protected $casts = [
@@ -39,6 +44,7 @@ class LogPenyimpananLimbah extends Model
         'maksimal_penyimpanan_tanggal' => 'datetime',
         'tanggal_pengangkutan' => 'datetime',
         'tanggal_kadaluarsa' => 'datetime',
+        'dokumen_uploaded_at' => 'datetime',
     ];
 
     /**

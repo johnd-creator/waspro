@@ -52,7 +52,7 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
             </div>
         </div>
         <div class="px-8 py-6">
-                    <form action="{{ route('log-penyimpanan.store') }}" method="POST">
+                    <form action="{{ route('log-penyimpanan.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="space-y-6">
@@ -158,6 +158,21 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                                 </datalist>
                                 
                                 @error('detail_sumber_limbah')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Dokumen Pendukung -->
+                            <div class="mt-6">
+                                <label for="dokumen_limbah" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Dokumen Pendukung</label>
+                                <input type="file"
+                                       id="dokumen_limbah"
+                                       name="dokumen_limbah"
+                                       accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                                       class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('dokumen_limbah') border-red-500 @enderror"
+                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                                <p class="mt-2 text-sm text-slate-500">Unggah manifest atau dokumen pendukung lainnya (maksimal {{ number_format(config('app.max_upload_size', 10240) / 1024, 1) }} MB).</p>
+                                @error('dokumen_limbah')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
