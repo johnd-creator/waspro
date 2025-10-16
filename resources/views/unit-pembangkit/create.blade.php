@@ -2,7 +2,7 @@
 
 @section('content')
     @if(session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-6 flex items-center">
+        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-6 flex items-center" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3 text-green-600"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto text-green-600 hover:text-green-800" onclick="this.parentElement.remove()">
@@ -11,25 +11,27 @@
         </div>
     @endif
 
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-        <div class="px-6 py-6 border-b flex justify-between items-center" style="border-color: var(--border-primary);">
+        <div class="px-6 py-6 flex justify-between items-center" style="border-color: var(--border-primary);">
             <div>
                 <h1 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Tambah Unit Pembangkit</h1>
                 <p style="color: var(--text-secondary);">Masukkan informasi unit pembangkit listrik baru</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('unit-pembangkit.index') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" 
-                   style="background-color: var(--secondary-bg);"
-                   onmouseover="this.style.backgroundColor='var(--secondary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
-                   onmouseout="this.style.backgroundColor='var(--secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                <a href="{{ route('unit-pembangkit.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
             </div>
         </div>
+    </div>
 
-        <!-- Form Section -->
+    <!-- Form Section -->
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="px-6 py-6">
             <form action="{{ route('unit-pembangkit.store') }}" method="POST">
                 @csrf
@@ -103,13 +105,19 @@
                         @enderror
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="flex justify-end">
-                        <button type="submit" class="px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
-                                style="background-color: var(--primary-bg);"
-                                onmouseover="this.style.backgroundColor='var(--primary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
-                                onmouseout="this.style.backgroundColor='var(--primary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
-                            <i class="fas fa-save mr-2"></i> Simpan Unit Pembangkit
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-3 mt-8">
+                        <a href="{{ route('unit-pembangkit.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                           style="background-color: var(--danger-primary); color: white;"
+                           onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';"
+                           onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
+                            Batal
+                        </a>
+                        <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                style="background-color: var(--accent-primary);"
+                                onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                                onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                            <i class="fas fa-save mr-2"></i>Simpan Unit Pembangkit
                         </button>
                     </div>
                 </div>

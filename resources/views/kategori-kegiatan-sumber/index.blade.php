@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-4 sm:p-6 lg:p-8">
     @if(session('success'))
-        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">

@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="p-4 sm:p-6 lg:p-8">
+    <style>
+        .table-hover-rows tr:hover { background-color: var(--hover-bg); }
+        .status-pill-secondary { background-color: var(--accent-bg-secondary); color: var(--accent-secondary); }
+        .status-pill-danger { background-color: var(--danger-bg); color: var(--danger-primary); }
+        .text-primary-var { color: var(--text-primary); }
+        .accent-pill { background-color: var(--accent-bg); color: var(--accent-primary); }
+    </style>
     <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="flex items-center justify-between border-b px-6 py-5" style="border-color: var(--border-primary);">
             <h3 class="text-xl font-semibold" style="color: var(--text-primary);">Laporan Unit Pembangkit</h3>
@@ -66,7 +73,7 @@
             <h5 class="text-sm font-semibold" style="color: var(--text-primary);">Ringkasan per Unit</h5>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full w-full">
+            <table class="min-w-full w-full table-hover-rows">
                 <thead style="background-color: var(--card-secondary-bg);">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">Unit</th>
@@ -81,8 +88,8 @@
                 </thead>
                 <tbody>
                     @foreach($unitStats as $stats)
-                    <tr class="border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
-                        <td class="px-4 py-3 text-sm font-medium" style="color: var(--text-primary);">{{ $stats['nama_unit'] }}</td>
+                    <tr class="border-b" style="border-color: var(--border-primary);">
+                        <td class="px-4 py-3 text-sm font-medium text-primary-var">{{ $stats['nama_unit'] }}</td>
                         <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $stats['total_logs'] }}</td>
                         <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ number_format($stats['total_quantity'], 2) }}</td>
                         <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ number_format($stats['efficiency_rate'], 2) }}</td>
@@ -100,7 +107,7 @@
 
     <!-- Data Table -->
     <div class="mt-2 overflow-hidden rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-        <table class="min-w-full w-full">
+        <table class="min-w-full w-full table-hover-rows">
             <thead style="background-color: var(--border-primary);">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-secondary);">No</th>
@@ -115,16 +122,16 @@
             </thead>
             <tbody>
                 @forelse($logs as $index => $log)
-                <tr class="border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
-                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $index + 1 }}</td>
-                    <td class="px-4 py-3 text-sm font-medium" style="color: var(--text-primary);">{{ $log->unitPembangkit->nama_unit ?? '-' }}</td>
+                <tr class="border-b" style="border-color: var(--border-primary);">
+                    <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $loop->iteration }}</td>
+                    <td class="px-4 py-3 text-sm font-medium text-primary-var">{{ $log->unitPembangkit->nama_unit ?? '-' }}</td>
                     <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
                     <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->jenisLimbah->nama_limbah ?? 'Unknown' }}</td>
                     <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->kode_limbah }}</td>
                     <td class="px-4 py-3 text-sm" style="color: var(--text-primary);">{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
                     <td class="px-4 py-3">
                         @php $isTransported = strtoupper($log->status_log) === 'DIANGKUT'; @endphp
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" style="{{ $isTransported ? 'background-color: var(--accent-bg-secondary); color: var(--accent-secondary);' : 'background-color: var(--danger-bg); color: var(--danger-primary);' }}">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $isTransported ? 'status-pill-secondary' : 'status-pill-danger' }}">
                             {{ $log->status_log }}
                         </span>
                     </td>

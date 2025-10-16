@@ -37,6 +37,11 @@ class LogPenyimpananLimbah extends Model
         'dokumen_mime',
         'dokumen_size',
         'dokumen_uploaded_at',
+        // Offline sync columns
+        'client_uuid',
+        'created_at_client',
+        'updated_at_client',
+        'synced_at',
     ];
 
     protected $casts = [
@@ -45,6 +50,9 @@ class LogPenyimpananLimbah extends Model
         'tanggal_pengangkutan' => 'datetime',
         'tanggal_kadaluarsa' => 'datetime',
         'dokumen_uploaded_at' => 'datetime',
+        'created_at_client' => 'datetime',
+        'updated_at_client' => 'datetime',
+        'synced_at' => 'datetime',
     ];
 
     /**

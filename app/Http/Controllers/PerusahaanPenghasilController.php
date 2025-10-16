@@ -73,7 +73,7 @@ class PerusahaanPenghasilController extends Controller
     public function update(Request $request, PerusahaanPenghasil $perusahaanPenghasil)
     {
         $validated = $request->validate([
-            'nama_perusahaan' => 'required|string|max:255|unique:perusahaan_penghasil,nama_perusahaan,'.$perusahaanPenghasil->perusahaan_id,
+            'nama_perusahaan' => 'required|string|max:255|unique:perusahaan_penghasil,nama_perusahaan,'.$perusahaanPenghasil->perusahaan_id.',perusahaan_id',
             'jenis_perusahaan' => 'nullable|string|max:255',
             'telepon' => 'nullable|string|max:15',
             'email' => 'nullable|email|max:100',

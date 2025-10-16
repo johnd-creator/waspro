@@ -66,7 +66,7 @@ class KategoriKegiatanSumberController extends Controller
     public function update(Request $request, KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
         $validated = $request->validate([
-            'nama_kategori' => 'required|string|max:255|unique:kategori_kegiatan_sumber,nama_kategori,'.$kategoriKegiatanSumber->kategori_id,
+            'nama_kategori' => 'required|string|max:255|unique:kategori_kegiatan_sumber,nama_kategori,'.$kategoriKegiatanSumber->kategori_id.',kategori_id',
         ]);
 
         $kategoriKegiatanSumber->update($validated);

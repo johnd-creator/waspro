@@ -76,13 +76,18 @@ class PenggunaSistemController extends Controller
 
         $validated = $request->validate($rules);
 
+        // Normalisasi nilai aktif: terima 'aktif' atau 'status_aktif' (backward-compat)
+        $isAktif = $request->has('aktif') || $request->has('status_aktif')
+            ? ($request->has('aktif') ? $request->boolean('aktif') : $request->boolean('status_aktif'))
+            : true;
+
         // Buat user baru
         $user = PenggunaSistem::create([
             'nama_lengkap' => $validated['nama_lengkap'],
             'email_address' => $validated['email_address'],
             'kata_sandi_hash' => Hash::make($validated['kata_sandi']),
             'unit_id' => $validated['unit_id'],
-            'aktif' => $request->boolean('aktif', true),
+            'aktif' => $isAktif,
         ]);
 
         // Attach peran
@@ -170,12 +175,17 @@ class PenggunaSistemController extends Controller
 
         $validated = $request->validate($rules);
 
+        // Normalisasi nilai aktif: terima 'aktif' atau 'status_aktif' (backward-compat)
+        $isAktif = $request->has('aktif') || $request->has('status_aktif')
+            ? ($request->has('aktif') ? $request->boolean('aktif') : $request->boolean('status_aktif'))
+            : true;
+
         // Update data user
         $updateData = [
             'nama_lengkap' => $validated['nama_lengkap'],
             'email_address' => $validated['email_address'],
             'unit_id' => $validated['unit_id'],
-            'aktif' => $request->boolean('aktif', true),
+            'aktif' => $isAktif,
         ];
 
         // Update password jika ada

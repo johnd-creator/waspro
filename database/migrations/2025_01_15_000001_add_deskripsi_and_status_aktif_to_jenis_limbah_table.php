@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('jenis_limbah', function (Blueprint $table) {
-            $table->text('deskripsi_limbah')->nullable()->after('kemasan');
-            $table->boolean('status_aktif')->default(true)->after('kategori_id');
-        });
+        // Schema::table('jenis_limbah', function (Blueprint $table) {
+        //     $table->text('deskripsi_limbah')->nullable()->after('kemasan');
+        //     $table->boolean('status_aktif')->default(true)->after('kategori_id');
+        // });
     }
 
     /**

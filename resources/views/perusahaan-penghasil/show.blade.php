@@ -1,18 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm mb-6">
-        <div style="border-bottom: 1px solid var(--border-primary);" class="px-6 py-6 flex justify-between items-center">
+        <div style="border-bottom: 1px var(--border-primary);" class="px-6 py-6 flex justify-between items-center">
             <div>
                 <h1 style="color: var(--text-primary);" class="text-2xl font-bold mb-2">Detail Perusahaan Penghasil Limbah</h1>
                 <p style="color: var(--text-secondary);">Informasi lengkap perusahaan penghasil limbah</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('perusahaan-penghasil.edit', $perusahaanPenghasil) }}" style="background-color: var(--warning-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                <a href="{{ route('perusahaan-penghasil.edit', $perusahaanPenghasil) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--accent-primary); color: white;"
+                   onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-edit mr-2"></i>Edit
                 </a>
-                <a href="{{ route('perusahaan-penghasil.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                <a href="{{ route('perusahaan-penghasil.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
             </div>
@@ -20,9 +27,9 @@
     </div>
 
     <!-- Content Section -->
-    <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm">
-        <div style="border-bottom: 1px solid var(--border-primary);" class="px-6 py-6">
-            <h6 style="color: var(--text-primary);" class="text-lg font-semibold flex items-center">
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6 border-b" style="border-color: var(--border-primary);">
+            <h6 class="text-lg font-semibold flex items-center" style="color: var(--text-primary);">
                 <i class="fas fa-building mr-2"></i>Informasi Detail
             </h6>
         </div>
@@ -208,69 +215,7 @@
                         </div>
                     @endif
 
-                    <!-- Log Penyimpanan Terkait -->
-                    @if($perusahaanPenghasil->logPenyimpananLimbah && $perusahaanPenghasil->logPenyimpananLimbah->count() > 0)
-                        <div style="background-color: var(--secondary-bg-light); border: 1px solid var(--border-secondary);" class="rounded-lg p-4">
-                            <h5 style="color: var(--text-primary);" class="text-lg font-semibold mb-4 flex items-center">
-                                <i style="color: var(--text-secondary);" class="fas fa-clipboard-list mr-2"></i>Log Penyimpanan Limbah Terkait
-                            </h5>
-                            <div class="overflow-x-auto">
-                                <table class="w-full min-w-[700px]">
-                                    <thead style="background: linear-gradient(to right, var(--table-header-start), var(--table-header-end)); color: white;" class="rounded-t-2xl">
-                                        <tr>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Tanggal</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Jenis Limbah</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Jumlah (Kg)</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Status</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody style="border-color: var(--border-secondary);" class="divide-y">
-                                        @foreach($perusahaanPenghasil->logPenyimpananLimbah->take(5) as $log)
-                                            <tr style="transition: all 0.2s;" class="hover:opacity-80">
-                                                <td style="color: var(--text-primary);" class="px-4 py-3 text-sm">
-                                                    {{ $log->tanggal_limbah_masuk ? \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d/m/Y') : '-' }}
-                                                </td>
-                                                <td class="px-4 py-3">
-                                                    @if($log->jenisLimbah)
-                                                        <div class="flex flex-col">
-                                                            <span style="background-color: var(--accent-bg); color: var(--accent-primary);" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mb-1">{{ $log->jenisLimbah->kode_limbah }}</span>
-                                                            <span style="color: var(--text-secondary);" class="text-xs">{{ $log->jenisLimbah->nama_limbah }}</span>
-                                                        </div>
-                                                    @else
-                                                        <span style="color: var(--text-tertiary);">-</span>
-                                                    @endif
-                                                </td>
-                                                <td style="color: var(--text-primary);" class="px-4 py-3 text-sm font-medium">
-                                                    {{ number_format($log->jumlah_limbah_masuk, 2) }}
-                                                </td>
-                                                <td class="px-4 py-3">
-                                                    @if($log->status_log == 'Tersimpan')
-                                                        <span style="background-color: var(--accent-bg); color: var(--accent-primary);" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">{{ $log->status_log }}</span>
-                                                    @elseif($log->status_log == 'Diangkut')
-                                                        <span style="background-color: var(--success-bg); color: var(--success-text);" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">{{ $log->status_log }}</span>
-                                                    @else
-                                                        <span style="background-color: var(--danger-bg); color: var(--danger-text);" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">{{ $log->status_log }}</span>
-                                                    @endif
-                                                </td>
-                                                <td class="px-4 py-3">
-                                                    <a href="{{ route('log-penyimpanan.show', $log) }}"
-                                                       style="background-color: var(--accent-bg); color: var(--accent-primary); transition: all 0.2s;"
-                                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:opacity-80"
-                                                       title="Lihat Detail">
-                                                        <i class="fas fa-eye text-sm"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            @if($perusahaanPenghasil->logPenyimpananLimbah->count() > 5)
-                                <p style="color: var(--text-tertiary);" class="text-sm mt-3">Menampilkan 5 dari {{ $perusahaanPenghasil->logPenyimpananLimbah->count() }} log penyimpanan</p>
-                            @endif
-                        </div>
-                    @endif
+
 
                     <!-- Action Buttons -->
                     <div style="border-top: 1px solid var(--border-secondary);" class="flex justify-between items-center mt-6 pt-6">
@@ -285,10 +230,16 @@
                             </form>
                         </div>
                         <div class="flex gap-3">
-                            <a href="{{ route('perusahaan-penghasil.edit', $perusahaanPenghasil) }}" style="background-color: var(--warning-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg hover:opacity-90">
+                            <a href="{{ route('perusahaan-penghasil.edit', $perusahaanPenghasil) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 shadow-lg"
+                               style="background-color: var(--accent-primary); color: white;"
+                               onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                               onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-edit mr-1"></i> Edit
                             </a>
-                            <a href="{{ route('perusahaan-penghasil.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg hover:opacity-90">
+                            <a href="{{ route('perusahaan-penghasil.index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 shadow-lg"
+                               style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                               onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                               onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-list mr-1"></i> Daftar Perusahaan
                             </a>
                         </div>

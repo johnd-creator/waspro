@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm mb-6">
         <div style="border-bottom: 1px solid var(--border-primary);" class="px-8 py-6 flex justify-between items-center">

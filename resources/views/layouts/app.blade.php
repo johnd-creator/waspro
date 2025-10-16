@@ -115,6 +115,10 @@
 
         /* Custom styles */
 
+        /* Notification dropdown: dark-mode safe styles */
+        .notification-item:hover { background-color: var(--hover-bg); }
+        .notification-item { border-bottom: 1px solid var(--border-primary); }
+
         /* Safari input text color fix */
         input[type="text"],
         input[type="email"],
@@ -515,11 +519,11 @@
                                  <i class="far fa-bell text-lg"></i>
                                  <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold" id="notification-count" style="display: none;">0</span>
                              </button>
-                            <div class="absolute right-0 mt-3 w-96 rounded-2xl shadow-2xl z-50 hidden overflow-hidden" id="notification-dropdown" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
+                            <div class="absolute right-0 mt-3 w-96 rounded-2xl shadow-2xl z-50 hidden overflow-hidden notification-dropdown" id="notification-dropdown" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
                                  <div class="px-6 py-4 border-b" style="background: linear-gradient(to right, var(--bg-tertiary), var(--bg-tertiary)); border-color: var(--border-primary);">
                                      <div class="flex items-center justify-between">
                                          <h3 class="font-bold" id="notification-header" style="color: var(--text-primary);">0 Notifikasi</h3>
-                                         <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="refreshNotifications()">
+                                         <button class="text-sm font-medium" onclick="refreshNotifications()" style="color: var(--accent-primary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--accent-primary)'">
                                              <i class="fas fa-sync-alt mr-1"></i>Refresh
                                          </button>
                                      </div>
@@ -527,8 +531,8 @@
                                 <div class="max-h-80 overflow-y-auto" id="notification-list">
                                     <!-- Notifications will be loaded here -->
                                 </div>
-                                <div class="border-t border-gray-100 bg-gray-50">
-                                    <a href="{{ route('notifications.index') }}" class="flex items-center justify-center w-full px-6 py-3 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 font-medium">
+                                <div class="border-t" style="border-color: var(--border-primary); background: var(--card-secondary-bg);">
+                                    <a href="{{ route('notifications.index') }}" class="flex items-center justify-center w-full px-6 py-3 transition-all duration-200 font-medium" style="color: var(--accent-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--text-primary)';" onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.color='var(--accent-primary)';">
                                         Lihat Semua Notifikasi
                                     </a>
                                 </div>
@@ -584,17 +588,6 @@
             </nav>
 
             <!-- Page Content -->            <main class="flex-1 overflow-y-auto" style="background-color: var(--bg-primary);">                <div class="py-4">
-                    @if(session('success'))
-                        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2"></i>
-                                {{ session('success') }}
-                            </div>
-                            <button type="button" class="text-green-600 hover:text-green-800 focus:outline-none" onclick="this.parentElement.remove()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    @endif
 
                     @if(session('error'))
                         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
@@ -721,6 +714,20 @@
 
     <!-- Custom Scripts -->
     <script>
+        // Auto-dismiss flash success alerts marked with data-auto-dismiss
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                document.querySelectorAll('[data-auto-dismiss]').forEach(function (el) {
+                    var ms = parseInt(el.getAttribute('data-auto-dismiss'), 10);
+                    if (isNaN(ms)) ms = 2500; // default 2.5s
+                    setTimeout(function () {
+                        if (el) { el.remove(); }
+                    }, ms);
+                });
+            } catch (e) {
+                // no-op: ensure UI doesn't break if selector fails
+            }
+        });
         // Toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -816,7 +823,7 @@
             const list = document.getElementById('notification-list');
 
             if (notifications.length === 0) {
-                list.innerHTML = '<div class="px-6 py-8 text-center text-gray-500"><i class="fas fa-bell-slash text-3xl mb-2"></i><p>Tidak ada notifikasi</p></div>';
+                list.innerHTML = '<div class="px-6 py-8 text-center" style="color: var(--text-secondary);"><i class="fas fa-bell-slash text-3xl mb-2"></i><p>Tidak ada notifikasi</p></div>';
                 return;
             }
 
@@ -827,23 +834,23 @@
                 const timeText = getTimeText(notification.days_until_expiry);
 
                 html += `
-                    <div class="px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="px-6 py-4 notification-item transition-colors duration-200">
                         <div class="flex items-start space-x-3">
                             <div class="w-10 h-10 ${statusClass} rounded-xl flex items-center justify-center flex-shrink-0">
                                 <i class="fas fa-exclamation-triangle text-white text-sm"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate">
+                                <p class="text-sm font-medium truncate" style="color: var(--text-primary);">
                                     ${notification.kode_identitas}
                                 </p>
-                                <p class="text-xs text-gray-600 mt-1">
+                                <p class="text-xs mt-1" style="color: var(--text-secondary);">
                                     ${notification.jenis_limbah_nama}
                                 </p>
                                 <div class="flex items-center justify-between mt-2">
                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusClass.replace('bg-', 'bg-').replace('-500', '-100')} ${statusClass.replace('bg-', 'text-').replace('-500', '-800')}">
                                         ${statusText}
                                     </span>
-                                    <span class="text-xs text-gray-500">${timeText}</span>
+                                    <span class="text-xs" style="color: var(--text-tertiary);">${timeText}</span>
                                 </div>
                             </div>
                         </div>

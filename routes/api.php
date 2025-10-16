@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController as ApiDashboardController;
 use App\Http\Controllers\Api\JenisLimbahController;
 use App\Http\Controllers\Api\KarakteristikLimbahController;
 use App\Http\Controllers\Api\KategoriKegiatanSumberController;
+use App\Http\Controllers\Api\LogPenyimpananController;
 use App\Http\Controllers\Api\PerusahaanPenghasilController;
 use App\Http\Controllers\Api\UnitPembangkitController;
 use Illuminate\Support\Facades\Route;
@@ -45,4 +47,17 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
         'update' => 'api.perusahaan-penghasil.update',
         'destroy' => 'api.perusahaan-penghasil.destroy',
     ]);
+
+    // Log penyimpanan API: CRUD + delta + bulk sync
+    Route::apiResource('log-penyimpanan', LogPenyimpananController::class)->names([
+        'index' => 'api.log-penyimpanan.index',
+        'store' => 'api.log-penyimpanan.store',
+        'show' => 'api.log-penyimpanan.show',
+        'update' => 'api.log-penyimpanan.update',
+        'destroy' => 'api.log-penyimpanan.destroy',
+    ]);
+    Route::post('sync/logs', [LogPenyimpananController::class, 'sync'])->name('api.sync.logs');
+
+    // Dashboard summary for mobile apps
+    Route::get('dashboard/summary', [ApiDashboardController::class, 'summary'])->name('api.dashboard.summary');
 });

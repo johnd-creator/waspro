@@ -1,18 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm mb-6">
-        <div style="border-bottom: 1px solid var(--border-primary);" class="px-6 py-6 flex justify-between items-center">
+        <div style="border-bottom: 1px var(--border-primary);" class="px-6 py-6 flex justify-between items-center">
             <div>
                 <h1 style="color: var(--text-primary);" class="text-2xl font-bold mb-2">Edit Perusahaan Penghasil Limbah</h1>
                 <p style="color: var(--text-secondary);">Perbarui informasi perusahaan penghasil limbah</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" style="background-color: var(--success-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--accent-secondary); color: white;"
+                   onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-eye mr-2"></i>Lihat
                 </a>
-                <a href="{{ route('perusahaan-penghasil.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                <a href="{{ route('perusahaan-penghasil.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
             </div>
@@ -20,13 +27,12 @@
     </div>
 
     <!-- Form Section -->
-    <div class="max-w-4xl mx-auto">
-        <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm">
-            <div style="border-bottom: 1px solid var(--border-primary);" class="px-6 py-6">
-                <h6 style="color: var(--text-primary);" class="text-lg font-semibold flex items-center">
-                    <i class="fas fa-building mr-2"></i>Informasi Perusahaan
-                </h6>
-            </div>
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6 border-b" style="border-color: var(--border-primary);">
+            <h6 class="text-lg font-semibold flex items-center" style="color: var(--text-primary);">
+                <i class="fas fa-building mr-2"></i>Informasi Perusahaan
+            </h6>
+        </div>
             <div class="px-6 py-6">
                 <form action="{{ route('perusahaan-penghasil.update', $perusahaanPenghasil) }}" method="POST">
                     @csrf
@@ -152,10 +158,16 @@
 
                     <!-- Action Buttons -->
                     <div class="flex justify-end gap-3 mt-8">
-                        <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                        <a href="{{ route('perusahaan-penghasil.show', $perusahaanPenghasil) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                           style="background-color: var(--danger-primary); color: white;"
+                           onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';"
+                           onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
                             Batal
                         </a>
-                        <button type="submit" style="background-color: var(--accent-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                        <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                style="background-color: var(--accent-primary);"
+                                onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                                onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                             <i class="fas fa-save mr-2"></i>Update
                         </button>
                     </div>

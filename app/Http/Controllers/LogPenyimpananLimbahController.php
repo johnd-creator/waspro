@@ -9,11 +9,13 @@ use App\Models\KategoriKegiatanSumber;
 use App\Models\LogPenyimpananLimbah;
 use App\Models\PerusahaanPenghasil;
 use App\Models\UnitPembangkit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LogPenyimpananLimbahController extends Controller
 {
@@ -25,10 +27,95 @@ class LogPenyimpananLimbahController extends Controller
         // UnitScope akan otomatis memfilter berdasarkan unit user
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unit', 'penggunaSistem']);
 
-        // Filter untuk tidak menampilkan log dengan status 'diangkut'
-        $query->whereRaw("LOWER(status_log) != 'diangkut'");
+        // Secara default tidak menampilkan log dengan status 'Diangkut'.
+        // Jika pengguna memilih filter status, maka jangan dikecualikan.
+        if (! $request->filled('search_status')) {
+            $query->whereRaw("LOWER(status_log) != 'diangkut'");
+        }
 
         // Search filters
+        if ($request->filled('search_jenis')) {
+            $query->whereHas('jenisLimbah', function ($q) use ($request) {
+                $q->where('nama_limbah', 'LIKE', '%'.$request->search_jenis.'%')
+                    ->orWhere('kode_limbah', 'LIKE', '%'.$request->search_jenis.'%');
+            });
+        }
+
+        if ($request->filled('search_perusahaan')) {
+            $query->whereHas('perusahaanPenghasil', function ($q) use ($request) {
+                $q->where('nama_perusahaan', 'LIKE', '%'.$request->search_perusahaan.'%');
+            });
+        }
+
+        if ($request->filled('search_status')) {
+            $query->where('status_log', $request->search_status);
+        }
+
+        // Filter tanggal tepat
+        if ($request->filled('search_tanggal')) {
+            $query->whereDate('tanggal_limbah_masuk', $request->search_tanggal);
+        }
+
+        // Filter rentang tanggal (mulai - akhir)
+        if ($request->filled('search_tanggal_mulai')) {
+            $query->whereDate('tanggal_limbah_masuk', '>=', $request->search_tanggal_mulai);
+        }
+        if ($request->filled('search_tanggal_akhir')) {
+            $query->whereDate('tanggal_limbah_masuk', '<=', $request->search_tanggal_akhir);
+        }
+
+        if ($request->filled('search_kode_identitas')) {
+            $query->where('kode_identitas', 'LIKE', '%'.$request->search_kode_identitas.'%');
+        }
+
+        // Filter penginput data (khusus Super Admin) berdasarkan nama/email pengguna sistem
+        $currentUser = Auth::user();
+        /** @var \App\Models\PenggunaSistem|null $currentUser */
+        $isSuper = $currentUser && is_callable([$currentUser, 'isSuperAdmin'])
+            ? (bool) call_user_func([$currentUser, 'isSuperAdmin'])
+            : false;
+        if ($isSuper && $request->filled('search_penginput')) {
+            $searchPenginput = $request->search_penginput;
+            $query->whereHas('penggunaSistem', function ($q) use ($searchPenginput) {
+                $q->where('nama_lengkap', 'LIKE', '%'.$searchPenginput.'%')
+                    ->orWhere('email_address', 'LIKE', '%'.$searchPenginput.'%');
+            });
+        }
+
+        // Filter hari menuju kadaluarsa (min/max)
+        // Menggunakan tanggal_kadaluarsa atau maksimal_penyimpanan_tanggal sebagai fallback
+        if ($request->filled('expiry_days_min') || $request->filled('expiry_days_max')) {
+            $coalesceExpr = 'COALESCE(tanggal_kadaluarsa, maksimal_penyimpanan_tanggal)';
+            if ($request->filled('expiry_days_min')) {
+                $minDays = (int) $request->input('expiry_days_min');
+                $query->whereRaw("DATEDIFF($coalesceExpr, CURRENT_DATE) >= ?", [$minDays]);
+            }
+            if ($request->filled('expiry_days_max')) {
+                $maxDays = (int) $request->input('expiry_days_max');
+                $query->whereRaw("DATEDIFF($coalesceExpr, CURRENT_DATE) <= ?", [$maxDays]);
+            }
+        }
+
+        // Urutan default: tanggal limbah masuk terbaru terlebih dahulu
+        $logs = $query->orderBy('tanggal_limbah_masuk', 'desc')
+            ->paginate(15)
+            ->withQueryString(); // Preserve search parameters in pagination
+
+        return view('log-penyimpanan.index', compact('logs'));
+    }
+
+    /**
+     * Export filtered listing to PDF or Excel.
+     */
+    public function export(Request $request, string $format)
+    {
+        // Bangun query sama seperti index
+        $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit', 'penggunaSistem']);
+
+        if (! $request->filled('search_status')) {
+            $query->whereRaw("LOWER(status_log) != 'diangkut'");
+        }
+
         if ($request->filled('search_jenis')) {
             $query->whereHas('jenisLimbah', function ($q) use ($request) {
                 $q->where('nama_limbah', 'LIKE', '%'.$request->search_jenis.'%')
@@ -49,16 +136,60 @@ class LogPenyimpananLimbahController extends Controller
         if ($request->filled('search_tanggal')) {
             $query->whereDate('tanggal_limbah_masuk', $request->search_tanggal);
         }
+        if ($request->filled('search_tanggal_mulai')) {
+            $query->whereDate('tanggal_limbah_masuk', '>=', $request->search_tanggal_mulai);
+        }
+        if ($request->filled('search_tanggal_akhir')) {
+            $query->whereDate('tanggal_limbah_masuk', '<=', $request->search_tanggal_akhir);
+        }
 
         if ($request->filled('search_kode_identitas')) {
             $query->where('kode_identitas', 'LIKE', '%'.$request->search_kode_identitas.'%');
         }
 
-        $logs = $query->orderBy('created_at', 'desc')
-            ->paginate(15)
-            ->withQueryString(); // Preserve search parameters in pagination
+        $currentUser = Auth::user();
+        /** @var \App\Models\PenggunaSistem|null $currentUser */
+        $isSuper = $currentUser && is_callable([$currentUser, 'isSuperAdmin'])
+            ? (bool) call_user_func([$currentUser, 'isSuperAdmin'])
+            : false;
+        if ($isSuper && $request->filled('search_penginput')) {
+            $searchPenginput = $request->search_penginput;
+            $query->whereHas('penggunaSistem', function ($q) use ($searchPenginput) {
+                $q->where('nama_lengkap', 'LIKE', '%'.$searchPenginput.'%')
+                    ->orWhere('email_address', 'LIKE', '%'.$searchPenginput.'%');
+            });
+        }
 
-        return view('log-penyimpanan.index', compact('logs'));
+        if ($request->filled('expiry_days_min') || $request->filled('expiry_days_max')) {
+            $coalesceExpr = 'COALESCE(tanggal_kadaluarsa, maksimal_penyimpanan_tanggal)';
+            if ($request->filled('expiry_days_min')) {
+                $minDays = (int) $request->input('expiry_days_min');
+                $query->whereRaw("DATEDIFF($coalesceExpr, CURRENT_DATE) >= ?", [$minDays]);
+            }
+            if ($request->filled('expiry_days_max')) {
+                $maxDays = (int) $request->input('expiry_days_max');
+                $query->whereRaw("DATEDIFF($coalesceExpr, CURRENT_DATE) <= ?", [$maxDays]);
+            }
+        }
+
+        $logs = $query->orderBy('tanggal_limbah_masuk', 'desc')->get();
+
+        if ($format === 'excel') {
+            $filename = 'log-penyimpanan-'.now()->format('Y-m-d-H-i-s').'.xlsx';
+
+            return Excel::download(new \App\Exports\LogIndexExport(['logs' => $logs]), $filename);
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('log-penyimpanan.export-pdf', [
+                'logs' => $logs,
+                'generatedAt' => now(),
+            ]);
+
+            return $pdf->download('log-penyimpanan-'.now()->format('Y-m-d-H-i-s').'.pdf');
+        }
+
+        abort(404);
     }
 
     /**

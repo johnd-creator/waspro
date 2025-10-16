@@ -1,9 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    .action-button.primary {
+        color: var(--accent-primary);
+        background-color: var(--accent-bg);
+    }
+    .action-button.primary:hover {
+        background-color: var(--accent-primary);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(var(--shadow-rgb), 0.1), 0 2px 4px -1px rgba(var(--shadow-rgb), 0.06);
+    }
+    .action-button.secondary {
+        color: var(--accent-secondary);
+        background-color: var(--accent-bg-secondary);
+    }
+    .action-button.secondary:hover {
+        background-color: var(--accent-secondary);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(var(--shadow-rgb), 0.1), 0 2px 4px -1px rgba(var(--shadow-rgb), 0.06);
+    }
+    .action-button.danger {
+        color: var(--danger-primary);
+        background-color: var(--danger-bg);
+    }
+    .action-button.danger:hover {
+        background-color: var(--danger-primary);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(var(--shadow-rgb), 0.1), 0 2px 4px -1px rgba(var(--shadow-rgb), 0.06);
+    }
+</style>
 <div class="p-4 sm:p-6 lg:p-8">
     @if(session('success'))
-        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
@@ -14,20 +52,17 @@
 
     <!-- Header Section -->
     <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-        <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
+        <div class="px-6 py-6 flex justify-between items-center">
             <div>
                 <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Peran Pengguna</h1>
                 <p style="color: var(--text-secondary);">Kelola dan pantau peran pengguna sistem</p>
             </div>
             <div>
-                <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5" style="background-color: var(--accent-primary);">
+                <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-plus-circle mr-2"></i>
                     <span>Tambah Peran</span>
                 </a>
             </div>
-        </div>
-        <div class="px-6 py-6">
-            <p style="color: var(--text-secondary);">Daftar peran pengguna yang terdaftar dalam sistem</p>
         </div>
     </div>
 
@@ -80,35 +115,28 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center space-x-1">
+                                <div class="flex items-center space-x-2">
                                     <a href="{{ route('peran-pengguna.show', $peran->peran_id) }}"
-                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
-                                       style="color: var(--accent-primary); background-color: var(--accent-bg);"
-                                       onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';"
-                                       onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';"
+                                       class="action-button primary"
                                        title="Lihat Detail ({{ $peran->nama_peran }})"
                                        target="_self">
-                                        <i class="fas fa-eye text-sm"></i>
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('peran-pengguna.edit', $peran->peran_id) }}"
-                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
-                                       style="color: var(--accent-secondary); background-color: var(--accent-bg-secondary);"
-                                       onmouseover="this.style.backgroundColor='var(--accent-secondary)'; this.style.color='white';"
-                                       onmouseout="this.style.backgroundColor='var(--accent-bg-secondary)'; this.style.color='var(--accent-secondary)';"
+                                       class="action-button secondary"
                                        title="Edit ({{ $peran->nama_peran }})">
-                                        <i class="fas fa-edit text-sm"></i>
+                                        <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('peran-pengguna.destroy', $peran->peran_id) }}"
-                                          method="POST" class="inline">
+                                          method="POST"
+                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus peran {{ $peran->nama_peran }}?');"
+                                          class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
-                                                style="color: var(--danger-primary); background-color: var(--danger-bg);"
-                                                onmouseover="this.style.backgroundColor='var(--danger-primary)'; this.style.color='white';"
-                                                onmouseout="this.style.backgroundColor='var(--danger-bg)'; this.style.color='var(--danger-primary)';"
-                                                title="Hapus ({{ $peran->nama_peran }})"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus peran ini?')">
-                                            <i class="fas fa-trash text-sm"></i>
+                                        <button type="submit"
+                                                class="action-button danger"
+                                                title="Hapus ({{ $peran->nama_peran }})">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
                                 </div>

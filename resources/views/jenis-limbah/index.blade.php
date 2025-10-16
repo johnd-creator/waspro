@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-4 sm:p-6 lg:p-8">
     @if(session('success'))
-        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
@@ -41,7 +41,6 @@
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Kode Limbah</th>
                         <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Limbah</th>
                         <th class="min-w-[150px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Karakteristik</th>
-                        <th class="min-w-[150px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Kategori Sumber</th>
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Masa Simpan</th>
                         <th class="min-w-[100px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
@@ -70,14 +69,12 @@
                                     <span class="text-xs" style="color: var(--text-tertiary);">-</span>
                                 @endif
                             </td>
+                            
                             <td class="px-6 py-4">
-                                <span class="text-xs" style="color: var(--text-tertiary);">-</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                @if($jenis->batas_penyimpanan_hari)
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--warning-bg); color: var(--warning-primary);">
-                                        {{ $jenis->batas_penyimpanan_hari }} hari
-                                    </span>
+                                @if(!empty($jenis->waktu_penyimpanan_hari))
+                                    <span class="text-sm font-medium" style="color: var(--text-primary);">{{ $jenis->waktu_penyimpanan_hari }} hari</span>
+                                @elseif(!empty($jenis->batas_penyimpanan_hari))
+                                    <span class="text-sm font-medium" style="color: var(--text-primary);">{{ $jenis->batas_penyimpanan_hari }} hari</span>
                                 @else
                                     <span class="text-xs" style="color: var(--text-tertiary);">-</span>
                                 @endif
@@ -113,7 +110,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center">
+                            <td colspan="7" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center">
                                     <i class="fas fa-trash-alt mb-4 text-6xl" style="color: var(--text-tertiary);"></i>
                                     <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Belum ada data jenis limbah</h3>

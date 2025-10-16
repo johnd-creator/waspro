@@ -126,9 +126,9 @@
 <body>
     <div class="header">
         <h1>Laporan Unit Pembangkit</h1>
-        @if($unitId && isset($data['unitStats']))
+        @if($unitId && isset($unitStats))
             @php
-                $selectedUnit = $data['unitStats']->where('unit_id', $unitId)->first();
+                $selectedUnit = $unitStats->where('unit_id', $unitId)->first();
             @endphp
             @if($selectedUnit)
                 <p>Unit: {{ $selectedUnit['nama_unit'] }}</p>
@@ -185,7 +185,7 @@
         <tbody>
             @foreach($unitStats as $index => $unit)
             <tr @if($unitId == $unit['unit_id']) class="unit-highlight" @endif>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $unit['nama_unit'] }}</td>
                 <td>{{ $unit['lokasi'] }}</td>
                 <td>{{ number_format($unit['total_logs']) }}</td>
@@ -221,7 +221,7 @@
             <tbody>
                 @foreach($selectedUnit['waste_types'] as $index => $waste)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $waste['nama_limbah'] }}</td>
                     <td>{{ number_format($waste['quantity'], 2) }}</td>
                     <td>{{ number_format($waste['logs_count']) }}</td>
@@ -249,7 +249,7 @@
         <tbody>
             @foreach($logs as $index => $log)
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ date('d/m/Y', strtotime($log->tanggal_limbah_masuk)) }}</td>
                 <td>{{ $log->unitPembangkit->nama_unit ?? 'N/A' }}</td>
                 <td>{{ $log->jenisLimbah->nama_limbah ?? 'N/A' }}</td>

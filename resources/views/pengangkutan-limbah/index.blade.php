@@ -5,7 +5,7 @@
 @section('content')
 <div class="p-4 sm:p-6 lg:p-8">
     @if(session('success'))
-        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
@@ -89,7 +89,11 @@
                                 </td>
                                 <td class="px-4 py-3 text-center text-sm font-medium" style="color: var(--text-secondary);">{{ $logPenyimpanan->firstItem() + $key }}</td>
                                 <td class="px-6 py-3 text-sm" style="color: var(--text-primary);">{{ $log->kode_identitas }}</td>
-                                <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->perusahaanPenghasil->nama_perusahaan ?? $log->perusahaan->nama_perusahaan }}</td>
+                                <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">
+                                    {{ optional($log->perusahaanPenghasil)->nama_perusahaan
+                                        ?? optional($log->perusahaan)->nama_perusahaan
+                                        ?? 'Tidak diketahui' }}
+                                </td>
                                 <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ $log->jenisLimbah->nama_limbah }}</td>
                                 <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
                                 <td class="px-6 py-3 text-right text-sm font-bold" style="color: var(--text-primary);">

@@ -18,7 +18,7 @@
                 
                 <div class="card-body">
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" data-auto-dismiss="2500">
                             <i class="fas fa-check-circle"></i> {{ session('success') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -207,7 +207,7 @@
                                             <span class="info-box-text">Hari Kritis</span>
                                             <span class="info-box-number">{{ $settings['critical_days'] }} hari</span>
                                             <div class="progress">
-                                                <div class="progress-bar bg-warning" style="width: {{ $criticalPercentage }}%"></div>
+                                                <div class="progress-bar bg-warning" data-bar-width="{{ $criticalPercentage }}"></div>
                                             </div>
                                             <span class="progress-description">dari maksimal 365 hari</span>
                                         </div>
@@ -220,7 +220,7 @@
                                             <span class="info-box-text">Hari Peringatan</span>
                                             <span class="info-box-number">{{ $settings['warning_days'] }} hari</span>
                                             <div class="progress">
-                                                <div class="progress-bar bg-info" style="width: {{ $warningPercentage }}%"></div>
+                                                <div class="progress-bar bg-info" data-bar-width="{{ $warningPercentage }}"></div>
                                             </div>
                                             <span class="progress-description">dari maksimal 365 hari</span>
                                         </div>
@@ -257,8 +257,8 @@ function updatePreview() {
 }
 
 function resetForm() {
-    document.getElementById('critical_days').value = {{ $settings['critical_days'] ?? 30 }};
-    document.getElementById('warning_days').value = {{ $settings['warning_days'] ?? 7 }};
+    document.getElementById('critical_days').value = {!! json_encode($settings['critical_days'] ?? 30) !!};
+    document.getElementById('warning_days').value = {!! json_encode($settings['warning_days'] ?? 7) !!};
     updatePreview();
 }
 
@@ -266,12 +266,12 @@ function resetToDefault() {
     if (confirm('Apakah Anda yakin ingin mereset pengaturan ke default (Kritis: 7 hari, Peringatan: 30 hari)?')) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '{{ route("expiry-settings.reset") }}';
+        form.action = {!! json_encode(route('expiry-settings.reset')) !!};
         
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = '_token';
-        csrfToken.value = '{{ csrf_token() }}';
+        csrfToken.value = {!! json_encode(csrf_token()) !!};
         
         form.appendChild(csrfToken);
         document.body.appendChild(form);
@@ -280,6 +280,14 @@ function resetToDefault() {
 }
 
 // Initialize preview on page load
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.progress-bar[data-bar-width]').forEach(function (el) {
+        var n = parseFloat(el.getAttribute('data-bar-width'));
+        if (!isNaN(n)) {
+            el.style.width = n + '%';
+        }
+    });
+});
 updatePreview();
 </script>
 @endsection

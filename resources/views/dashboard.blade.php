@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen px-2" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
+<div class="min-h-screen p-4 sm:p-6 lg:p-8" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
     <!-- Professional Header Section -->
     <div class="rounded-2xl shadow-sm mb-8" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
         <div class="px-6 py-8 lg:px-8">
@@ -162,7 +162,7 @@
             <h2 style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Analisis Data</h2>
             <p style="color: var(--text-secondary);" class="text-sm transition-colors duration-200">Visualisasi data limbah dan tren penyimpanan</p>
         </div>
-        
+
         <div class="grid grid-cols-1 xl:grid-cols-5 gap-4">
             <!-- Monthly Chart -->
             <div style="background: var(--card-bg); border-color: var(--border-primary);" class="xl:col-span-3 backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-blue-500/10" data-aos="fade-up" data-aos-delay="500">
@@ -221,7 +221,7 @@
                     <h2 id="data-teratas-heading" style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Data Teratas</h2>
                     <p style="color: var(--text-secondary);" class="text-sm leading-relaxed transition-colors duration-200">Peringkat limbah berdasarkan volume penyimpanan</p>
                 </header>
-                
+
                 <!-- Main Card -->
                 <article style="background: var(--card-bg); border-color: var(--border-primary);" class="rounded-2xl border shadow-xl shadow-slate-900/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10">
                     <!-- Card Header -->
@@ -239,7 +239,7 @@
                              </button>
                          </div>
                     </header>
-                    
+
                     <!-- Table Container -->
                     <div class="overflow-x-auto">
                         <table class="w-full" role="table" aria-label="Top 10 jenis limbah">
@@ -257,12 +257,11 @@
                                     </th>
                                     <th scope="col" style="color: var(--text-primary);" class="px-6 py-2 text-center text-xs font-semibold uppercase tracking-wider">
                                         Jumlah Log
-                                    </th>
                                 </tr>
                             </thead>
-                            
+
                             <!-- Table Body -->
-                            <tbody style="background: var(--card-bg);" class="divide-y" style="border-color: var(--border-primary);">
+                            <tbody style="background: var(--card-bg); border-color: var(--border-primary);" class="divide-y">
                                 @forelse($topWasteTypes as $index => $waste)
                                 <tr class="group transition-colors duration-200" onmouseover="this.style.background='var(--hover-bg)'" onmouseout="this.style.background='transparent'">
                                     <!-- Rank & Name -->
@@ -282,14 +281,14 @@
                                             </div>
                                         </div>
                                     </td>
-                                    
+
                                     <!-- Total Quantity -->
                                     <td class="px-6 py-2 text-center">
                                         <span style="color: var(--text-primary);" class="text-sm font-bold">
                                             {{ number_format($waste->total_quantity, 2) }}
                                         </span>
                                     </td>
-                                    
+
                                     <!-- Log Count -->
                                     <td class="px-6 py-2 text-center">
                                         <span style="background: var(--accent-bg); color: var(--accent-primary); border-color: var(--border-primary);" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border">
@@ -324,7 +323,7 @@
                     <h2 style="color: var(--text-primary);" class="text-2xl font-bold mb-1 transition-colors duration-200 hover:text-blue-600">Aktivitas Terbaru</h2>
                     <p style="color: var(--text-secondary);" class="text-sm leading-relaxed transition-colors duration-200">10 log aktivitas terbaru dalam sistem</p>
                 </header>
-                
+
                 <div style="background: var(--card-bg); border-color: var(--border-primary);" class="backdrop-blur-xl border rounded-xl shadow-lg shadow-blue-500/10 overflow-hidden h-fit">
                     <!-- Header -->
                     <header class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 pb-4">
@@ -473,7 +472,7 @@
 </div>
 @endsection
 
-@push('styles')
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endpush
 
@@ -481,12 +480,12 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 const dashboardChartData = {
-    monthlyLabels: @json($monthlyChartLabels ?? []),
-    monthlyValues: @json($monthlyChartValues ?? []),
-    statusLabels: @json($statusChartLabels ?? []),
-    statusValues: @json($statusChartValues ?? []),
-    statusBackgroundColors: @json($statusChartBackgroundColors ?? []),
-    statusBorderColors: @json($statusChartBorderColors ?? []),
+    monthlyLabels: {!! json_encode($monthlyChartLabels ?? []) !!},
+    monthlyValues: {!! json_encode($monthlyChartValues ?? []) !!},
+    statusLabels: {!! json_encode($statusChartLabels ?? []) !!},
+    statusValues: {!! json_encode($statusChartValues ?? []) !!},
+    statusBackgroundColors: {!! json_encode($statusChartBackgroundColors ?? []) !!},
+    statusBorderColors: {!! json_encode($statusChartBorderColors ?? []) !!},
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -497,14 +496,14 @@ document.addEventListener('DOMContentLoaded', function() {
         once: true,
         offset: 100
     });
-    
+
     // Handle data-href clicks
     document.querySelectorAll('[data-href]').forEach(function(element) {
         element.addEventListener('click', function() {
             window.location.href = this.getAttribute('data-href');
         });
     });
-    
+
     // Wait a bit for Chart.js to be fully loaded
     setTimeout(function() {
         if (typeof Chart !== 'undefined') {
@@ -672,11 +671,11 @@ function initializeCharts() {
             // Handle chart creation error silently
         }
     }
-    
+
     // Real-time clock and date function
     function updateDateTime() {
         const now = new Date();
-        
+
         // Update time with seconds
         const timeString = now.toLocaleTimeString('id-ID', {
             hour: '2-digit',
@@ -684,37 +683,37 @@ function initializeCharts() {
             second: '2-digit',
             hour12: false
         });
-        
+
         // Update date
         const dateString = now.toLocaleDateString('id-ID', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
         });
-        
+
         // Update day name
         const dayString = now.toLocaleDateString('id-ID', {
             weekday: 'long'
         });
-        
+
         // Update DOM elements
         const clockElement = document.getElementById('currentTime');
         const dateElement = document.getElementById('currentDate');
         const dayElement = document.getElementById('currentDay');
-        
+
         if (clockElement) {
             clockElement.textContent = timeString;
         }
-        
+
         if (dateElement) {
             dateElement.textContent = dateString;
         }
-        
+
         if (dayElement) {
             dayElement.textContent = dayString;
         }
     }
-    
+
     // Update date and time immediately only (no continuous updates)
     updateDateTime();
     // setInterval(updateDateTime, 1000); // Disabled to prevent constant movement

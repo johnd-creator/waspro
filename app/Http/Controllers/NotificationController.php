@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApplicationSetting;
 use App\Models\LogPenyimpananLimbah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
@@ -55,10 +55,9 @@ class NotificationController extends Controller
      */
     private function getExpiryNotificationsData()
     {
-        // Get warning days from settings (default 30 if not set)
-        $warningDays = DB::table('app_settings')
-            ->where('key', 'warning_days')
-            ->value('value') ?? 30;
+        // Get thresholds from unified settings
+        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
+        $criticalDays = (int) ApplicationSetting::get('critical_days', 7);
 
         $criticalDays = 7; // Critical threshold
         $urgentDays = 3;   // Urgent threshold
@@ -156,8 +155,8 @@ class NotificationController extends Controller
     public function getSettings()
     {
         $settings = [
-            'warning_days' => DB::table('app_settings')->where('key', 'warning_days')->value('value') ?? 30,
-            'critical_days' => 7,
+            'warning_days' => (int) ApplicationSetting::get('warning_days', 30),
+            'critical_days' => (int) ApplicationSetting::get('critical_days', 7),
             'urgent_days' => 3,
             'auto_refresh' => true,
             'refresh_interval' => 300000, // 5 minutes in milliseconds

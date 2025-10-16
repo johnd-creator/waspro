@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-4 sm:p-6 lg:p-8">
     @if(session('success'))
-        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);">
+        <div class="mb-6 flex items-center rounded-xl border p-4" style="background-color: var(--accent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" role="alert" data-auto-dismiss="2500">
             <i class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" class="ml-auto transition-opacity hover:opacity-75" onclick="this.parentElement.remove()">
@@ -26,27 +26,91 @@
                 </a>
             </div>
         </div>
-        <!-- Search Section -->
+        <!-- Search & Filter Section -->
         <div class="px-6 py-6">
-            <form method="GET" action="{{ route('log-penyimpanan.index') }}" class="flex flex-col gap-4 md:flex-row">
-                <div class="relative flex-1">
-                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                        <i class="fas fa-search" style="color: var(--text-tertiary);"></i>
+            <form method="GET" action="{{ route('log-penyimpanan.index') }}" class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4 md:flex-row">
+                    <div class="relative flex-1">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                            <i class="fas fa-search" style="color: var(--text-tertiary);"></i>
+                        </div>
+                        <input type="text" class="w-full rounded-xl border py-3 pl-12 pr-4 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);"
+                               name="search_kode_identitas"
+                               value="{{ request('search_kode_identitas') }}"
+                               placeholder="Cari Kode Identitas Limbah">
                     </div>
-                    <input type="text" class="w-full rounded-xl border py-3 pl-12 pr-4 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500" 
-                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);"
-                           name="search_kode_identitas" 
-                           value="{{ request('search_kode_identitas') }}" 
-                           placeholder="Cari berdasarkan Kode Identitas Limbah...">
+                    <input type="text" name="search_jenis" value="{{ request('search_jenis') }}" placeholder="Jenis/Kode Limbah"
+                           class="w-full md:w-60 rounded-xl border px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                    <input type="text" name="search_perusahaan" value="{{ request('search_perusahaan') }}" placeholder="Perusahaan Penghasil"
+                           class="w-full md:w-60 rounded-xl border px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                           style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                    @if(auth()->user() && method_exists(auth()->user(), 'isSuperAdmin') && auth()->user()->isSuperAdmin())
+                        <input type="text" name="search_penginput" value="{{ request('search_penginput') }}" placeholder="Penginput Data (nama/email)"
+                               class="w-full md:w-60 rounded-xl border px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                    @endif
+                    <select name="search_status" class="w-full md:w-52 rounded-xl border px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                        <option value="">Semua Status</option>
+                        <option value="Tersimpan" {{ request('search_status') == 'Tersimpan' ? 'selected' : '' }}>Tersimpan</option>
+                        <option value="Kadaluarsa" {{ request('search_status') == 'Kadaluarsa' ? 'selected' : '' }}>Kadaluarsa</option>
+                        <option value="Diangkut" {{ request('search_status') == 'Diangkut' ? 'selected' : '' }}>Diangkut</option>
+                    </select>
                 </div>
-                <button type="submit" class="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
-                    <i class="fas fa-search mr-2"></i>Cari
-                </button>
-                @if(request()->hasAny(['search_kode_identitas', 'search_jenis', 'search_perusahaan', 'search_status', 'search_tanggal']))
-                    <a href="{{ route('log-penyimpanan.index') }}" class="rounded-xl px-6 py-3 font-medium transition-colors" style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">
-                        <i class="fas fa-times mr-2"></i>Reset
+
+                <div class="flex flex-col gap-4 md:flex-row items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="text-sm font-medium" style="color: var(--text-secondary);">Rentang Tanggal Masuk</div>
+                        <input type="date" name="search_tanggal_mulai" value="{{ request('search_tanggal_mulai') }}"
+                               class="rounded-xl border px-4 py-2 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                        <span style="color: var(--text-secondary);">s/d</span>
+                        <input type="date" name="search_tanggal_akhir" value="{{ request('search_tanggal_akhir') }}"
+                               class="rounded-xl border px-4 py-2 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                               style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
+                    </div>
+
+
+                    <div class="ml-auto flex gap-3">
+                        <button type="submit" class="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
+                            <i class="fas fa-filter mr-2"></i>Terapkan Filter
+                        </button>
+                        <a href="{{ route('log-penyimpanan.export', array_merge(request()->all(), ['format' => 'pdf'])) }}" class="rounded-xl bg-rose-600 px-6 py-3 font-medium text-white transition-colors hover:bg-rose-700">
+                            <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                        </a>
+                        <a href="{{ route('log-penyimpanan.export', array_merge(request()->all(), ['format' => 'excel'])) }}" class="rounded-xl bg-emerald-600 px-6 py-3 font-medium text-white transition-colors hover:bg-emerald-700">
+                            <i class="fas fa-file-excel mr-2"></i>Export Excel
+                        </a>
+                        @if(request()->hasAny(['search_kode_identitas','search_jenis','search_perusahaan','search_status','search_tanggal','search_tanggal_mulai','search_tanggal_akhir','search_penginput','expiry_days_min','expiry_days_max']))
+                            <a href="{{ route('log-penyimpanan.index') }}" class="rounded-xl px-6 py-3 font-medium transition-colors" style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">
+                                <i class="fas fa-times mr-2"></i>Reset
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Quick status tabs -->
+                <div class="mt-2 flex flex-wrap gap-2">
+                    @php($baseQuery = request()->except('page'))
+                    <a href="{{ route('log-penyimpanan.index', array_merge($baseQuery, ['search_status' => ''])) }}"
+                       class="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium" style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">
+                        Semua
                     </a>
-                @endif
+                    <a href="{{ route('log-penyimpanan.index', array_merge($baseQuery, ['search_status' => 'Tersimpan'])) }}"
+                       class="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                        Tersimpan
+                    </a>
+                    <a href="{{ route('log-penyimpanan.index', array_merge($baseQuery, ['search_status' => 'Kadaluarsa'])) }}"
+                       class="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
+                        Kadaluarsa
+                    </a>
+                    <a href="{{ route('log-penyimpanan.index', array_merge($baseQuery, ['search_status' => 'Diangkut'])) }}"
+                       class="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium" style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">
+                        Diangkut
+                    </a>
+                </div>
             </form>
         </div>
     </div>
@@ -75,7 +139,7 @@
                         <tr class="transition-colors duration-200 border-b" style="border-color: var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
                             <td class="px-4 py-4 text-center text-sm font-medium" style="color: var(--text-secondary);">{{ $logs->firstItem() + $index }}</td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-semibold" style="color: var(--accent-primary);">{{ $log->kode_identitas ?? 'Belum Ada' }}</div>
+                                <div class="text-sm font-semibold" style="color: var(--accent-primary);" title="Kode identitas: {{ $log->kode_identitas ?? 'Belum Ada' }}">{{ $log->kode_identitas ?? 'Belum Ada' }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium" style="color: var(--text-secondary);">{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
                             <td class="px-6 py-4">

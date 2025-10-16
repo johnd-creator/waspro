@@ -4,10 +4,10 @@
 
 @section('content')
 <!-- Modern Header Section -->
-<div class="mb-6">
+<div class="p-4 sm:p-6 lg:p-8">
     <div class="container-fluid">
         <!-- Page Header Card -->
-        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="backdrop-blur-xl border rounded-2xl p-6 shadow-xl shadow-slate-900/5 transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10" data-aos="fade-up">
+        <div style="background: var(--caccent-bg-secondary); border-color: var(--border-secondary); color: var(--accent-secondary);" class="backdrop-blur-xl border rounded-2xl p-6 shadow-xl shadow-slate-900/5 transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10" data-aos="fade-up">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div class="flex items-center">
                     <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-white mr-4 shadow-xl">
@@ -37,29 +37,29 @@
     </div>
 </div>
 
-<section class="content">
+<section class="p-4 sm:p-6 lg:p-8">
     <div class="container-fluid">
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <!-- Expired Card -->
-            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-red-500/10 hover:shadow-xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+            <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);" class="group backdrop-blur-xl rounded-xl p-4 shadow-lg shadow-red-500/10 hover:shadow-xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
                 <div class="flex items-center justify-between mb-3">
                     <div class="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
-                        <i class="fas fa-exclamation-triangle text-lg text-white"></i>
+                        <i class="fas fa-exclamation-triangle text-lg"></i>
                     </div>
                     <div class="text-right">
                         <div style="color: var(--text-primary);" class="text-2xl font-bold" id="expired-count">0</div>
                         <div style="color: var(--text-secondary);" class="font-medium text-sm">Kadaluarsa</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1 text-red-600">
-                    <i class="fas fa-exclamation-circle text-xs"></i>
+                <div class="flex items-center gap-1" style="color: var(--text-secondary);">
+                    <i class="fas fa-exclamation-circle text-xs text-red-600"></i>
                     <span class="text-xs font-semibold">Perlu Tindakan</span>
                 </div>
             </div>
 
             <!-- Urgent Card -->
-            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-amber-500/10 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+            <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);" class="group backdrop-blur-xl rounded-xl p-4 shadow-lg shadow-amber-500/10 hover:shadow-xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
                 <div class="flex items-center justify-between mb-3">
                     <div class="p-3 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                         <i class="fas fa-clock text-lg text-white"></i>
@@ -69,14 +69,14 @@
                         <div style="color: var(--text-secondary);" class="font-medium text-sm">Mendesak</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1 text-amber-600">
-                    <i class="fas fa-clock text-xs"></i>
+                <div class="flex items-center gap-1" style="color: var(--text-secondary);">
+                    <i class="fas fa-clock text-xs text-amber-600"></i>
                     <span class="text-xs font-semibold">Segera Ditangani</span>
                 </div>
             </div>
 
             <!-- Critical Card -->
-            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+            <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);" class="group backdrop-blur-xl rounded-xl p-4 shadow-lg shadow-blue-500/10 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
                 <div class="flex items-center justify-between mb-3">
                     <div class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                         <i class="fas fa-bell text-lg text-white"></i>
@@ -86,14 +86,14 @@
                         <div style="color: var(--text-secondary);" class="font-medium text-sm">Kritis</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1 text-blue-600">
-                    <i class="fas fa-bell text-xs"></i>
+                <div class="flex items-center gap-1" style="color: var(--text-secondary);">
+                    <i class="fas fa-bell text-xs text-blue-600"></i>
                     <span class="text-xs font-semibold">Prioritas Tinggi</span>
                 </div>
             </div>
 
             <!-- Warning Card -->
-            <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-4 shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="400">
+            <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);" class="group backdrop-blur-xl rounded-xl p-4 shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="400">
                 <div class="flex items-center justify-between mb-3">
                     <div class="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
                         <i class="fas fa-info-circle text-lg text-white"></i>
@@ -103,30 +103,30 @@
                         <div style="color: var(--text-secondary);" class="font-medium text-sm">Peringatan</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1 text-emerald-600">
-                    <i class="fas fa-info-circle text-xs"></i>
+                <div class="flex items-center gap-1" style="color: var(--text-secondary);">
+                    <i class="fas fa-info-circle text-xs text-emerald-600"></i>
                     <span class="text-xs font-semibold">Informasi</span>
                 </div>
             </div>
         </div>
 
         <!-- Notifications List -->
-        <div style="background: var(--card-bg); border-color: var(--border-primary);" class="backdrop-blur-xl border rounded-2xl shadow-xl shadow-slate-900/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10" data-aos="fade-up" data-aos-delay="500">
+        <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);" class="backdrop-blur-xl rounded-2xl shadow-xl shadow-slate-900/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10" data-aos="fade-up" data-aos-delay="500">
             <!-- Card Header -->
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 p-8 pb-6 bg-gradient-to-r from-blue-600 to-purple-600 border-b border-blue-700">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 p-8 pb-6" style="background: var(--card-bg); border-bottom: 1px solid var(--border-primary);">
                 <div class="flex-1">
                     <div class="flex items-center gap-4 mb-2">
                         <div class="p-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl border-2 border-yellow-300 hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 hover:scale-105">
-                            <i class="fas fa-bell text-2xl text-white drop-shadow-lg"></i>
+                            <i class="fas fa-bell text-2xl"></i>
                         </div>
-                        <h3 class="text-3xl font-bold text-white tracking-tight">Notifikasi Limbah</h3>
+                        <h3 class="text-3xl font-bold tracking-tight" style="color: var(--text-primary);">Notifikasi Limbah</h3>
                     </div>
-                    <p class="text-blue-100 text-lg leading-relaxed">Pantau status limbah yang memerlukan perhatian</p>
+                    <p class="text-lg leading-relaxed" style="color: var(--text-secondary);">Pantau status limbah yang memerlukan perhatian</p>
                 </div>
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <div class="text-right text-white">
-                        <div class="text-sm text-blue-100 font-medium">Total Notifikasi</div>
-                        <div class="text-2xl font-bold" id="total-count">0</div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium" style="color: var(--text-secondary);">Total Notifikasi</div>
+                        <div class="text-2xl font-bold" id="total-count" style="color: var(--text-primary);">0</div>
                     </div>
                     <div class="flex items-center gap-3">
                         <button type="button" class="inline-flex items-center gap-3 px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 border-2 border-emerald-400 rounded-xl hover:from-emerald-600 hover:to-emerald-700 hover:border-emerald-300 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-emerald-300 focus:ring-offset-2 shadow-xl hover:shadow-2xl backdrop-blur-sm" onclick="refreshNotifications()">
@@ -134,18 +134,18 @@
                             <span class="font-bold">Refresh</span>
                         </button>
                         <div class="relative">
-                            <button type="button" class="inline-flex items-center gap-3 px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 border-2 border-blue-400 rounded-xl hover:from-blue-600 hover:to-blue-700 hover:border-blue-300 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 shadow-xl hover:shadow-2xl backdrop-blur-sm" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" class="inline-flex items-center gap-3 px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 border-2 border-blue-400 rounded-xl hover:from-blue-600 hover:to-blue-700 hover:border-blue-300 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 shadow-xl hover:shadow-2xl backdrop-blur-sm" id="filterDropdown" aria-expanded="false">
                                 <i class="fas fa-filter text-base"></i>
                                 <span class="font-bold">Filter: <span id="currentFilter" class="font-black">Semua</span></span>
                                 <i class="fas fa-chevron-down text-sm ml-1 transition-transform duration-200" id="filterChevron"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-2xl border-0 rounded-xl p-2 mt-2 overflow-hidden" style="background: var(--card-bg); border-color: var(--border-primary);" aria-labelledby="filterDropdown">
-                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option active d-flex align-items-center gap-3 font-medium hover:bg-blue-50 transition-colors duration-200" href="#" data-filter="all" style="color: var(--text-primary);"><i class="fas fa-list text-blue-600"></i><span>Semua Notifikasi</span></a></li>
+                            <ul id="filterMenu" class="dropdown-menu dropdown-menu-end absolute right-0 z-50 hidden shadow-2xl border rounded-xl p-2 mt-2 overflow-hidden" style="background: var(--card-bg); border-color: var(--border-primary);" aria-labelledby="filterDropdown">
+                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option active d-flex align-items-center gap-3 font-medium transition-colors duration-200" href="#" data-filter="all" style="color: var(--text-primary);"><i class="fas fa-list text-blue-600"></i><span>Semua Notifikasi</span></a></li>
                                 <li><hr class="dropdown-divider my-2" style="border-color: var(--border-primary);"></li>
-                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium hover:bg-red-50 transition-colors duration-200" href="#" data-filter="expired" style="color: var(--text-primary);"><i class="fas fa-exclamation-triangle text-red-600"></i><span>Kadaluarsa</span></a></li>
-                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium hover:bg-amber-50 transition-colors duration-200" href="#" data-filter="urgent" style="color: var(--text-primary);"><i class="fas fa-clock text-amber-600"></i><span>Mendesak</span></a></li>
-                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium hover:bg-blue-50 transition-colors duration-200" href="#" data-filter="critical" style="color: var(--text-primary);"><i class="fas fa-bell text-blue-600"></i><span>Kritis</span></a></li>
-                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium hover:bg-emerald-50 transition-colors duration-200" href="#" data-filter="warning" style="color: var(--text-primary);"><i class="fas fa-info-circle text-emerald-600"></i><span>Peringatan</span></a></li>
+                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium transition-colors duration-200" href="#" data-filter="expired" style="color: var(--text-primary);"><i class="fas fa-exclamation-triangle text-red-600"></i><span>Kadaluarsa</span></a></li>
+                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium transition-colors duration-200" href="#" data-filter="urgent" style="color: var(--text-primary);"><i class="fas fa-clock text-amber-600"></i><span>Mendesak</span></a></li>
+                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium transition-colors duration-200" href="#" data-filter="critical" style="color: var(--text-primary);"><i class="fas fa-bell text-blue-600"></i><span>Kritis</span></a></li>
+                                <li><a class="dropdown-item rounded-lg py-3 px-4 filter-option d-flex align-items-center gap-3 font-medium transition-colors duration-200" href="#" data-filter="warning" style="color: var(--text-primary);"><i class="fas fa-info-circle text-emerald-600"></i><span>Peringatan</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -156,8 +156,8 @@
                 <!-- Empty State -->
                 <div class="text-center py-12 px-6" id="empty-state" style="display: none;">
                     <div class="mb-6">
-                        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full mb-4">
-                            <i class="fas fa-bell-slash text-3xl text-slate-400"></i>
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4" style="background: var(--card-secondary-bg);">
+                            <i class="fas fa-bell-slash text-3xl" style="color: var(--text-secondary);"></i>
                         </div>
                     </div>
                     <div class="max-w-sm mx-auto">
@@ -179,8 +179,12 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 <script>
 $(document).ready(function() {
+    if (typeof moment !== 'undefined') {
+        moment.locale('id');
+    }
     let currentFilter = 'all';
     let allNotifications = [];
     
@@ -189,6 +193,34 @@ $(document).ready(function() {
     
     // Auto refresh every 5 minutes
     setInterval(loadNotifications, 300000);
+
+    // Filter dropdown toggle
+    const $filterDropdown = $('#filterDropdown');
+    const $filterMenu = $('#filterMenu');
+    const $chevron = $('#filterChevron');
+
+    $filterDropdown.on('click', function(e) {
+        e.preventDefault();
+        const isOpen = !$filterMenu.hasClass('hidden');
+        if (isOpen) {
+            $filterMenu.addClass('hidden');
+            $filterDropdown.attr('aria-expanded', 'false');
+            $chevron.css('transform', 'rotate(0deg)');
+        } else {
+            $filterMenu.removeClass('hidden');
+            $filterDropdown.attr('aria-expanded', 'true');
+            $chevron.css('transform', 'rotate(180deg)');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#filterDropdown, #filterMenu').length) {
+            $filterMenu.addClass('hidden');
+            $filterDropdown.attr('aria-expanded', 'false');
+            $chevron.css('transform', 'rotate(0deg)');
+        }
+    });
     
     // Load notifications function
     function loadNotifications() {
@@ -264,9 +296,10 @@ $(document).ready(function() {
                 ? notification.days_until_expiry + ' hari lagi' 
                 : 'Kadaluarsa ' + Math.abs(notification.days_until_expiry) + ' hari';
             
+                // Ini harus di cek
             const item = `
                 <div class="notification-item" data-type="${notification.type}" data-aos="fade-up">
-                    <div style="background: var(--card-bg); border-color: var(--border-primary);" class="group backdrop-blur-xl border rounded-xl p-6 shadow-lg shadow-${notification.color}-500/10 hover:shadow-xl hover:shadow-${notification.color}-500/20 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-${notification.color}-500">
+                    <div style="background: var(--card-bg); border: 2px solid var(--border-primary); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);" class="group backdrop-blur-xl rounded-xl p-6 shadow-lg shadow-${notification.color}-500/10 hover:shadow-xl hover:shadow-${notification.color}-500/20 transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-${notification.color}-500">
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                             <!-- Main Content -->
                             <div class="flex-1">
@@ -274,7 +307,7 @@ $(document).ready(function() {
                                     <!-- Icon -->
                                     <div class="flex-shrink-0">
                                         <div class="p-3 bg-gradient-to-br from-${notification.color}-500 to-${notification.color}-600 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-300">
-                                            <i class="${notification.icon} text-lg text-white"></i>
+                                            <i class="${notification.icon} text-lg text-primary"></i>
                                         </div>
                                     </div>
                                     
@@ -321,7 +354,7 @@ $(document).ready(function() {
                             <!-- Actions -->
                             <div class="flex flex-col items-end gap-3 lg:ml-6">
                                 <!-- Action Button -->
-                                <a href="{{ url('log-penyimpanan') }}/${notification.id}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-${notification.color}-600 bg-${notification.color}-50 border border-${notification.color}-200 rounded-lg hover:bg-${notification.color}-100 hover:border-${notification.color}-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-${notification.color}-500 focus:ring-offset-2">
+                                <a href="{{ url('log-penyimpanan') }}/${notification.id}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border rounded-lg transition-all duration-200 focus:outline-none action-button" style="color: var(--text-primary); background: var(--card-secondary-bg); border-color: var(--border-primary);">
                                     <i class="fas fa-eye text-sm"></i>
                                     <span>Lihat Detail</span>
                                 </a>
@@ -353,25 +386,11 @@ $(document).ready(function() {
         
         // Filter notifications
         displayNotifications(filterNotifications(allNotifications, currentFilter));
-    });
-    
-    // Dropdown chevron animation
-    $('#filterDropdown').on('click', function() {
-        const $chevron = $('#filterChevron');
-        const isExpanded = $(this).attr('aria-expanded') === 'true';
-        
-        if (isExpanded) {
-            $chevron.css('transform', 'rotate(180deg)');
-        } else {
-            $chevron.css('transform', 'rotate(0deg)');
-        }
-    });
-    
-    // Reset chevron when dropdown is hidden
-    $(document).on('click', function(e) {
-        if (!$('#filterDropdown').is(e.target) && $('#filterDropdown').has(e.target).length === 0) {
-            $('#filterChevron').css('transform', 'rotate(0deg)');
-        }
+
+        // Close dropdown after selecting
+        $filterMenu.addClass('hidden');
+        $filterDropdown.attr('aria-expanded', 'false');
+        $chevron.css('transform', 'rotate(0deg)');
     });
     
     // Update total count
@@ -405,27 +424,7 @@ $(document).ready(function() {
 
 @push('styles')
 <style>
-/* CSS Variables for Theme Support */
-:root {
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --card-secondary-bg: rgba(248, 250, 252, 0.8);
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --border-primary: rgba(226, 232, 240, 0.8);
-    --hover-bg: rgba(248, 250, 252, 0.5);
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --card-bg: rgba(30, 41, 59, 0.95);
-        --card-secondary-bg: rgba(51, 65, 85, 0.8);
-        --text-primary: #f1f5f9;
-        --text-secondary: #94a3b8;
-        --border-primary: rgba(71, 85, 105, 0.8);
-        --hover-bg: rgba(51, 65, 85, 0.5);
-    }
-}
+/* Use global theme variables from layout. No overrides here to respect [data-theme="dark"]. */
 
 /* Global Styles */
 .backdrop-blur-xl {
@@ -631,8 +630,15 @@ $(document).ready(function() {
 }
 
 .dropdown-item.active {
-    background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%) !important;
-    color: white !important;
+    background: var(--hover-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Action button hover follows theme */
+.action-button:hover {
+    background: var(--hover-bg) !important;
+    border-color: var(--border-primary) !important;
+    color: var(--text-primary) !important;
 }
 
 /* Animation Support */
@@ -680,8 +686,42 @@ $(document).ready(function() {
 
 .gap-2 { gap: 0.5rem; }
 
+/* Empty State Styles */
+.empty-state {
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    color: var(--text-secondary);
+    font-size: 3rem;
+}
+
+.empty-state-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-text {
+    color: var(--text-secondary);
+}
+
 /* Color Classes */
 .bg-emerald-500 { background-color: #10b981; }
 .hover\:text-blue-600:hover { color: #2563eb; }
+
+/* Enhanced Card Visibility for Light Mode */
+[data-theme="light"] .backdrop-blur-xl {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .group {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .group:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
 </style>
 @endpush

@@ -186,6 +186,24 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Format default untuk laporan',
                 'is_active' => true,
             ],
+
+            // Expiry Settings (unify to application_settings)
+            [
+                'key' => 'critical_days',
+                'value' => 7,
+                'type' => 'integer',
+                'category' => 'expiry',
+                'description' => 'Jumlah hari untuk status kritis sebelum kadaluarsa',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'warning_days',
+                'value' => 30,
+                'type' => 'integer',
+                'category' => 'expiry',
+                'description' => 'Jumlah hari untuk status peringatan sebelum kadaluarsa',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {

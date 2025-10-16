@@ -3,20 +3,26 @@
 @section('title', 'Edit Pengguna Sistem')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
-    <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary); margin-bottom: 1.5rem;">
-        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-primary);">
-            <div class="flex justify-between items-start">
+    <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6" style="border-color: var(--border-primary);">
+            <div class="flex justify-between items-center">
                 <div>
                     <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Edit Pengguna Sistem</h1>
                     <p style="color: var(--text-secondary);">Perbarui informasi pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--success-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--success-hover)'" onmouseout="this.style.background='var(--success-bg)'">
+                    <a href="{{ route('pengguna-sistem.show', $penggunaSistem) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--accent-secondary); color: white;"
+                   onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                         <i class="fas fa-eye mr-2"></i>Lihat Detail
                     </a>
-                    <a href="{{ route('pengguna-sistem.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
+                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                       style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                       onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                       onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
@@ -25,18 +31,16 @@
     </div>
 
     <!-- Form Section -->
-    <div class="max-w-4xl mx-auto">
-        <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary);">
-            <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-primary);">
-                <h6 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center;">
-                    <i class="fas fa-user-edit mr-2"></i>Form Edit Pengguna
-                </h6>
-            </div>
-            <div style="padding: 1.5rem 2rem;">
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6">
+            <h6 class="text-lg font-semibold mb-4" style="color: var(--text-primary); display: flex; align-items: center;">
+                <i class="fas fa-user-edit mr-2"></i>Form Edit Pengguna
+            </h6>
+            <div class="">
                     <form action="{{ route('pengguna-sistem.update', $penggunaSistem) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        
+
                         <!-- Informasi Dasar -->
                         <div class="row mb-4">
                             <div class="col-12">
@@ -44,24 +48,24 @@
                                     <i class="fas fa-user me-2"></i>Informasi Dasar
                                 </h6>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="nama_lengkap" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Nama Lengkap <span style="color: var(--danger-primary);">*</span></label>
-                                <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" 
-                                       id="nama_lengkap" name="nama_lengkap" 
-                                       value="{{ old('nama_lengkap', $penggunaSistem->nama_lengkap) }}" 
+                                <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror"
+                                       id="nama_lengkap" name="nama_lengkap"
+                                       value="{{ old('nama_lengkap', $penggunaSistem->nama_lengkap) }}"
                                        placeholder="Masukkan nama lengkap" required
                                        style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 @error('nama_lengkap')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="email_address" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Email Address <span style="color: var(--danger-primary);">*</span></label>
-                                <input type="email" class="form-control @error('email_address') is-invalid @enderror" 
-                                       id="email_address" name="email_address" 
-                                       value="{{ old('email_address', $penggunaSistem->email_address) }}" 
+                                <input type="email" class="form-control @error('email_address') is-invalid @enderror"
+                                       id="email_address" name="email_address"
+                                       value="{{ old('email_address', $penggunaSistem->email_address) }}"
                                        placeholder="contoh@email.com" required
                                        style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 @error('email_address')
@@ -78,11 +82,11 @@
                                     <small style="color: var(--text-secondary);">(Kosongkan jika tidak ingin mengubah kata sandi)</small>
                                 </h6>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="kata_sandi" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Kata Sandi Baru</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control @error('kata_sandi') is-invalid @enderror" 
+                                    <input type="password" class="form-control @error('kata_sandi') is-invalid @enderror"
                                            id="kata_sandi" name="kata_sandi" placeholder="Minimal 8 karakter"
                                            style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem 0 0 0.5rem; padding: 0.75rem;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi')"
@@ -95,12 +99,12 @@
                                 </div>
                                 <small style="color: var(--text-secondary);">Kosongkan jika tidak ingin mengubah kata sandi</small>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="kata_sandi_confirmation" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Konfirmasi Kata Sandi Baru</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control @error('kata_sandi_confirmation') is-invalid @enderror" 
-                                           id="kata_sandi_confirmation" name="kata_sandi_confirmation" 
+                                    <input type="password" class="form-control @error('kata_sandi_confirmation') is-invalid @enderror"
+                                           id="kata_sandi_confirmation" name="kata_sandi_confirmation"
                                            placeholder="Ulangi kata sandi baru"
                                            style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem 0 0 0.5rem; padding: 0.75rem;">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('kata_sandi_confirmation')"
@@ -121,7 +125,7 @@
                                     <i class="fas fa-building me-2"></i>Organisasi
                                 </h6>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="unit_id" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Unit Pembangkit <span style="color: var(--danger-primary);">*</span></label>
                             <select class="form-select @error('unit_id') is-invalid @enderror"
@@ -139,14 +143,14 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Peran Pengguna <span style="color: var(--danger-primary);">*</span></label>
                                 <div style="border: 1px solid var(--border-primary); border-radius: 0.5rem; padding: 0.75rem; background: var(--input-bg);" class="@error('peran_ids') border-danger @enderror">
                                     @foreach($peranList as $peran)
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" 
-                                                   id="peran_{{ $peran->peran_id }}" 
+                                            <input class="form-check-input" type="checkbox"
+                                                   id="peran_{{ $peran->peran_id }}"
                                                    name="peran_ids[]" value="{{ $peran->peran_id }}"
                                                    {{ in_array($peran->peran_id, old('peran_ids', $userPeranIds)) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="peran_{{ $peran->peran_id }}" style="color: var(--text-primary);">
@@ -172,11 +176,11 @@
                                     <i class="fas fa-toggle-on me-2"></i>Status
                                 </h6>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="aktif" 
-                                           name="aktif" value="1" 
+                                    <input class="form-check-input" type="checkbox" id="aktif"
+                                           name="aktif" value="1"
                                            {{ old('aktif', $penggunaSistem->aktif) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="aktif" style="color: var(--text-primary);">
                                         <strong>Status Aktif</strong>
@@ -193,19 +197,19 @@
                                     <i class="fas fa-info-circle me-2"></i>Informasi Tambahan
                                 </h6>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Dibuat Pada</label>
-                                <input type="text" class="form-control" 
-                                       value="{{ $penggunaSistem->created_at ? $penggunaSistem->created_at->format('d/m/Y H:i') : 'N/A' }}" 
+                                <input type="text" class="form-control"
+                                       value="{{ $penggunaSistem->created_at ? $penggunaSistem->created_at->format('d/m/Y H:i') : 'N/A' }}"
                                        readonly
                                        style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0.5rem; padding: 0.75rem;">
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Terakhir Diperbarui</label>
-                                <input type="text" class="form-control" 
-                                       value="{{ $penggunaSistem->updated_at ? $penggunaSistem->updated_at->format('d/m/Y H:i') : 'N/A' }}" 
+                                <input type="text" class="form-control"
+                                       value="{{ $penggunaSistem->updated_at ? $penggunaSistem->updated_at->format('d/m/Y H:i') : 'N/A' }}"
                                        readonly
                                        style="background: var(--secondary-bg-light); border: 1px solid var(--border-primary); color: var(--text-secondary); border-radius: 0.5rem; padding: 0.75rem;">
                             </div>
@@ -213,10 +217,16 @@
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('pengguna-sistem.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
+                            <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                               style="background-color: var(--danger-primary); color: white;"
+                               onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';"
+                               onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-times mr-2"></i>Batal
                             </a>
-                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
+                            <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                    style="background-color: var(--accent-primary);"
+                                    onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                                    onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                                 <i class="fas fa-save mr-2"></i>Perbarui Pengguna
                             </button>
                         </div>
@@ -263,7 +273,7 @@
 function togglePassword(fieldId) {
     const field = document.getElementById(fieldId);
     const icon = document.getElementById(fieldId + '-icon');
-    
+
     if (field.type === 'password') {
         field.type = 'text';
         icon.classList.remove('fa-eye');
@@ -279,17 +289,17 @@ function togglePassword(fieldId) {
 document.querySelector('form').addEventListener('submit', function(e) {
     const peranCheckboxes = document.querySelectorAll('input[name="peran_ids[]"]');
     const isAnyChecked = Array.from(peranCheckboxes).some(checkbox => checkbox.checked);
-    
+
     if (!isAnyChecked) {
         e.preventDefault();
         showNotification('Silakan pilih minimal satu peran untuk pengguna.', 'warning');
         return false;
     }
-    
+
     // Validasi password confirmation jika password diisi
     const password = document.getElementById('kata_sandi').value;
     const passwordConfirmation = document.getElementById('kata_sandi_confirmation').value;
-    
+
     if (password && password !== passwordConfirmation) {
         e.preventDefault();
         showNotification('Konfirmasi kata sandi tidak cocok.', 'error');

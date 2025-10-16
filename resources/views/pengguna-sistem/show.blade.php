@@ -3,20 +3,20 @@
 @section('title', 'Detail Pengguna Sistem')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
-    <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm mb-6">
-        <div class="px-8 py-6">
+    <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm border mb-6">
+        <div class="px-6 py-6">
             <div class="flex justify-between items-center">
                 <div>
                     <h1 style="color: var(--text-primary);" class="text-2xl font-bold mb-2">Detail Pengguna Sistem</h1>
                     <p style="color: var(--text-secondary);">Informasi lengkap pengguna: {{ $penggunaSistem->nama_lengkap }}</p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('pengguna-sistem.edit', $penggunaSistem) }}" style="background-color: var(--warning-primary); color: var(--text-white); transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl hover:opacity-90">
+                    <a href="{{ route('pengguna-sistem.edit', $penggunaSistem) }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                         <i class="fas fa-edit mr-2"></i>Edit
                     </a>
-                    <a href="{{ route('pengguna-sistem.index') }}" style="background-color: var(--secondary-bg); color: var(--text-white); transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl hover:opacity-90">
+                    <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
@@ -24,190 +24,124 @@
         </div>
     </div>
 
-    <!-- Content Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Profile Card -->
-        <div class="lg:col-span-1">
-            <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm">
-                <div class="px-8 py-6 text-center">
-                    <div class="avatar-lg mx-auto mb-3">
-                        <div style="background-color: var(--accent-primary); color: var(--text-white);" class="avatar-title rounded-circle">
+    <!-- Content Section: Single Card -->
+    <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm border">
+        <div class="px-6 py-6">
+            <!-- Profile Header -->
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    <div class="avatar-profile">
+                        <div style="background-color: var(--accent-primary); color: var(--text-white);" class="avatar-title">
                             {{ strtoupper(substr($penggunaSistem->nama_lengkap, 0, 2)) }}
                         </div>
                     </div>
-                    <h5 style="color: var(--text-primary);" class="card-title mb-1">{{ $penggunaSistem->nama_lengkap }}</h5>
-                    <p style="color: var(--text-secondary);" class="mb-3">{{ $penggunaSistem->email_address }}</p>
-                    
-                    <div class="mb-3">
-                        @if($penggunaSistem->aktif)
-                            <span style="background-color: var(--success-bg); color: var(--success-primary);" class="badge fs-6">
-                                <i class="fas fa-check-circle me-1"></i>Aktif
-                            </span>
-                        @else
-                            <span style="background-color: var(--danger-bg); color: var(--danger-primary);" class="badge fs-6">
-                                <i class="fas fa-times-circle me-1"></i>Nonaktif
-                            </span>
-                        @endif
+                </div>
+                
+                <!-- User Info -->
+                <div class="flex-grow text-center md:text-left">
+                    <h3 style="color: var(--text-primary);" class="text-xl font-bold mb-1">{{ $penggunaSistem->nama_lengkap }}</h3>
+                    <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-3">
+                        <p style="color: var(--text-secondary);" class="flex items-center justify-center md:justify-start">
+                            <i class="fas fa-envelope text-sm mr-2"></i>{{ $penggunaSistem->email_address }}
+                        </p>
+                        <p style="color: var(--text-secondary);" class="flex items-center justify-center md:justify-start">
+                            <i class="fas fa-building text-sm mr-2"></i>{{ $penggunaSistem->unitPembangkit->nama_unit ?? 'N/A' }}
+                        </p>
                     </div>
                     
-                    <div class="d-flex justify-content-center gap-2">
-                        <form action="{{ route('pengguna-sistem.toggle-status', $penggunaSistem) }}" method="POST" class="d-inline">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        @if($penggunaSistem->aktif)
+                            <span style="background-color: var(--success-bg); color: var(--success-primary);" class="status-badge">
+                                <i class="fas fa-check-circle mr-1"></i>Aktif
+                            </span>
+                        @else
+                            <span style="background-color: var(--danger-bg); color: var(--danger-primary);" class="status-badge">
+                                <i class="fas fa-times-circle mr-1"></i>Nonaktif
+                            </span>
+                        @endif
+                        
+                        <form action="{{ route('pengguna-sistem.toggle-status', $penggunaSistem) }}" method="POST" class="inline-block">
                             @csrf
                             @method('PATCH')
                             @php
                                 $confirmMessage = $penggunaSistem->aktif ? 'menonaktifkan' : 'mengaktifkan';
                             @endphp
-                            <button type="submit" style="border: 1px solid var(--border-secondary); color: var(--text-primary); background-color: var(--card-bg); transition: all 0.2s;" class="btn btn-sm hover:opacity-80"
-                                     onclick="return handleDeleteConfirm(event, 'Apakah Anda yakin ingin {{ $confirmMessage }} pengguna ini?')">
-                                <i class="fas {{ $penggunaSistem->aktif ? 'fa-ban' : 'fa-check' }} me-1"></i>
+                            <button type="submit" class="action-button" onclick="return handleDeleteConfirm(event, 'Apakah Anda yakin ingin {{ $confirmMessage }} pengguna ini?')">
+                                <i class="fas {{ $penggunaSistem->aktif ? 'fa-ban' : 'fa-check' }} mr-1"></i>
                                 {{ $penggunaSistem->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Details Card -->
-        <div class="lg:col-span-2">
-            <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm">
-                <div style="border-bottom: 1px solid var(--border-primary);" class="px-8 py-6">
-                    <h6 style="color: var(--text-primary);" class="text-lg font-semibold flex items-center">
-                        <i class="fas fa-info-circle me-2"></i>Informasi Detail
-                    </h6>
+            
+            <!-- Divider -->
+            <!-- Detail Section (refined, single list) -->
+            <div class="w-full" style="margin-top: 0.5rem;">
+                <div class="section-title flex items-center" style="color: var(--text-primary);">
+                    <i class="fas fa-info-circle mr-2"></i>Informasi Detail
                 </div>
-                <div class="px-8 py-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">ID Pengguna</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">{{ $penggunaSistem->user_id }}</p>
+                <div class="detail-grid">
+                        <div class="detail-row">
+                            <div class="detail-label">ID Pengguna</div>
+                            <div class="detail-value">{{ $penggunaSistem->user_id }}</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Nama Lengkap</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">{{ $penggunaSistem->nama_lengkap }}</p>
+                        <div class="detail-row">
+                            <div class="detail-label">Nama Lengkap</div>
+                            <div class="detail-value">{{ $penggunaSistem->nama_lengkap }}</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Email Address</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">{{ $penggunaSistem->email_address }}</p>
+                        <div class="detail-row">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">{{ $penggunaSistem->email_address }}</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Unit Pembangkit</label>
-                            <p class="fw-bold">
-                                <span style="background-color: var(--accent-bg); color: var(--accent-primary);" class="badge fs-6">
-                                    {{ $penggunaSistem->unitPembangkit->nama_unit ?? 'N/A' }}
-                                </span>
-                            </p>
+                        <div class="detail-row">
+                            <div class="detail-label">Unit Pembangkit</div>
+                            <div class="detail-value">{{ $penggunaSistem->unitPembangkit->nama_unit ?? 'N/A' }}</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Alamat Unit</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">
-                                {{ $penggunaSistem->unitPembangkit->alamat_unit ?? 'N/A' }}<br>
-                                <small style="color: var(--text-secondary);">
+                        <div class="detail-row">
+                            <div class="detail-label">Alamat Unit</div>
+                            <div class="detail-value">
+                                {{ $penggunaSistem->unitPembangkit->alamat_unit ?? 'N/A' }}
+                                <span class="detail-subtext">
                                     {{ $penggunaSistem->unitPembangkit->kota ?? '' }}
-                        {{ $penggunaSistem->unitPembangkit->kode_pos ? ', ' . $penggunaSistem->unitPembangkit->kode_pos : '' }}
-                                </small>
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Peran Pengguna</label>
-                            <p class="fw-bold">
-                                @forelse($penggunaSistem->peranPengguna as $peran)
-                                    <span style="background-color: var(--secondary-bg-light); color: var(--text-primary);" class="badge me-1 fs-6">{{ $peran->nama_peran }}</span>
-                                @empty
-                                    <span style="color: var(--text-secondary);">Tidak ada peran</span>
-                                @endforelse
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Dibuat Pada</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">{{ $penggunaSistem->created_at ? $penggunaSistem->created_at->format('d/m/Y H:i:s') : 'N/A' }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label style="color: var(--text-secondary);" class="form-label">Terakhir Diperbarui</label>
-                            <p style="color: var(--text-primary);" class="fw-bold">{{ $penggunaSistem->updated_at ? $penggunaSistem->updated_at->format('d/m/Y H:i:s') : 'N/A' }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Activity Log Card -->
-    <div class="row">
-        <div class="col-12">
-            <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary); box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.1);" class="card">
-                <div style="background-color: var(--table-header-start); border-bottom: 1px solid var(--border-primary);" class="card-header">
-                    <h6 style="color: var(--text-primary);" class="m-0 font-weight-bold">
-                        <i class="fas fa-history me-2"></i>Riwayat Aktivitas Log Penyimpanan
-                        <span style="background-color: var(--secondary-bg-light); color: var(--text-primary);" class="badge ms-2">{{ $penggunaSistem->logPenyimpananLimbah->count() }} log</span>
-                    </h6>
-                </div>
-                <div class="card-body">
-                    @if($penggunaSistem->logPenyimpananLimbah->count() > 0)
-                        <div class="table-responsive">
-                            <table style="background-color: var(--card-bg);" class="table table-hover">
-                                <thead style="background-color: var(--table-header-start);">
-                                    <tr>
-                                        <th style="color: var(--text-primary); border-top: none;">No</th>
-                                        <th style="color: var(--text-primary); border-top: none;">Tanggal</th>
-                                        <th style="color: var(--text-primary); border-top: none;">Jenis Limbah</th>
-                                        <th style="color: var(--text-primary); border-top: none;">Jumlah</th>
-                                        <th style="color: var(--text-primary); border-top: none;">Lokasi</th>
-                                        <th style="color: var(--text-primary); border-top: none;">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($penggunaSistem->logPenyimpananLimbah->take(10) as $index => $log)
-                                        <tr style="border-bottom: 1px solid var(--border-secondary);" class="hover:bg-opacity-50" onmouseover="this.style.backgroundColor='var(--hover-bg)'" onmouseout="this.style.backgroundColor='transparent'">
-                                            <td style="color: var(--text-primary);">{{ $index + 1 }}</td>
-                                            <td style="color: var(--text-primary);">{{ $log->tanggal_penyimpanan ? $log->tanggal_penyimpanan->format('d/m/Y') : 'N/A' }}</td>
-                                            <td>
-                                                <span style="background-color: var(--accent-primary); color: var(--text-white);" class="badge">{{ $log->jenisLimbah->nama_jenis ?? 'N/A' }}</span>
-                                            </td>
-                                            <td style="color: var(--text-primary);">{{ $log->jumlah_limbah ?? 0 }} {{ $log->satuan ?? '' }}</td>
-                                            <td style="color: var(--text-primary);">{{ $log->lokasi_penyimpanan ?? 'N/A' }}</td>
-                                            <td>
-                                                @if($log->tanggal_kadaluarsa && $log->tanggal_kadaluarsa->isPast())
-                                                    <span style="background-color: var(--danger-bg); color: var(--danger-primary);" class="badge">Kadaluarsa</span>
-                                                @elseif($log->tanggal_kadaluarsa && $log->tanggal_kadaluarsa->diffInDays(now()) <= 30)
-                                                    <span style="background-color: var(--warning-bg); color: var(--warning-primary);" class="badge">Akan Kadaluarsa</span>
-                                                @elseif($log->tanggal_kadaluarsa)
-                                                    <span style="background-color: var(--success-bg); color: var(--success-primary);" class="badge">Normal</span>
-                                                @else
-                                                    <span style="background-color: var(--secondary-bg-light); color: var(--text-primary);" class="badge">Tidak Ada Tanggal</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        @if($penggunaSistem->logPenyimpananLimbah->count() > 10)
-                            <div class="text-center mt-3">
-                                <p style="color: var(--text-secondary);">Menampilkan 10 dari {{ $penggunaSistem->logPenyimpananLimbah->count() }} log aktivitas</p>
-                                <a href="{{ route('log-penyimpanan') }}?user_id={{ $penggunaSistem->user_id }}" style="border: 1px solid var(--accent-primary); color: var(--accent-primary); background-color: transparent; transition: all 0.2s;" class="btn hover:bg-opacity-10">
-                                    <i class="fas fa-eye me-2"></i>Lihat Semua Log
-                                </a>
+                                    {{ $penggunaSistem->unitPembangkit->kode_pos ? ', ' . $penggunaSistem->unitPembangkit->kode_pos : '' }}
+                                </span>
                             </div>
-                        @endif
-                    @else
-                        <div class="text-center py-4">
-                            <i style="color: var(--text-secondary);" class="fas fa-clipboard-list fa-3x mb-3"></i>
-                            <h6 style="color: var(--text-secondary);">Belum Ada Aktivitas</h6>
-                            <p style="color: var(--text-secondary);">Pengguna ini belum melakukan input log penyimpanan limbah.</p>
                         </div>
-                    @endif
+                        <div class="detail-row">
+                            <div class="detail-label">Peran Pengguna</div>
+                            <div class="detail-value">
+                                @forelse($penggunaSistem->peranPengguna as $peran)
+                                    <span class="role-badge">{{ $peran->nama_peran }}</span>
+                                @empty
+                                    <span class="detail-subtext">Tidak ada peran</span>
+                                @endforelse
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Dibuat Pada</div>
+                            <div class="detail-value">{{ $penggunaSistem->created_at ? $penggunaSistem->created_at->format('d/m/Y H:i:s') : 'N/A' }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Terakhir Diperbarui</div>
+                            <div class="detail-value">{{ $penggunaSistem->updated_at ? $penggunaSistem->updated_at->format('d/m/Y H:i:s') : 'N/A' }}</div>
+                        </div>
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
 
 <style>
-.avatar-lg {
-    width: 80px;
-    height: 80px;
+/* Avatar Styling */
+.avatar-profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 3px solid var(--accent-primary);
 }
 
 .avatar-title {
@@ -216,33 +150,164 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 700;
+    font-size: 2rem;
+    border-radius: 50%;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
     font-weight: 600;
-    font-size: 1.5rem;
+    font-size: 0.875rem;
 }
 
-.card {
-    border: none;
+/* Action Button */
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: 1px solid var(--border-secondary);
+    color: var(--text-primary);
+    background-color: var(--card-bg);
+    transition: all 0.2s;
 }
 
-.table th {
+.action-button:hover {
+    background-color: var(--hover-bg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background-color: var(--border-primary);
+    margin: 1.5rem 0;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 1.25rem;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent-primary);
+    margin-bottom: 1.5rem;
+    width: fit-content;
 }
 
-.badge {
-    font-size: 0.75em;
+/* Info Cards */
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background-color: var(--card-secondary-bg);
+    border: 1px solid var(--border-primary);
+    transition: all 0.2s;
 }
 
-.fs-6 {
-    font-size: 0.875rem !important;
+.info-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
-.form-label {
-    font-weight: 600;
+.info-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    background-color: var(--accent-bg-light);
+    color: var(--text-primary);
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.info-card-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.info-card-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
     margin-bottom: 0.25rem;
 }
 
-.fw-bold {
-    font-weight: 600 !important;
+.info-card-value {
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.info-card-subtext {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.highlight-accent {
+    color: var(--accent-primary);
+    font-weight: 700;
+}
+
+/* Role Badge */
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--secondary-bg-light);
+    color: var(--text-primary);
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Refined detail list */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem 1rem;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    align-items: start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-label { color: var(--text-secondary); font-weight: 500; }
+.detail-value { color: var(--text-primary); font-weight: 600; }
+.detail-subtext { display: block; color: var(--text-secondary); font-weight: 400; margin-top: 0.25rem; }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .avatar-profile {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .avatar-title {
+        font-size: 1.5rem;
+    }
+    .detail-row { grid-template-columns: 1fr; }
+    .detail-label { margin-bottom: 0.25rem; }
 }
 </style>
 @endsection

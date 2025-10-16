@@ -114,9 +114,9 @@
 <body>
     <div class="header">
         <h1>Laporan Perusahaan Penghasil Limbah</h1>
-        @if($perusahaanId && isset($data['companyStats']))
+        @if($perusahaanId && isset($companyStats))
             @php
-                $selectedCompany = $data['companyStats']->where('perusahaan_id', $perusahaanId)->first();
+                $selectedCompany = $companyStats->where('perusahaan_id', $perusahaanId)->first();
             @endphp
             @if($selectedCompany)
                 <p>Perusahaan: {{ $selectedCompany['nama_perusahaan'] }}</p>
@@ -171,11 +171,11 @@
         <tbody>
             @foreach($companyStats as $index => $company)
             <tr @if($perusahaanId == $company['perusahaan_id']) class="company-highlight" @endif>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $company['nama_perusahaan'] }}</td>
                 <td>{{ number_format($company['total_logs']) }}</td>
                 <td>{{ number_format($company['total_quantity'], 2) }}</td>
-                <td>{{ number_format($company['avg_quantity'], 2) }}</td>
+                <td>{{ number_format(($company['total_logs'] ?? 0) ? (($company['total_quantity'] ?? 0) / $company['total_logs']) : 0, 2) }}</td>
                 <td>{{ number_format($company['efficiency_rate'], 1) }}%</td>
             </tr>
             @endforeach
@@ -199,7 +199,7 @@
         <tbody>
             @foreach($logs as $index => $log)
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ date('d/m/Y', strtotime($log->tanggal_limbah_masuk)) }}</td>
                 <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'N/A' }}</td>
                 <td>{{ $log->jenisLimbah->nama_limbah ?? 'N/A' }}</td>

@@ -90,7 +90,8 @@
         <h1>Laporan Bulanan Penyimpanan Limbah</h1>
         <p>Periode: {{ $monthName ? $monthName . ' ' : 'Seluruh Bulan ' }}{{ $year }}</p>
         @if($unitId && isset($units))
-            <p>Unit: {{ $units->where('unit_id', $unitId)->first()->nama_unit ?? 'Semua Unit' }}</p>
+            @php $selectedUnit = $units->where('unit_id', $unitId)->first(); @endphp
+            <p>Unit: {{ $selectedUnit ? $selectedUnit->nama_unit : 'Semua Unit' }}</p>
         @endif
         <p>Dicetak pada: {{ date('d/m/Y H:i:s') }}</p>
     </div>
@@ -161,7 +162,7 @@
         <tbody>
             @foreach($topWasteTypes as $index => $waste)
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $waste['nama_limbah'] }}</td>
                 <td>{{ number_format($waste['total_quantity'], 2) }}</td>
                 <td>{{ number_format($waste['total_logs']) }}</td>
@@ -183,7 +184,7 @@
         <tbody>
             @foreach($topCompanies as $index => $company)
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $company['nama_perusahaan'] }}</td>
                 <td>{{ number_format($company['total_quantity'], 2) }}</td>
                 <td>{{ number_format($company['total_logs']) }}</td>

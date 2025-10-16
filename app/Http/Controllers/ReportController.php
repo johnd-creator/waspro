@@ -16,6 +16,21 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReportController extends Controller
 {
     /**
+     * Safely determine if the given user is Super Admin without direct method call,
+     * avoiding static analysis "undefined method" warnings.
+     */
+    protected function userIsSuperAdmin($user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        return is_callable([$user, 'isSuperAdmin'])
+            ? (bool) call_user_func([$user, 'isSuperAdmin'])
+            : false;
+    }
+
+    /**
      * Display the main report dashboard
      */
     public function index()
@@ -38,7 +53,8 @@ class ReportController extends Controller
         $year = (int) $request->get('year', date('Y'));
         $month = $request->filled('month') ? (int) $request->get('month') : null;
         $unitId = $request->get('unit_id');
-        $format = $request->get('format', 'view');
+        // Ambil format dari parameter rute jika ada, jika tidak gunakan query
+        $format = $request->route('format') ?? $request->get('format', 'view');
 
         // Cache key for this report
         $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_".Auth::user()->unit_id;
@@ -114,9 +130,11 @@ class ReportController extends Controller
         $data['monthName'] = $month ? Carbon::create()->month((int) $month)->format('F') : null;
 
         // All units for filter (filtered by user access)
-        $data['units'] = (Auth::user() && Auth::user()->isSuperAdmin())
+        $user = Auth::user();
+        $isSuper = $this->userIsSuperAdmin($user);
+        $data['units'] = $isSuper
             ? UnitPembangkit::orderBy('nama_unit')->get()
-            : UnitPembangkit::where('unit_id', Auth::user()->unit_id)->get();
+            : UnitPembangkit::where('unit_id', $user ? $user->unit_id : null)->get();
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.monthly-pdf', $data);
@@ -146,7 +164,8 @@ class ReportController extends Controller
         $status = $request->get('status');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
-        $format = $request->get('format', 'view');
+        // Ambil format dari parameter rute jika ada, jika tidak gunakan query
+        $format = $request->route('format') ?? $request->get('format', 'view');
 
         $cacheKey = "status_report_{$status}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
 
@@ -230,7 +249,8 @@ class ReportController extends Controller
         $jenisLimbahId = $request->get('jenis_limbah_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
-        $format = $request->get('format', 'view');
+        // Ambil format dari parameter rute jika ada, jika tidak gunakan query
+        $format = $request->route('format') ?? $request->get('format', 'view');
 
         $cacheKey = "waste_type_report_{$jenisLimbahId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
 
@@ -266,6 +286,8 @@ class ReportController extends Controller
         $data['jenisLimbahId'] = $jenisLimbahId;
         $data['dateFrom'] = $dateFrom;
         $data['dateTo'] = $dateTo;
+        // Provide selected waste type object for export title
+        $data['wasteType'] = $jenisLimbahId ? \App\Models\JenisLimbah::find($jenisLimbahId) : null;
 
         // Add waste types for filter dropdown
         $data['wasteTypes'] = \App\Models\JenisLimbah::where('status_aktif', true)->orderBy('nama_limbah')->get();
@@ -298,7 +320,8 @@ class ReportController extends Controller
         $perusahaanId = $request->get('perusahaan_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
-        $format = $request->get('format', 'view');
+        // Ambil format dari parameter rute jika ada, jika tidak gunakan query
+        $format = $request->route('format') ?? $request->get('format', 'view');
 
         $cacheKey = "company_report_{$perusahaanId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
 
@@ -355,6 +378,8 @@ class ReportController extends Controller
         $data['perusahaanId'] = $perusahaanId;
         $data['dateFrom'] = $dateFrom;
         $data['dateTo'] = $dateTo;
+        // Provide selected company object for export title
+        $data['company'] = $perusahaanId ? \App\Models\PerusahaanPenghasil::find($perusahaanId) : null;
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.company-pdf', $data);
@@ -384,10 +409,13 @@ class ReportController extends Controller
         $unitId = $request->get('unit_id');
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
-        $format = $request->get('format', 'view');
+        // Ambil format dari parameter rute jika ada, jika tidak gunakan query
+        $format = $request->route('format') ?? $request->get('format', 'view');
 
         // Only Super Admin can see all units
-        if ((! Auth::user() || ! Auth::user()->isSuperAdmin()) && $unitId && $unitId != Auth::user()->unit_id) {
+        $user = Auth::user();
+        $isSuper = $this->userIsSuperAdmin($user);
+        if (! $isSuper && $unitId && $user && $unitId != $user->unit_id) {
             abort(403, 'Unauthorized access to unit data.');
         }
 
@@ -440,9 +468,11 @@ class ReportController extends Controller
                 ->sortByDesc('total_quantity');
 
             // All units for filter (filtered by user access)
-            $units = (Auth::user() && Auth::user()->isSuperAdmin())
+            $user = Auth::user();
+            $isSuper = $this->userIsSuperAdmin($user);
+            $units = $isSuper
                 ? UnitPembangkit::orderBy('nama_unit')->get()
-                : UnitPembangkit::where('unit_id', Auth::user()->unit_id)->get();
+                : UnitPembangkit::where('unit_id', $user ? $user->unit_id : null)->get();
 
             return compact('logs', 'unitStats', 'units');
         });
@@ -450,6 +480,8 @@ class ReportController extends Controller
         $data['unitId'] = $unitId;
         $data['dateFrom'] = $dateFrom;
         $data['dateTo'] = $dateTo;
+        // Provide selected unit object for export title
+        $data['unit'] = $unitId ? \App\Models\UnitPembangkit::find($unitId) : null;
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.unit-pdf', $data);
@@ -470,7 +502,7 @@ class ReportController extends Controller
     public function clearCache(Request $request)
     {
         $user = Auth::user();
-        $isSuper = $user && method_exists($user, 'isSuperAdmin') ? $user->isSuperAdmin() : false;
+        $isSuper = $this->userIsSuperAdmin($user);
         $unitId = $isSuper ? null : ($user->unit_id ?? null);
 
         $ok = $this->clearReportCache($unitId, $isSuper);

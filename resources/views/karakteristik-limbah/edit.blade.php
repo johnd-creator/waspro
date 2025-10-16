@@ -10,11 +10,14 @@
                 <p style="color: var(--text-secondary);">Perbarui informasi karakteristik limbah yang sudah ada</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="inline-flex items-center px-6 py-3 font-medium text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl" style="background-color: var(--accent-primary);">
-                    <i class="fas fa-eye mr-2"></i> Lihat
+                <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-eye mr-2"></i>Lihat
                 </a>
-                <a href="{{ route('karakteristik-limbah.index') }}" class="inline-flex items-center px-6 py-3 font-medium text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl" style="background-color: var(--text-secondary); hover:background-color: var(--text-primary);">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                <a href="{{ route('karakteristik-limbah.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
             </div>
         </div>
@@ -54,9 +57,15 @@
                     @enderror
                 </div>
 
-                <div class="mt-8 flex justify-end">
-                    <button type="submit" class="px-6 py-3 rounded-xl text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200" style="background-color: var(--accent-primary);">
-                        <i class="fas fa-save mr-2"></i> Update Karakteristik
+                <div class="flex justify-end gap-3 mt-8">
+                    <a href="{{ route('karakteristik-limbah.show', $karakteristikLimbah) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                       style="background-color: var(--danger-primary); color: white;"
+                       onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';"
+                       onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
+                        <i class="fas fa-times mr-2"></i>Batal
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                        <i class="fas fa-save mr-2"></i>Update Karakteristik
                     </button>
                 </div>
             </form>

@@ -3,31 +3,33 @@
 @section('title', 'Edit System Setting')
 
 @section('content')
-<div class="container-fluid">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Edit System Setting</h1>
-            <p class="text-muted mb-0">Edit pengaturan sistem: <code>{{ $setting->key }}</code></p>
+    <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6 flex justify-between items-center" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="text-2xl font-bold mb-1" style="color: var(--text-primary);">Edit System Setting</h1>
+                <p style="color: var(--text-secondary);">Edit pengaturan sistem: <code>{{ $setting->key }}</code></p>
+            </div>
+            <a href="{{ route('application-settings.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+               style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+               onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+               onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                <i class="fas fa-arrow-left mr-2"></i>Kembali
+            </a>
         </div>
-        <a href="{{ route('application-settings.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
-        </a>
     </div>
 
     <!-- Form Card -->
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-edit me-2"></i>Form Edit Setting
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('application-settings.update', $setting) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6">
+            <h6 class="text-lg font-semibold mb-4" style="color: var(--text-primary);">
+                <i class="fas fa-edit mr-2"></i>Form Edit Setting
+            </h6>
+            <div>
+                <form action="{{ route('application-settings.update', $setting) }}" method="POST">
+                    @csrf
+                    @method('PUT')
                         
                         <!-- Informasi Dasar -->
                         <div class="row mb-4">
@@ -142,30 +144,32 @@
                         </div>
 
                         <!-- Submit Buttons -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('application-settings.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-times me-2"></i>Batal
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-2"></i>Update Setting
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('application-settings.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                               style="background-color: var(--danger-primary); color: white;"
+                               onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';"
+                               onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-times mr-2"></i>Batal
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                    style="background-color: var(--accent-primary);"
+                                    onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                                    onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-save mr-2"></i>Update Setting
+                            </button>
                         </div>
-                    </form>
-                </div>
+                </form>
             </div>
-            
-            <!-- Current Value Info -->
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-info">
-                        <i class="fas fa-info-circle me-2"></i>Informasi Saat Ini
-                    </h6>
-                </div>
-                <div class="card-body">
+        </div>
+    </div>
+
+    <!-- Current Value Info -->
+    <div class="rounded-2xl shadow-sm border mt-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6">
+            <h6 class="text-lg font-semibold mb-4" style="color: var(--text-primary);">
+                <i class="fas fa-info-circle mr-2"></i>Informasi Saat Ini
+            </h6>
+            <div>
                     <div class="row">
                         <div class="col-md-6">
                             <strong>Key:</strong> <code>{{ $setting->key }}</code><br>
@@ -194,36 +198,16 @@
                     @else
                         <code>{{ $setting->value }}</code>
                     @endif
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-    border: none;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #5a5c69;
-}
-
-.border-bottom {
-    border-color: #e3e6f0 !important;
-}
-
-.form-check-input:checked {
-    background-color: #4e73df;
-    border-color: #4e73df;
-}
-
-pre {
-    max-height: 200px;
-    overflow-y: auto;
-}
+.form-label { font-weight: 600; color: var(--text-primary); }
+.border-bottom { border-color: var(--border-primary) !important; }
+.form-check-input:checked { background-color: var(--accent-primary); border-color: var(--accent-primary); }
+pre { max-height: 200px; overflow-y: auto; }
 </style>
 
 <script>

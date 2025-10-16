@@ -2,34 +2,43 @@
 
 @section('content')
     @if(session('success'))
-        <div style="background-color: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text);" class="px-4 py-3 rounded-xl mb-6 flex items-center">
+        <div style="background-color: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text);" class="px-4 py-3 rounded-xl mb-6 flex items-center" role="alert" data-auto-dismiss="2500">
             <i style="color: var(--success-primary);" class="fas fa-check-circle mr-3"></i>
             <span>{{ session('success') }}</span>
             <button type="button" style="color: var(--success-primary); transition: opacity 0.2s;" class="ml-auto hover:opacity-75" onclick="this.parentElement.remove()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
+    </div>
     @endif
 
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
-    <div style="background-color: var(--card-bg); border: 1px solid var(--border-primary);" class="rounded-2xl shadow-sm mb-6">
-        <div style="border-bottom: 1px solid var(--border-primary);" class="px-6 py-6 flex justify-between items-center">
+    <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6 flex justify-between items-center" style="border-color: var(--border-primary);">
             <div>
-                <h1 style="color: var(--text-primary);" class="text-2xl font-bold mb-2">Detail Unit Pembangkit</h1>
-                <p style="color: var(--text-secondary);">Informasi lengkap unit pembangkit listrik</p>
+                <h1 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Detail Unit Pembangkit</h1>
+                <p style="color: var(--text-secondary);">Informasi lengkap mengenai unit pembangkit</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('unit-pembangkit.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                <a href="{{ route('unit-pembangkit.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
-                <a href="{{ route('unit-pembangkit.edit', $unitPembangkit) }}" style="background-color: var(--warning-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
-                    <i class="fas fa-edit mr-2"></i> Edit
+                <a href="{{ route('unit-pembangkit.edit', $unitPembangkit) }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--accent-primary);"
+                   onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-edit mr-2"></i>Edit
                 </a>
             </div>
         </div>
+    </div>
 
-        <!-- Content Section -->
+    <!-- Content Section -->
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="px-6 py-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Left: Informasi Unit -->
@@ -141,24 +150,7 @@
                 </div>
             @endif
 
-            <!-- Action Footer -->
-            <div style="border-top: 1px solid var(--border-secondary);" class="flex justify-between items-center mt-8 pt-6">
-                <a href="{{ route('unit-pembangkit.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md hover:opacity-90">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
-                </a>
-                <div class="flex space-x-3">
-                    <a href="{{ route('unit-pembangkit.edit', $unitPembangkit) }}" style="background-color: var(--warning-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md hover:opacity-90">
-                        <i class="fas fa-edit mr-2"></i> Edit
-                    </a>
-                    <form action="{{ route('unit-pembangkit.destroy', $unitPembangkit) }}" method="POST" class="inline" onsubmit="return handleDeleteConfirm(event, 'Apakah Anda yakin ingin menghapus unit pembangkit ini? Tindakan ini tidak dapat dibatalkan!')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" style="background-color: var(--danger-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md hover:opacity-90">
-                            <i class="fas fa-trash mr-2"></i> Hapus
-                        </button>
-                    </form>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

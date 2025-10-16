@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApplicationSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -77,17 +78,12 @@ class ExpirySettingsController extends Controller
      */
     private function getExpirySettings()
     {
-        $criticalDays = DB::table('app_settings')
-            ->where('key', 'critical_days')
-            ->value('value') ?? 7; // Default 7 days
-
-        $warningDays = DB::table('app_settings')
-            ->where('key', 'warning_days')
-            ->value('value') ?? 30; // Default 30 days
+        $criticalDays = (int) ApplicationSetting::get('critical_days', 7);
+        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
 
         return [
-            'critical_days' => (int) $criticalDays,
-            'warning_days' => (int) $warningDays,
+            'critical_days' => $criticalDays,
+            'warning_days' => $warningDays,
         ];
     }
 
@@ -96,16 +92,7 @@ class ExpirySettingsController extends Controller
      */
     private function updateOrCreateSetting($key, $value, $description)
     {
-        DB::table('app_settings')->updateOrInsert(
-            ['key' => $key],
-            [
-                'value' => $value,
-                'type' => 'integer',
-                'description' => $description,
-                'updated_at' => now(),
-                'created_at' => now(),
-            ]
-        );
+        ApplicationSetting::set($key, (int) $value, 'integer', 'expiry', $description);
     }
 
     /**

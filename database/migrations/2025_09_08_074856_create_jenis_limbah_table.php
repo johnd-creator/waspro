@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('kategori_id');
             $table->foreign('karakteristik_id')->references('karakteristik_id')->on('karakteristik_limbah');
             $table->foreign('kategori_id')->references('kategori_id')->on('kategori_kegiatan_sumber');
+            $table->text('deskripsi_limbah')->nullable();
+            $table->boolean('status_aktif')->default(true);
             $table->timestamps();
         });
     }

@@ -3,20 +3,22 @@
 @section('title', 'Detail System Setting')
 
 @section('content')
-<div class="container-fluid">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Detail System Setting</h1>
-            <p class="text-muted mb-0">Informasi lengkap setting: <code>{{ $setting->key }}</code></p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('application-settings.edit', $setting) }}" class="btn btn-warning">
-                <i class="fas fa-edit me-2"></i>Edit
-            </a>
-            <a href="{{ route('application-settings.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Kembali
-            </a>
+    <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6 flex justify-between items-center" style="border-color: var(--border-primary);">
+            <div>
+                <h1 class="text-2xl font-bold mb-1" style="color: var(--text-primary);">Detail System Setting</h1>
+                <p style="color: var(--text-secondary);">Informasi lengkap setting: <code>{{ $setting->key }}</code></p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ route('application-settings.edit', $setting) }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-edit mr-2"></i>Edit
+                </a>
+                <a href="{{ route('application-settings.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
+                </a>
+            </div>
         </div>
     </div>
 
@@ -214,9 +216,7 @@ ApplicationSetting::set('{{ $setting->key }}', $newValue);</code></pre>
             @endif
         </div>
     </div>
-</div>
-
-<!-- Delete Confirmation Modal -->
+    <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -180,7 +180,7 @@
         <tbody>
             @foreach($logs as $index => $log)
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ date('d/m/Y', strtotime($log->tanggal_limbah_masuk)) }}</td>
                 <td>{{ $log->jenisLimbah->nama_limbah ?? 'N/A' }}</td>
                 <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'N/A' }}</td>

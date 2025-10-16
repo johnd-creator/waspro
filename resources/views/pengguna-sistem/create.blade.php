@@ -3,43 +3,38 @@
 @section('title', 'Tambah Pengguna Sistem')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div class="rounded-2xl shadow-sm border mb-6" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-        <div class="px-8 py-6 border-b" style="border-color: var(--border-primary);">
-            <div class="flex justify-between items-start">
+        <div class="px-6 py-6 flex justify-between items-center" style="border-color: var(--border-primary);">
+            <div>
                 <div>
                     <h1 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">Tambah Pengguna Sistem</h1>
                     <p style="color: var(--text-secondary);">Buat pengguna sistem baru untuk unit pembangkit</p>
                 </div>
-                <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200"
-                   style="background-color: var(--secondary-bg);"
-                   onmouseover="this.style.backgroundColor='var(--secondary-bg-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
-                   onmouseout="this.style.backgroundColor='var(--secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                </div>
+                <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';" 
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
-            </div>
         </div>
     </div>
 
     <!-- Form Section -->
-    <div class="max-w-4xl mx-auto">
-        <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-            <div class="px-8 py-6">
-            <div class="card" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-                <div class="card-header" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-                    <h6 class="m-0 font-weight-bold" style="color: var(--accent-primary);">
-                        <i class="fas fa-user-plus me-2"></i>Form Tambah Pengguna
-                    </h6>
-                </div>
-                <div class="card-body">
+    <div class="rounded-2xl shadow-sm border" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+        <div class="px-6 py-6">
+            <h6 class="text-lg font-semibold mb-4" style="color: var(--text-primary);">
+                <i class="fas fa-user-plus me-2"></i>Form Tambah Pengguna
+            </h6>
                     <form action="{{ route('pengguna-sistem.store') }}" method="POST">
                         @csrf
                         
                         <!-- Informasi Dasar -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="border-bottom pb-2 mb-3" style="color: var(--accent-primary); border-color: var(--border-primary);">
+                                <h6 class="section-title">
                                     <i class="fas fa-user me-2"></i>Informasi Dasar
                                 </h6>
                             </div>
@@ -70,7 +65,7 @@
                         <!-- Keamanan -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="border-bottom pb-2 mb-3" style="color: var(--accent-primary); border-color: var(--border-primary);">
+                                <h6 class="section-title">
                                     <i class="fas fa-lock me-2"></i>Keamanan
                                 </h6>
                             </div>
@@ -89,7 +84,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <small style="color: var(--text-secondary);">Kata sandi harus minimal 8 karakter</small>
+                                <small class="help-text">Kata sandi harus minimal 8 karakter</small>
                             </div>
                             
                             <div class="col-md-6 mb-3">
@@ -113,7 +108,7 @@
                         <!-- Unit & Peran -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="border-bottom pb-2 mb-3" style="color: var(--accent-primary); border-color: var(--border-primary);">
+                                <h6 class="section-title">
                                     <i class="fas fa-building me-2"></i>Unit & Peran
                                 </h6>
                             </div>
@@ -162,7 +157,7 @@
                         <!-- Status -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h6 class="border-bottom pb-2 mb-3" style="color: var(--accent-primary); border-color: var(--border-primary);">
+                                <h6 class="section-title">
                                     <i class="fas fa-toggle-on me-2"></i>Status
                                 </h6>
                             </div>
@@ -170,37 +165,76 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" style="color: var(--text-primary);">Status Akun</label>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="status_aktif" name="status_aktif" value="1" 
-                                           {{ old('status_aktif', '1') == '1' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="status_aktif" style="color: var(--text-primary);">Aktif</label>
+                                    <input class="form-check-input" type="checkbox" id="aktif" name="aktif" value="1" 
+                                           {{ old('aktif', '1') == '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="aktif" style="color: var(--text-primary);">Aktif</label>
                                 </div>
                                 <small style="color: var(--text-secondary);">Pengguna tidak aktif tidak dapat login ke sistem</small>
                             </div>
                         </div>
 
                         <!-- Tombol Aksi -->
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a href="{{ route('pengguna-sistem.index') }}" class="btn"
-                               style="background-color: var(--secondary-bg); color: white;"
-                               onmouseover="this.style.backgroundColor='var(--secondary-bg-hover)';" 
-                               onmouseout="this.style.backgroundColor='var(--secondary-bg)';">
-                                <i class="fas fa-times me-1"></i> Batal
+                        <div class="flex justify-end gap-3 mt-8">
+                            <a href="{{ route('pengguna-sistem.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                               style="background-color: var(--danger-primary); color: white;"
+                               onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';" 
+                               onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-times mr-2"></i>Batal
                             </a>
-                            <button type="submit" class="btn"
-                                    style="background-color: var(--primary-bg); color: white;"
-                                    onmouseover="this.style.backgroundColor='var(--primary-bg-hover)';" 
-                                    onmouseout="this.style.backgroundColor='var(--primary-bg)';">
-                                <i class="fas fa-save me-1"></i> Simpan Pengguna
+                            <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg"
+                                    style="background-color: var(--accent-primary);"
+                                    onmouseover="this.style.boxShadow='var(--shadow-xl)';" 
+                                    onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-save mr-2"></i>Simpan Pengguna
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection
+
+<style>
+/* Input & Select enhanced styles */
+.form-control, .form-select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-primary);
+    color: var(--input-text);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-control::placeholder { color: var(--text-secondary); }
+.form-control:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+/* Input group for password toggle */
+.input-group .form-control { border-right: 0; border-radius: 0.75rem 0 0 0.75rem; }
+.input-group .btn {
+    background-color: var(--secondary-bg-light);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    border-left: 0;
+    border-radius: 0 0.75rem 0.75rem 0;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-group .btn:hover { background-color: var(--hover-bg); }
+
+/* Labels & feedback */
+.form-label { color: var(--text-primary); font-weight: 500; }
+.invalid-feedback { color: var(--danger-primary); }
+.help-text { color: var(--text-secondary); }
+
+/* Checkboxes & switches */
+.form-check-input { background-color: var(--input-bg); border-color: var(--border-primary); }
+.form-check-input:checked { background-color: var(--accent-primary); border-color: var(--accent-primary); }
+.form-check-label { color: var(--text-primary); }
+
+/* Section title */
+.section-title { color: var(--accent-primary); border-bottom: 2px solid var(--border-secondary); padding-bottom: 0.5rem; margin-bottom: 0.75rem; }
+</style>
 
 @push('scripts')
 <script>

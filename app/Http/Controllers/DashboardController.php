@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApplicationSetting;
 use App\Models\JenisLimbah;
 use App\Models\LogPenyimpananLimbah;
 use App\Models\PenggunaSistem;
@@ -37,9 +38,7 @@ class DashboardController extends Controller
         $totalUsers = $usersQuery->count();
 
         // Get warning days from settings (default 30 if not set)
-        $warningDays = DB::table('app_settings')
-            ->where('key', 'warning_days')
-            ->value('value') ?? 30;
+        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
 
         // Total limbah yang akan kadaluarsa dalam warning days
         // Menggunakan method getDaysUntilExpiry() untuk perhitungan yang konsisten
@@ -362,9 +361,7 @@ class DashboardController extends Controller
         $sortOrder = $request->get('order', 'asc');
 
         // Get warning days from settings (default 30 if not set)
-        $warningDays = DB::table('app_settings')
-            ->where('key', 'warning_days')
-            ->value('value') ?? 30;
+        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
 
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
             ->where('status_log', 'Tersimpan')

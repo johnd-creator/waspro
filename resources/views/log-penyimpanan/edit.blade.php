@@ -37,7 +37,7 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
 @endpush
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div class="mb-6 rounded-2xl border shadow-sm" style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="flex items-center justify-between border-b px-8 py-6" style="border-color: var(--border-primary);">

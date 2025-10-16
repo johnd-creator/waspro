@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('unit.access')->group(function () {
         Route::resource('log-penyimpanan', App\Http\Controllers\LogPenyimpananLimbahController::class);
         Route::put('/log-penyimpanan/{logPenyimpanan}/transport', [App\Http\Controllers\LogPenyimpananLimbahController::class, 'markTransported'])->name('log-penyimpanan.transport');
+        Route::get('/log-penyimpanan/export/{format}', [App\Http\Controllers\LogPenyimpananLimbahController::class, 'export'])->name('log-penyimpanan.export');
     });
 
     // Pengangkutan Limbah Routes

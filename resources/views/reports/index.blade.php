@@ -3,7 +3,7 @@
 @section('title', 'Pusat Laporan - Sistem Manajemen Limbah')
 
 @section('content')
-<div class="min-h-screen px-2" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
+<div class="min-h-screen p-4 sm:p-6 lg:p-8" style="background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-tertiary), var(--bg-secondary));">
 
     <!-- Professional Header Section -->
     <div class="rounded-2xl shadow-sm mb-8" style="background-color: var(--card-bg); border: 1px solid var(--border-primary);">
@@ -69,7 +69,7 @@
             'title' => 'Laporan Perusahaan',
             'icon' => 'fa-building',
             'description' => 'Laporan berdasarkan perusahaan penghasil limbah dengan analisis performa.',
-            'color' => 'rose',
+            'color' => 'purple',
         ],
         [
             'route' => 'reports.unit',

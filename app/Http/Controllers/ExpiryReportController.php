@@ -6,6 +6,7 @@ use App\Exports\ExpiryReportExport;
 use App\Models\JenisLimbah;
 use App\Models\LogPenyimpananLimbah;
 use App\Models\PerusahaanPenghasil;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -93,6 +94,23 @@ class ExpiryReportController extends Controller
 
         $query->orderBy('tanggal_kadaluarsa', 'asc');
         $logs = $query->get();
+
+        $format = $request->get('format', 'excel');
+
+        if ($format === 'pdf') {
+            $data = [
+                'logs' => $logs,
+                'expiryStatus' => $request->get('expiry_status'),
+                'dateFrom' => $request->get('date_from'),
+                'dateTo' => $request->get('date_to'),
+                'jenisLimbahId' => $request->get('jenis_limbah_id'),
+                'perusahaanId' => $request->get('perusahaan_id'),
+            ];
+
+            $pdf = Pdf::loadView('expiry-reports-pdf', $data);
+
+            return $pdf->download('laporan-expiry-limbah-'.Carbon::now()->format('Y-m-d-H-i-s').'.pdf');
+        }
 
         $filename = 'laporan-expiry-limbah-'.Carbon::now()->format('Y-m-d-H-i-s').'.xlsx';
 

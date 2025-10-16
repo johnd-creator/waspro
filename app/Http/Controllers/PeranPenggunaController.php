@@ -53,8 +53,12 @@ class PeranPenggunaController extends Controller
 
         $validated = $this->validateRequest($request, $rules, $messages);
 
-        if (is_array($validated) && ! $validated['success']) {
-            return $validated;
+        // Jika validateRequest mengembalikan response redirect (HTML) atau JSON error array, kembalikan apa adanya
+        if (! is_array($validated)) {
+            return $validated; // redirect response pada mode web
+        }
+        if ($request->expectsJson() && array_key_exists('success', $validated) && $validated['success'] === false) {
+            return response()->json($validated, 422);
         }
 
         return $this->handleDatabaseOperation(
@@ -113,8 +117,12 @@ class PeranPenggunaController extends Controller
 
         $validated = $this->validateRequest($request, $rules, $messages);
 
-        if (is_array($validated) && ! $validated['success']) {
-            return $validated;
+        // Jika validateRequest mengembalikan response redirect (HTML) atau JSON error array, kembalikan apa adanya
+        if (! is_array($validated)) {
+            return $validated; // redirect response pada mode web
+        }
+        if ($request->expectsJson() && array_key_exists('success', $validated) && $validated['success'] === false) {
+            return response()->json($validated, 422);
         }
 
         return $this->handleDatabaseOperation(

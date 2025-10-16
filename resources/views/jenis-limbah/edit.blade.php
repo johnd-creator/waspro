@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-2 py-4">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header Section -->
     <div style="background: var(--card-bg); border-radius: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid var(--border-primary); margin-bottom: 1.5rem;">
         <div style="padding: 2rem; border-bottom: 1px solid var(--border-primary);">
@@ -11,11 +11,11 @@
                     <p style="color: var(--text-secondary);">Perbarui informasi jenis limbah yang sudah ada</p>
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
-                        <i class="fas fa-eye mr-2"></i> Lihat
+                    <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                        <i class="fas fa-eye mr-2"></i>Lihat
                     </a>
-                    <a href="{{ route('jenis-limbah.index') }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">
-                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    <a href="{{ route('jenis-limbah.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                 </div>
             </div>
@@ -136,9 +136,11 @@
                         </div>
 
                         <div class="flex justify-end gap-3 mt-8">
-                            <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--secondary-bg); color: white; font-weight: 500; border-radius: 0.75rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='var(--secondary-hover)'" onmouseout="this.style.background='var(--secondary-bg)'">Batal</a>
-                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: var(--accent-primary); color: white; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" onmouseover="this.style.background='var(--accent-hover)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1)'" onmouseout="this.style.background='var(--accent-primary)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'">
-                                <i class="fas fa-save mr-2"></i> Update
+                            <a href="{{ route('jenis-limbah.show', $jenisLimbah) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--danger-primary); color: white;" onmouseover="this.style.backgroundColor='var(--danger-hover)'; this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.backgroundColor='var(--danger-primary)'; this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-times mr-2"></i>Batal
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                                <i class="fas fa-save mr-2"></i>Update
                             </button>
                         </div>
                     </form>
