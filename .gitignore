@@ -22,3 +22,12 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/flutter.zip
+/.dart_tool/
+/android/
+/ios/
+/linux/
+/macos/
+/web/
+/windows/
+/test_ios_app/
