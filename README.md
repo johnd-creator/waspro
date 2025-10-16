@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/Laravel-12.x-red.svg" alt="Laravel Version">
   <img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP Version">
   <img src="https://img.shields.io/badge/Tailwind-4.x-cyan.svg" alt="Tailwind CSS">
-  <img src="https://img.shields.io/badge/Version-0.1.3-brightgreen.svg" alt="App Version">
+  <img src="https://img.shields.io/badge/Version-0.1.4-brightgreen.svg" alt="App Version">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </p>
 
@@ -28,7 +28,7 @@ WASPRO (Waste Management System for Occupational Health and Safety) adalah siste
 - 👥 **Multi-User Management** – Role-based access control lengkap dengan audit aktivitas
 - 🏢 **Multi-Unit Support** – Manajemen data multi perusahaan / unit pembangkit
 
-## ✨ Apa yang baru di v0.1.3
+## ✨ Apa yang baru di v0.1.4
 
 - 🌐 **API Hardening** – CORS configurable, throttling bawaan (`throttle:api`), dan middleware logging request untuk audit
 - 📄 **Dokumen Limbah** – Upload manifest/bukti angkut per log, tersimpan di storage publik dan dapat diunduh ulang
@@ -60,7 +60,7 @@ WASPRO (Waste Management System for Occupational Health and Safety) adalah siste
    ```bash
    git clone https://github.com/johnd-creator/waspro.git
    cd waspro
-   git checkout v0.1.3
+   git checkout v0.1.4
    ```
 
 2. **Install Dependencies**
@@ -162,7 +162,38 @@ Gunakan akun ini hanya di lingkungan pengembangan.
 - `docs/user-manual.md` – Panduan pengguna (UI & fitur)
 - `docs/api.md` – Referensi endpoint API
 - `docs/deployment.md` – Panduan deployment produksi
-- `CHANGELOG.md` – Riwayat perilisan (termasuk v0.1.2)
+- `CHANGELOG.md` – Riwayat perilisan (termasuk v0.1.4)
+
+## 🔁 Alur Git & Rilis
+
+Untuk merilis versi resmi ke GitHub dan memastikan hanya branch `main` yang aktif:
+
+1. **Pastikan repositori bersih**
+   ```bash
+   git checkout main
+   git pull origin main
+   git status
+   ```
+2. **Commit perubahan terbaru**
+   ```bash
+   git add .
+   git commit -m "chore: prepare release v0.1.4"
+   ```
+3. **Sinkronisasi dengan GitHub**
+   ```bash
+   git push origin main
+   ```
+4. **Tag rilis**
+   ```bash
+   git tag -a v0.1.4 -m "Release v0.1.4"
+   git push origin v0.1.4
+   ```
+5. **Hapus branch lain di remote (opsional)**
+   ```bash
+   git push origin --delete nama-branch
+   ```
+
+> **Catatan:** Langkah di atas tidak dapat dijalankan otomatis dari README ini. Jalankan perintah secara manual di mesin pengembangan Anda.
 
 ## 🤝 Kontribusi
 
