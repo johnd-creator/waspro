@@ -58,7 +58,7 @@
                 <p style="color: var(--text-secondary);">Kelola dan pantau peran pengguna sistem</p>
             </div>
             <div>
-                <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center px-6 py-3 text-white font-medium rounded-xl transition-all duration-200 shadow-lg" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
+                <a href="{{ route('peran-pengguna.create') }}" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700" style="background-color: var(--accent-primary);" onmouseover="this.style.boxShadow='var(--shadow-xl)';" onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-plus-circle mr-2"></i>
                     <span>Tambah Peran</span>
                 </a>
@@ -156,7 +156,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         @if($peranPengguna->hasPages())
             <div class="border-t px-6 py-4" style="border-color: var(--border-primary);">
                 {{ $peranPengguna->links() }}

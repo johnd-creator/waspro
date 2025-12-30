@@ -497,14 +497,14 @@
                         </div>                    </div>
 
                     <!-- Right side -->                    <div class="flex items-center space-x-4">                        <!-- Search -->
-                        <div class="hidden md:flex items-center">
+                        <!-- <div class="hidden md:flex items-center">
                             <div class="relative group">
                                 <input class="w-64 pl-10 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 text-sm" type="text" placeholder="Cari data..." style="background-color: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text);">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-search transition-colors duration-200" style="color: var(--text-tertiary);"></i>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Dark Mode Toggle -->
                          <div class="relative">
@@ -634,8 +634,8 @@
                 <div class="px-4">
                     <div class="flex items-center justify-between text-sm" style="color: var(--text-secondary);">
                         <div class="flex items-center space-x-2">
-                            <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-recycle text-white text-xs"></i>
+                            <div class="w-6 h-6 bg-gradient-to-br from-gray-200 to-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-recycle text-emerald-400 text-xs"></i>
                             </div>
                             <span>Copyright &copy; WASPRO {{ date('Y') }}</span>
                         </div>

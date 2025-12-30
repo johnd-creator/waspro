@@ -220,3 +220,82 @@ Proyek ini berlisensi MIT – lihat [LICENSE](LICENSE).
 <p align="center">
   Made with ❤️ for better waste management and occupational safety
 </p>
+
+graph TD
+    %% Definisi Swimlane berdasarkan Role dan Penanggung Jawab (PJ)
+    subgraph Pemicu ["⚡ Pemicu Insiden"]
+        A1[Sistem NMS mendeteksi Anomali]
+        A2[Pengguna melaporkan Gangguan]
+    end
+
+    subgraph NOC ["👤 Role: Staff IT (NOC/Operator) | PJ: Assistant Manager IT"]
+        B1(Monitoring & Deteksi Alert Real-time)
+        B2[Mengirim Alert/Notifikasi]
+    end
+
+    subgraph Helpdesk ["👤 Role: Staff IT (Helpdesk) | PJ: Assistant Manager IT"]
+        C1(Menerima Alert/Laporan & Registrasi Tiket)
+        C2{Klasifikasi & Prioritas?}
+        C3a[Masalah Sederhana / Panduan User]
+        C3b[Teruskan ke Technical Support]
+        C4(Verifikasi dengan Pengguna/NMS)
+        C5{Verifikasi Berhasil?}
+        C6[Dokumentasi ke Knowledge Base & Tutup Tiket]
+    end
+
+    subgraph TechSupport ["👤 Role: Staff IT (Technical Support) | PJ: Assistant Manager IT"]
+        D1(Investigasi & Diagnosis Root Cause)
+        D2[Lakukan Penanganan Awal misal: Restart]
+        D3{Masalah Terselesaikan?}
+        D4[Eskalasi ke Tingkat Lanjut]
+        D5(Resolusi & Pemulihan Sistem)
+    end
+
+    subgraph Specialist ["👤 Role: Officer IT (Senior Specialist)/Vendor | PJ: Manager IT"]
+        E1(Investigasi Mendalam & Penanganan Teknis Rumit)
+        E2{Masalah Terselesaikan?}
+    end
+
+    subgraph Management ["👥 Role: Assistant Manager & Manager IT"]
+        F1(Review Insiden Bulanan & Pembuatan Laporan oleh Ast. Mgr)
+        F2[Review Akhir oleh Manager IT]
+    end
+
+    %% Alur Proses
+    A1 -->|Alert Otomatis| B1
+    B1 --> B2
+    B2 -->|Alert| C1
+    A2 -->|Laporan Langsung| C1
+
+    C1 --> C2
+    C2 -->|Minor/Pertanyaan| C3a
+    C2 -->|Major/Kritis/Teknis| C3b
+    
+    C3a --> C4
+    C3b --> D1
+
+    D1 --> D2
+    D2 --> D3
+    D3 -->|Ya| D5
+    D3 -->|Tidak, Rumit| D4
+
+    D4 --> E1
+    E1 --> E2
+    E2 -->|Ya| D5
+    E2 -->|Tidak| E1
+
+    D5 -->|Sistem Pulih| C4
+    C4 --> C5
+    C5 -->|Ya, Normal| C6
+    C5 -->|Tidak, Masih Bermasalah| D1
+
+    C6 -->|Tiket Ditutup| F1
+    F1 --> F2
+
+    %% Styling untuk kejelasan
+    classDef process fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef decision fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef terminator fill:#9f9,stroke:#333,stroke-width:2px;
+    
+    class C2,D3,C5,E2 decision;
+    class A1,A2,C6,F2 process;

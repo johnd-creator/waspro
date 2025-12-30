@@ -10,12 +10,18 @@
                 <p style="color: var(--text-secondary);">Informasi lengkap data penyimpanan limbah</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('log-penyimpanan.index') }}" style="background-color: var(--secondary-bg); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
-                </a>
-                <a href="{{ route('log-penyimpanan.edit', $logPenyimpanan) }}" style="background-color: var(--warning-primary); color: white; transition: all 0.2s;" class="inline-flex items-center px-6 py-3 font-medium rounded-xl shadow-lg hover:shadow-xl hover:opacity-90">
+                 <a href="{{ route('log-penyimpanan.edit', $logPenyimpanan) }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--accent-primary); color: white;"
+                   onmouseover="this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.boxShadow='var(--shadow-lg)';">
                     <i class="fas fa-edit mr-2"></i> Edit
                 </a>
+                    <a href="{{ route('log-penyimpanan.index') }}" class="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-200 shadow-lg"
+                   style="background-color: var(--card-secondary-bg); color: var(--text-primary); border: 1px solid var(--border-primary);"
+                   onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.boxShadow='var(--shadow-xl)';"
+                   onmouseout="this.style.backgroundColor='var(--card-secondary-bg)'; this.style.boxShadow='var(--shadow-lg)';">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
             </div>
         </div>
         <div class="px-8 py-6">
