@@ -136,14 +136,6 @@
                     <div class="detail-label">Diperbarui Pada</div>
                     <div class="detail-value">{{ $peranPengguna->updated_at ? $peranPengguna->updated_at->format('d M Y, H:i') : '-' }}</div>
                 </div>
-                <div class="detail-row">
-                    <div class="detail-label">Dibuat Oleh</div>
-                    <div class="detail-value">{{ $peranPengguna->created_by ?? '-' }}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Diperbarui Oleh</div>
-                    <div class="detail-value">{{ $peranPengguna->updated_by ?? '-' }}</div>
-                </div>
             </div>
 
                     <!-- Users with this role -->

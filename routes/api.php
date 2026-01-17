@@ -48,7 +48,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
         'destroy' => 'api.perusahaan-penghasil.destroy',
     ]);
 
-    // Log penyimpanan API: CRUD + delta + bulk sync
+    // Log penyimpanan API: CRUD + delta + bulk sync + approval
     Route::apiResource('log-penyimpanan', LogPenyimpananController::class)->names([
         'index' => 'api.log-penyimpanan.index',
         'store' => 'api.log-penyimpanan.store',
@@ -57,6 +57,10 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
         'destroy' => 'api.log-penyimpanan.destroy',
     ]);
     Route::post('sync/logs', [LogPenyimpananController::class, 'sync'])->name('api.sync.logs');
+
+    // Approval API for supervisor
+    Route::post('log-penyimpanan/{id}/approve', [LogPenyimpananController::class, 'approve'])->name('api.log-penyimpanan.approve');
+    Route::post('log-penyimpanan/{id}/reject', [LogPenyimpananController::class, 'reject'])->name('api.log-penyimpanan.reject');
 
     // Dashboard summary for mobile apps
     Route::get('dashboard/summary', [ApiDashboardController::class, 'summary'])->name('api.dashboard.summary');

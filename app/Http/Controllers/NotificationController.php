@@ -31,9 +31,10 @@ class NotificationController extends Controller
     public function getCount()
     {
         $notifications = $this->getExpiryNotificationsData();
+        $unreadCount = $this->getUnreadCount($notifications);
 
         return response()->json([
-            'count' => count($notifications),
+            'count' => $unreadCount,
         ]);
     }
 
@@ -55,16 +56,21 @@ class NotificationController extends Controller
      */
     private function getExpiryNotificationsData()
     {
-        // Get thresholds from unified settings
-        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
-        $criticalDays = (int) ApplicationSetting::get('critical_days', 7);
+        // Get thresholds
+        $warningDays = (int) ApplicationSetting::getValue('warning_days', 30);
+        $criticalDays = (int) ApplicationSetting::getValue('critical_days', 7);
+        $urgentDays = (int) ApplicationSetting::getValue('expiry.urgent_days', 3);
 
-        $criticalDays = 7; // Critical threshold
-        $urgentDays = 3;   // Urgent threshold
+        // Calculate cutoff date
+        $cutoffDate = now()->addDays($warningDays);
 
-        // Get all stored waste that needs attention
+        // Get stored waste that is approaching expiry or expired
+        // Optimized: Filter in database instead of memory and limit to 50 records
         $allStoredWaste = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
             ->where('status_log', 'Tersimpan')
+            ->where('maksimal_penyimpanan_tanggal', '<=', $cutoffDate)
+            ->orderBy('maksimal_penyimpanan_tanggal', 'asc')
+            ->limit(50)
             ->get();
 
         $notifications = [];
@@ -92,7 +98,7 @@ class NotificationController extends Controller
                 $notification['type'] = 'expired';
                 $notification['priority'] = 'critical';
                 $notification['title'] = 'Limbah Kadaluarsa';
-                $notification['message'] = "Limbah {$waste->kode_identitas} telah kadaluarsa ".abs($daysUntilExpiry).' hari yang lalu';
+                $notification['message'] = "Limbah {$waste->kode_identitas} telah kadaluarsa " . abs($daysUntilExpiry) . ' hari yang lalu';
                 $notification['icon'] = 'fas fa-exclamation-triangle';
                 $notification['color'] = 'danger';
                 $notifications[] = $notification;
@@ -141,6 +147,20 @@ class NotificationController extends Controller
     }
 
     /**
+     * Mark all notifications as read
+     */
+    public function markAllAsRead()
+    {
+        // Store the current timestamp in session
+        session(['notifications_read_at' => now()]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Semua notifikasi telah ditandai sebagai sudah dibaca',
+        ]);
+    }
+
+    /**
      * Mark notification as read (for future implementation)
      */
     public function markAsRead(Request $request, $id)
@@ -150,14 +170,36 @@ class NotificationController extends Controller
     }
 
     /**
+     * Get count of unread notifications
+     */
+    private function getUnreadCount($notifications)
+    {
+        $readAt = session('notifications_read_at');
+
+        if (!$readAt) {
+            return count($notifications);
+        }
+
+        // Count notifications created after the last read timestamp
+        $unreadCount = 0;
+        foreach ($notifications as $notification) {
+            if (isset($notification['created_at']) && $notification['created_at'] > $readAt) {
+                $unreadCount++;
+            }
+        }
+
+        return $unreadCount;
+    }
+
+    /**
      * Get notification settings
      */
     public function getSettings()
     {
         $settings = [
-            'warning_days' => (int) ApplicationSetting::get('warning_days', 30),
-            'critical_days' => (int) ApplicationSetting::get('critical_days', 7),
-            'urgent_days' => 3,
+            'warning_days' => (int) ApplicationSetting::getValue('warning_days', 30),
+            'critical_days' => (int) ApplicationSetting::getValue('critical_days', 7),
+            'urgent_days' => (int) ApplicationSetting::getValue('expiry.urgent_days', 3),
             'auto_refresh' => true,
             'refresh_interval' => 300000, // 5 minutes in milliseconds
         ];

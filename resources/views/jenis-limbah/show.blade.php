@@ -40,13 +40,23 @@
                                 <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);" class="dark:text-white">{{ $jenisLimbah->nama_jenis }}</span>
                             </div>
                         </div>
-                        <div class="flex justify-between items-start">
+                         <div class="flex justify-between items-start">
                             <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-primary); width: 40%;" class="dark:text-white">Karakteristik:</span>
                             <div style="width: 60%;">
                                 @if($jenisLimbah->karakteristikLimbah)
                                     <span style="display: inline-flex; padding: 0.25rem 0.75rem; font-size: 0.875rem; font-weight: 600; border-radius: 9999px; background: var(--secondary-bg-light); color: var(--text-secondary);" class="dark:bg-gray-700 dark:text-gray-300">{{ $jenisLimbah->karakteristikLimbah->nama_karakteristik }}</span>
                                 @else
                                     <span style="font-size: 0.875rem; color: var(--text-tertiary);" class="dark:text-gray-400">Tidak ada karakteristik</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-primary); width: 40%;" class="dark:text-white">Kategori:</span>
+                            <div style="width: 60%;">
+                                @if($jenisLimbah->kategoriKegiatanSumber)
+                                    <span style="display: inline-flex; padding: 0.25rem 0.75rem; font-size: 0.875rem; font-weight: 600; border-radius: 9999px; background: var(--accent-bg); color: var(--accent-primary);" class="dark:bg-blue-900 dark:text-blue-200">{{ $jenisLimbah->kategoriKegiatanSumber->nama_kategori }}</span>
+                                @else
+                                    <span style="font-size: 0.875rem; color: var(--text-tertiary);" class="dark:text-gray-400">Tidak ada kategori</span>
                                 @endif
                             </div>
                         </div>
@@ -102,11 +112,58 @@
                         <div style="padding: 1rem;">
                             <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0;" class="dark:text-gray-300">{{ $jenisLimbah->deskripsi_limbah }}</p>
                         </div>
-                    </div>
-                </div>
-            @endif
+                     </div>
+                 </div>
+             @endif
 
-            <!-- Related Log Penyimpanan -->
+             <!-- Biaya Information -->
+             <div style="margin-top: 2rem;">
+                 <h5 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;" class="dark:text-white">Biaya Pengangkutan</h5>
+                 <div style="background: var(--secondary-bg-light); border-radius: 0.5rem; border: 1px solid var(--border-primary);" class="dark:bg-gray-700 dark:border-gray-600">
+                     <div style="padding: 1rem;">
+                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                             <div>
+                                 <span style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Biaya Pengangkutan</span>
+                                 <span style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">
+                                     @if($jenisLimbah->biaya_pengangkutan_per_kg)
+                                         Rp {{ number_format($jenisLimbah->biaya_pengangkutan_per_kg, 0, ',', '.') }}
+                                     @else
+                                         <span style="color: var(--text-tertiary);" class="dark:text-gray-400">Belum diatur</span>
+                                     @endif
+                                 </span>
+                                 <span style="font-size: 0.875rem; color: var(--text-secondary);">/kg</span>
+                             </div>
+                             <div>
+                                 <span style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Masa Berlaku</span>
+                                 <span style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">
+                                     @if($jenisLimbah->mulai_berlaku)
+                                         {{ $jenisLimbah->mulai_berlaku->format('d M Y') }}
+                                         @if($jenisLimbah->akhir_berlaku)
+                                             - {{ $jenisLimbah->akhir_berlaku->format('d M Y') }}
+                                         @else
+                                             - Sekarang
+                                         @endif
+                                     @else
+                                         <span style="color: var(--text-tertiary);" class="dark:text-gray-400">Belum diatur</span>
+                                     @endif
+                                 </span>
+                             </div>
+                         </div>
+                         @if($jenisLimbah->keterangan_biaya)
+                         <div style="margin-top: 1.5rem;">
+                             <span style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Keterangan</span>
+                             <p style="font-size: 0.875rem; color: var(--text-primary);" class="dark:text-gray-300">
+                                 {{ is_array($jenisLimbah->keterangan_biaya)
+                                     ? json_decode($jenisLimbah->keterangan_biaya, true)['keterangan'] ?? '-'
+                                     : $jenisLimbah->keterangan_biaya }}
+                             </p>
+                         </div>
+                         @endif
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Related Log Penyimpanan -->
             @if($jenisLimbah->logPenyimpananLimbah && $jenisLimbah->logPenyimpananLimbah->count() > 0)
                 <div style="margin-top: 2rem;">
                     <h5 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;" class="dark:text-white">Log Penyimpanan Terkait</h5>

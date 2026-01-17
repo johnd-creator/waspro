@@ -27,8 +27,24 @@ class JenisLimbah extends Model
         'waktu_penyimpanan_hari',
         'batas_penyimpanan_hari',
         'karakteristik_id',
+        'kategori_id',
         'deskripsi_limbah',
         'status_aktif',
+        'biaya_pengangkutan_per_kg',
+        'mulai_berlaku',
+        'akhir_berlaku',
+        'keterangan_biaya',
+    ];
+
+    protected $casts = [
+        'jumlah_ton_per_tahun' => 'integer',
+        'waktu_penyimpanan_hari' => 'integer',
+        'batas_penyimpanan_hari' => 'integer',
+        'status_aktif' => 'boolean',
+        'mulai_berlaku' => 'date',
+        'akhir_berlaku' => 'date',
+        'biaya_pengangkutan_per_kg' => 'decimal:2',
+        'keterangan_biaya' => 'array',
     ];
 
     /**
@@ -40,11 +56,19 @@ class JenisLimbah extends Model
     }
 
     /**
-     * Get the karakteristik limbah for this jenis limbah (alias)
+     * Get karakteristik limbah for this jenis limbah (alias)
      */
     public function karakteristikLimbah(): BelongsTo
     {
         return $this->belongsTo(KarakteristikLimbah::class, 'karakteristik_id', 'karakteristik_id');
+    }
+
+    /**
+     * Get kategori kegiatan sumber that owns jenis limbah
+     */
+    public function kategoriKegiatanSumber(): BelongsTo
+    {
+        return $this->belongsTo(KategoriKegiatanSumber::class, 'kategori_id', 'kategori_id');
     }
 
     /**

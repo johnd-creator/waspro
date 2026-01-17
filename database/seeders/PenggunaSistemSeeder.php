@@ -11,19 +11,11 @@ use Illuminate\Support\Facades\Hash;
 class PenggunaSistemSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run database seeds.
      */
     public function run(): void
     {
-        // Pastikan ada data unit dan peran
-        $unitList = UnitPembangkit::all();
         $peranList = PeranPengguna::all();
-
-        if ($unitList->isEmpty()) {
-            $this->command->warn('Tidak ada data unit pembangkit. Jalankan UnitPembangkitSeeder terlebih dahulu.');
-
-            return;
-        }
 
         if ($peranList->isEmpty()) {
             $this->command->warn('Tidak ada data peran pengguna. Jalankan PeranPenggunaSeeder terlebih dahulu.');
@@ -31,13 +23,30 @@ class PenggunaSistemSeeder extends Seeder
             return;
         }
 
-        // Data pengguna demo
+        $superAdminPeran = $peranList->where('nama_peran', 'Super Admin')->first();
+        $adminPeran = $peranList->where('nama_peran', 'Administrator')->first();
+        $supervisorPeran = $peranList->where('nama_peran', 'Supervisor')->first();
+        $operatorPeran = $peranList->where('nama_peran', 'Operator')->first();
+        $viewerPeran = $peranList->where('nama_peran', 'Viewer')->first();
+
+        $superAdminEmail = env('SUPERADMIN_EMAIL', 'superadmin@waspro.com');
+        $superAdminPassword = env('SUPERADMIN_PASSWORD', 'password123');
+        $superAdminName = env('SUPERADMIN_NAME', 'Super Administrator');
+
+        $unitList = UnitPembangkit::orderBy('nama_unit')->get();
+
+        if ($unitList->isEmpty()) {
+            $this->command->warn('Tidak ada data unit pembangkit. Jalankan UnitPembangkitSeeder terlebih dahulu.');
+
+            return;
+        }
+
         $users = [
             [
-                'nama_lengkap' => 'Super Administrator',
-                'email_address' => 'superadmin@waspro.com',
-                'kata_sandi' => 'password123',
-                'unit_id' => $unitList->first()->unit_id,
+                'nama_lengkap' => $superAdminName,
+                'email_address' => $superAdminEmail,
+                'kata_sandi' => $superAdminPassword,
+                'unit_id' => null,
                 'aktif' => true,
                 'peran' => ['Super Admin'],
             ],
@@ -47,7 +56,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Pusat')->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Admin'],
+                'peran' => ['Administrator'],
             ],
             [
                 'nama_lengkap' => 'Manager Surabaya',
@@ -55,7 +64,7 @@ class PenggunaSistemSeeder extends Seeder
                 'kata_sandi' => 'password123',
                 'unit_id' => $unitList->where('nama_unit', 'Unit Pembangkit Surabaya')->first()?->unit_id ?? $unitList->skip(1)->first()?->unit_id ?? $unitList->first()->unit_id,
                 'aktif' => true,
-                'peran' => ['Manager'],
+                'peran' => ['Supervisor'],
             ],
             [
                 'nama_lengkap' => 'Operator Jakarta 1',
@@ -144,29 +153,11 @@ class PenggunaSistemSeeder extends Seeder
                 $user->peranPengguna()->sync($peranIds);
             }
 
-            $unitName = $unitList->where('unit_id', $userData['unit_id'])->first()?->nama_unit ?? 'Unknown';
+            $unitName = $userData['unit_id']
+                ? ($unitList->where('unit_id', $userData['unit_id'])->first()?->nama_unit ?? 'Unknown')
+                : 'Global (Super Admin)';
             $action = $user->wasRecentlyCreated ? 'dibuat' : 'diperbarui';
             $this->command->info("✓ User {$userData['nama_lengkap']} ({$userData['email_address']}) {$action} - Unit: {$unitName}");
-        }
-
-        // Tambahan pengguna via factory untuk kebutuhan pengujian jika belum ada data selain default
-        $hasAdditionalUsers = PenggunaSistem::whereNotIn('email_address', $defaultEmails)->exists();
-
-        if (! $hasAdditionalUsers) {
-            $this->command->info('Menambahkan pengguna tambahan menggunakan factory...');
-
-            PenggunaSistem::factory()
-                ->count(5)
-                ->state(fn () => [
-                    'unit_id' => $unitList->random()->unit_id,
-                    'kata_sandi_hash' => Hash::make('password123'),
-                ])
-                ->create()
-                ->each(function (PenggunaSistem $user) use ($peranList) {
-                    $peran = $peranList->random();
-                    $user->peranPengguna()->sync([$peran->peran_id]);
-                    $this->command?->info("  • {$user->nama_lengkap} ({$user->email_address}) sebagai {$peran->nama_peran}");
-                });
         }
 
         $this->command->newLine();
@@ -175,7 +166,7 @@ class PenggunaSistemSeeder extends Seeder
         $this->command->info('Informasi Login:');
         $this->command->info('==================');
         $this->command->info('Super Admin:');
-        $this->command->info('  Email: superadmin@waspro.com');
+        $this->command->info("  Email: {$superAdminEmail}");
         $this->command->info('  Password: password123');
         $this->command->line('');
         $this->command->info('Admin Jakarta:');

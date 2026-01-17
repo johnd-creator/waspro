@@ -13,13 +13,12 @@ use Illuminate\Validation\Rule;
 class PenggunaSistemController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(Request $request)
     {
         $query = PenggunaSistem::with(['unitPembangkit', 'peranPengguna']);
 
-        // Filter berdasarkan unit jika user bukan admin
         $currentUser = Auth::guard('web')->user();
         if ($currentUser && ! $this->isAdmin($currentUser)) {
             $query->where('unit_id', $currentUser->unit_id);
@@ -31,13 +30,12 @@ class PenggunaSistemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Jika bukan admin, hanya bisa membuat user untuk unit sendiri
         if ($currentUser && ! $this->isAdmin($currentUser)) {
             $unitList = UnitPembangkit::where('unit_id', $currentUser->unit_id)->get();
         } else {
@@ -60,37 +58,68 @@ class PenggunaSistemController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'email_address' => 'required|email|unique:pengguna_sistem,email_address',
             'kata_sandi' => 'required|string|min:8|confirmed',
-            'unit_id' => 'required|exists:unit_pembangkit,unit_id',
+            'unit_id' => 'nullable|exists:unit_pembangkit,unit_id',
             'peran_ids' => 'required|array|min:1',
             'peran_ids.*' => 'exists:peran_pengguna,peran_id',
             'aktif' => 'boolean',
         ];
 
-        // Jika bukan admin, validasi unit_id harus sama dengan unit user
-        if ($currentUser && ! $this->isAdmin($currentUser)) {
-            $rules['unit_id'] = [
+        $isSuperAdminRole = in_array('Super Admin', $request->input('peran_ids', []));
+
+        if ($isSuperAdminRole) {
+            $superAdminPeranId = PeranPengguna::where('nama_peran', 'Super Admin')->first()?->peran_id;
+
+            $existingSuperAdmin = PenggunaSistem::whereHas('peranPengguna', function ($q) use ($superAdminPeranId) {
+                $q->where('peran_pengguna.peran_id', $superAdminPeranId);
+            })->exists();
+
+            if ($existingSuperAdmin) {
+                return back()->withErrors(['peran_ids' => 'Hanya satu Super Admin yang diizinkan.'])->withInput();
+            }
+
+            $rules['peran_ids'] = [
                 'required',
-                Rule::in([$currentUser->unit_id]),
+                'array',
+                Rule::in([$superAdminPeranId]),
             ];
+
+            if ($currentUser && ! $this->isAdmin($currentUser)) {
+                return back()->withErrors(['peran_ids' => 'Anda tidak memiliki izin untuk membuat Super Admin.'])->withInput();
+            }
+        } else {
+            $rules['unit_id'] = 'required|exists:unit_pembangkit,unit_id';
+
+            $superAdminPeranId = PeranPengguna::where('nama_peran', 'Super Admin')->first()?->peran_id;
+            $rules['peran_ids.*'] = function ($attribute, $value, $fail) use ($superAdminPeranId) {
+                if ($value == $superAdminPeranId) {
+                    $fail('Hanya satu Super Admin yang diizinkan.');
+                }
+            };
+
+            if ($currentUser && ! $this->isAdmin($currentUser)) {
+                $rules['unit_id'] = [
+                    'required',
+                    Rule::in([$currentUser->unit_id]),
+                ];
+            }
         }
 
         $validated = $request->validate($rules);
 
-        // Normalisasi nilai aktif: terima 'aktif' atau 'status_aktif' (backward-compat)
         $isAktif = $request->has('aktif') || $request->has('status_aktif')
             ? ($request->has('aktif') ? $request->boolean('aktif') : $request->boolean('status_aktif'))
             : true;
 
-        // Buat user baru
+        $unitId = $isSuperAdminRole ? null : $validated['unit_id'];
+
         $user = PenggunaSistem::create([
             'nama_lengkap' => $validated['nama_lengkap'],
             'email_address' => $validated['email_address'],
             'kata_sandi_hash' => Hash::make($validated['kata_sandi']),
-            'unit_id' => $validated['unit_id'],
+            'unit_id' => $unitId,
             'aktif' => $isAktif,
         ]);
 
-        // Attach peran
         $user->peranPengguna()->attach($validated['peran_ids']);
 
         return redirect()->route('pengguna-sistem.index')
@@ -98,14 +127,15 @@ class PenggunaSistemController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display specified resource.
      */
     public function show(PenggunaSistem $penggunaSistem)
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Cek akses berdasarkan unit
-        if ($currentUser && ! $this->isAdmin($currentUser) && $penggunaSistem->unit_id !== $currentUser->unit_id) {
+        if ($currentUser && ! $this->isAdmin($currentUser) &&
+            $penggunaSistem->unit_id !== null &&
+            $penggunaSistem->unit_id !== $currentUser->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk melihat pengguna dari unit lain.');
         }
 
@@ -115,18 +145,18 @@ class PenggunaSistemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing specified resource.
      */
     public function edit(PenggunaSistem $penggunaSistem)
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Cek akses berdasarkan unit
-        if ($currentUser && ! $this->isAdmin($currentUser) && $penggunaSistem->unit_id !== $currentUser->unit_id) {
+        if ($currentUser && ! $this->isAdmin($currentUser) &&
+            $penggunaSistem->unit_id !== null &&
+            $penggunaSistem->unit_id !== $currentUser->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk mengedit pengguna dari unit lain.');
         }
 
-        // Jika bukan admin, hanya bisa edit user untuk unit sendiri
         if ($currentUser && ! $this->isAdmin($currentUser)) {
             $unitList = UnitPembangkit::where('unit_id', $currentUser->unit_id)->get();
         } else {
@@ -140,62 +170,94 @@ class PenggunaSistemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update specified resource in storage.
      */
     public function update(Request $request, PenggunaSistem $penggunaSistem)
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Cek akses berdasarkan unit
-        if ($currentUser && ! $this->isAdmin($currentUser) && $penggunaSistem->unit_id !== $currentUser->unit_id) {
+        if ($currentUser && ! $this->isAdmin($currentUser) &&
+            $penggunaSistem->unit_id !== null &&
+            $penggunaSistem->unit_id !== $currentUser->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk mengedit pengguna dari unit lain.');
         }
 
         $rules = [
             'nama_lengkap' => 'required|string|max:255',
             'email_address' => 'required|email|unique:pengguna_sistem,email_address,'.$penggunaSistem->user_id.',user_id',
-            'unit_id' => 'required|exists:unit_pembangkit,unit_id',
+            'unit_id' => 'nullable|exists:unit_pembangkit,unit_id',
             'peran_ids' => 'required|array|min:1',
             'peran_ids.*' => 'exists:peran_pengguna,peran_id',
             'aktif' => 'boolean',
         ];
 
-        // Jika ada password baru
         if ($request->filled('kata_sandi')) {
             $rules['kata_sandi'] = 'string|min:8|confirmed';
         }
 
-        // Jika bukan admin, validasi unit_id harus sama dengan unit user
-        if ($currentUser && ! $this->isAdmin($currentUser)) {
-            $rules['unit_id'] = [
+        $isBecomingSuperAdmin = in_array('Super Admin', $request->input('peran_ids', []));
+        $isCurrentlySuperAdmin = $penggunaSistem->peranPengguna()->where('nama_peran', 'Super Admin')->exists();
+
+        if ($isBecomingSuperAdmin) {
+            $superAdminPeranId = PeranPengguna::where('nama_peran', 'Super Admin')->first()?->peran_id;
+            $existingSuperAdmin = PenggunaSistem::whereHas('peranPengguna', function ($q) use ($superAdminPeranId) {
+                $q->where('peran_pengguna.peran_id', $superAdminPeranId);
+            })->where('user_id', '!=', $penggunaSistem->user_id)->exists();
+
+            if ($existingSuperAdmin) {
+                return back()->withErrors(['peran_ids' => 'Hanya satu Super Admin yang diizinkan.'])->withInput();
+            }
+
+            $rules['peran_ids'] = [
                 'required',
-                Rule::in([$currentUser->unit_id]),
+                'array',
+                Rule::in([$superAdminPeranId]),
             ];
+
+            $rules['unit_id'] = 'nullable';
+
+            if ($currentUser && ! $this->isAdmin($currentUser)) {
+                return back()->withErrors(['peran_ids' => 'Anda tidak memiliki izin untuk mengubah pengguna menjadi Super Admin.'])->withInput();
+            }
+        } else {
+            $rules['unit_id'] = 'required|exists:unit_pembangkit,unit_id';
+
+            $superAdminPeranId = PeranPengguna::where('nama_peran', 'Super Admin')->first()?->peran_id;
+            $rules['peran_ids.*'] = function ($attribute, $value, $fail) use ($superAdminPeranId) {
+                if ($value == $superAdminPeranId) {
+                    $fail('Hanya satu Super Admin yang diizinkan.');
+                }
+            };
+
+            if ($currentUser && ! $this->isAdmin($currentUser)) {
+                $rules['unit_id'] = [
+                    'required',
+                    Rule::in([$currentUser->unit_id]),
+                ];
+            }
         }
 
         $validated = $request->validate($rules);
 
-        // Normalisasi nilai aktif: terima 'aktif' atau 'status_aktif' (backward-compat)
         $isAktif = $request->has('aktif') || $request->has('status_aktif')
             ? ($request->has('aktif') ? $request->boolean('aktif') : $request->boolean('status_aktif'))
             : true;
 
-        // Update data user
+        $unitId = $isBecomingSuperAdmin ? null : $validated['unit_id'];
+
         $updateData = [
             'nama_lengkap' => $validated['nama_lengkap'],
             'email_address' => $validated['email_address'],
-            'unit_id' => $validated['unit_id'],
+            'unit_id' => $unitId,
             'aktif' => $isAktif,
         ];
 
-        // Update password jika ada
         if ($request->filled('kata_sandi')) {
             $updateData['kata_sandi_hash'] = Hash::make($validated['kata_sandi']);
         }
 
         $penggunaSistem->update($updateData);
 
-        // Sync peran
         $penggunaSistem->peranPengguna()->sync($validated['peran_ids']);
 
         return redirect()->route('pengguna-sistem.index')
@@ -203,27 +265,30 @@ class PenggunaSistemController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove specified resource from storage.
      */
     public function destroy(PenggunaSistem $penggunaSistem)
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Cek akses berdasarkan unit
-        if ($currentUser && ! $this->isAdmin($currentUser) && $penggunaSistem->unit_id !== $currentUser->unit_id) {
+        if ($currentUser && ! $this->isAdmin($currentUser) &&
+            $penggunaSistem->unit_id !== null &&
+            $penggunaSistem->unit_id !== $currentUser->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus pengguna dari unit lain.');
         }
 
-        // Cek apakah user ini memiliki log penyimpanan
+        if ($penggunaSistem->peranPengguna()->where('nama_peran', 'Super Admin')->exists()) {
+            return redirect()->route('pengguna-sistem.index')
+                ->with('error', 'Super Admin tidak dapat dihapus.');
+        }
+
         if ($penggunaSistem->logPenyimpananLimbah()->count() > 0) {
             return redirect()->route('pengguna-sistem.index')
                 ->with('error', 'Pengguna tidak dapat dihapus karena memiliki riwayat log penyimpanan limbah.');
         }
 
-        // Hapus relasi peran
         $penggunaSistem->peranPengguna()->detach();
 
-        // Hapus user
         $penggunaSistem->delete();
 
         return redirect()->route('pengguna-sistem.index')
@@ -237,9 +302,15 @@ class PenggunaSistemController extends Controller
     {
         $currentUser = Auth::guard('web')->user();
 
-        // Cek akses berdasarkan unit
-        if ($currentUser && ! $this->isAdmin($currentUser) && $penggunaSistem->unit_id !== $currentUser->unit_id) {
+        if ($currentUser && ! $this->isAdmin($currentUser) &&
+            $penggunaSistem->unit_id !== null &&
+            $penggunaSistem->unit_id !== $currentUser->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk mengubah status pengguna dari unit lain.');
+        }
+
+        if ($penggunaSistem->peranPengguna()->where('nama_peran', 'Super Admin')->exists()) {
+            return redirect()->route('pengguna-sistem.index')
+                ->with('error', 'Status Super Admin tidak dapat diubah.');
         }
 
         $penggunaSistem->update([
@@ -257,6 +328,6 @@ class PenggunaSistemController extends Controller
      */
     private function isAdmin($user)
     {
-        return $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Admin')->exists();
+        return $user->peranPengguna()->whereIn('peran_pengguna.nama_peran', ['Super Admin', 'Administrator'])->exists();
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\PenggunaSistem;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -50,7 +52,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'nama_lengkap' => ['required', 'string', 'max:255'],
             'email_address' => ['required', 'string', 'email', 'max:255', 'unique:pengguna_sistem,email_address'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', Password::defaults(), 'confirmed'],
             'unit_id' => ['required', 'exists:unit_pembangkit,unit_id'],
         ]);
     }

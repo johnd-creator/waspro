@@ -13,7 +13,7 @@ class ExpirySettingsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
-            if (Auth::user()->role !== 'Super Admin') {
+            if (!Auth::user()->isSuperAdmin()) {
                 abort(403, 'Unauthorized access');
             }
 
@@ -29,10 +29,11 @@ class ExpirySettingsController extends Controller
         $settings = $this->getExpirySettings();
 
         // Calculate percentages for progress bars
+        $urgentPercentage = round(($settings['urgent_days'] / 365) * 100, 2);
         $criticalPercentage = round(($settings['critical_days'] / 365) * 100, 2);
         $warningPercentage = round(($settings['warning_days'] / 365) * 100, 2);
 
-        return view('expiry-settings.index', compact('settings', 'criticalPercentage', 'warningPercentage'));
+        return view('expiry-settings.index', compact('settings', 'urgentPercentage', 'criticalPercentage', 'warningPercentage'));
     }
 
     /**
@@ -41,11 +42,18 @@ class ExpirySettingsController extends Controller
     public function update(Request $request)
     {
         $request->validate([
+            'urgent_days' => 'required|integer|min:1|max:365',
             'critical_days' => 'required|integer|min:1|max:365',
             'warning_days' => 'required|integer|min:1|max:365',
         ]);
 
-        // Validate that warning_days > critical_days
+        // Validate logic: urgent < critical < warning
+        if ($request->critical_days <= $request->urgent_days) {
+            return back()->withErrors([
+                'critical_days' => 'Hari kritis harus lebih besar dari hari urgent',
+            ]);
+        }
+
         if ($request->warning_days <= $request->critical_days) {
             return back()->withErrors([
                 'warning_days' => 'Hari peringatan harus lebih besar dari hari kritis',
@@ -54,6 +62,9 @@ class ExpirySettingsController extends Controller
 
         try {
             DB::beginTransaction();
+
+            // Update or create urgent_days setting
+            $this->updateOrCreateSetting('expiry.urgent_days', $request->urgent_days, 'Jumlah hari untuk status peringatan urgent sebelum kadaluarsa');
 
             // Update or create critical_days setting
             $this->updateOrCreateSetting('critical_days', $request->critical_days, 'Jumlah hari untuk status kritis sebelum kadaluarsa');
@@ -69,7 +80,7 @@ class ExpirySettingsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan: '.$e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal memperbarui pengaturan: ' . $e->getMessage()]);
         }
     }
 
@@ -78,10 +89,12 @@ class ExpirySettingsController extends Controller
      */
     private function getExpirySettings()
     {
-        $criticalDays = (int) ApplicationSetting::get('critical_days', 7);
-        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
+        $urgentDays = (int) ApplicationSetting::getValue('expiry.urgent_days', 3);
+        $criticalDays = (int) ApplicationSetting::getValue('critical_days', 7);
+        $warningDays = (int) ApplicationSetting::getValue('warning_days', 30);
 
         return [
+            'urgent_days' => $urgentDays,
             'critical_days' => $criticalDays,
             'warning_days' => $warningDays,
         ];
@@ -92,7 +105,7 @@ class ExpirySettingsController extends Controller
      */
     private function updateOrCreateSetting($key, $value, $description)
     {
-        ApplicationSetting::set($key, (int) $value, 'integer', 'expiry', $description);
+        ApplicationSetting::setValue($key, (int) $value, 'integer', 'expiry', $description);
     }
 
     /**
@@ -103,6 +116,7 @@ class ExpirySettingsController extends Controller
         try {
             DB::beginTransaction();
 
+            $this->updateOrCreateSetting('expiry.urgent_days', 3, 'Jumlah hari untuk status peringatan urgent sebelum kadaluarsa');
             $this->updateOrCreateSetting('critical_days', 7, 'Jumlah hari untuk status kritis sebelum kadaluarsa');
             $this->updateOrCreateSetting('warning_days', 30, 'Jumlah hari untuk status peringatan sebelum kadaluarsa');
 
@@ -114,7 +128,7 @@ class ExpirySettingsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return back()->withErrors(['error' => 'Gagal mereset pengaturan: '.$e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal mereset pengaturan: ' . $e->getMessage()]);
         }
     }
 }

@@ -113,8 +113,8 @@
                                 </h6>
                             </div>
                             
-                            <div class="col-md-6 mb-3">
-                                <label for="unit_id" class="form-label" style="color: var(--text-primary);">Unit Pembangkit <span class="text-danger">*</span></label>
+                            <div class="col-md-6 mb-3" id="unit-field">
+                                <label for="unit_id" class="form-label" style="color: var(--text-primary);">Unit Pembangkit <span id="unit-required" class="text-danger">*</span></label>
                                 <select class="form-select @error('unit_id') is-invalid @enderror" 
                                         style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);"
                                         id="unit_id" name="unit_id" required>
@@ -130,16 +130,17 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" style="color: var(--text-primary);">Peran Pengguna <span class="text-danger">*</span></label>
                                 <div class="border rounded p-3 @error('peran_ids') border-danger @enderror"
                                      style="background-color: var(--input-bg); border-color: var(--border-primary);">
                                     @foreach($peranList as $peran)
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" 
+                                            <input class="form-check-input peran-checkbox" type="checkbox" 
                                                    id="peran_{{ $peran->peran_id }}" 
                                                    name="peran_ids[]" value="{{ $peran->peran_id }}"
+                                                   data-peran="{{ $peran->nama_peran }}"
                                                    {{ in_array($peran->peran_id, old('peran_ids', [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="peran_{{ $peran->peran_id }}"
                                                    style="color: var(--text-primary);">
@@ -241,7 +242,7 @@
     function togglePassword(inputId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(inputId + '-icon');
-        
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('fa-eye');
@@ -252,5 +253,34 @@
             icon.classList.add('fa-eye');
         }
     }
+
+    function handleSuperAdminRole() {
+        const checkboxes = document.querySelectorAll('.peran-checkbox');
+        const unitField = document.getElementById('unit-field');
+        const unitRequired = document.getElementById('unit-required');
+        const unitInput = document.getElementById('unit_id');
+        let isSuperAdmin = false;
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked && checkbox.dataset.peran === 'Super Admin') {
+                isSuperAdmin = true;
+            }
+        });
+
+        if (isSuperAdmin) {
+            unitField.style.display = 'none';
+            unitInput.removeAttribute('required');
+            unitRequired.classList.add('d-none');
+            unitInput.value = '';
+        } else {
+            unitField.style.display = 'block';
+            unitInput.setAttribute('required', 'required');
+            unitRequired.classList.remove('d-none');
+        }
+    }
+
+    document.querySelectorAll('.peran-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', handleSuperAdminRole);
+    });
 </script>
 @endpush

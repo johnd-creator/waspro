@@ -1,0 +1,31 @@
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315586458333 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315462962963 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315411921296 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.40473153694444447 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.40473153324074074 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315292824074 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.40473152542824076 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315217708333 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315179398148 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+
+  <warning> DEPRECATED </warning> Implicit conversion from float 0.4047315141087963 to int loses precision in app/Models/LogPenyimpananLimbah.php on line 222.
+
+Status: 200 Memory: 46.5MB

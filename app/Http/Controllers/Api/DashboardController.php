@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $query = LogPenyimpananLimbah::query();
 
         // Non-admin users are limited to their unit
-        if ($user && ! $user->isAdmin()) {
+        if ($user && !$user->isAdmin()) {
             $query->where('unit_id', $user->unit_id);
         } elseif ($request->filled('unit_id')) {
             // Admin can filter specific unit
@@ -31,7 +31,7 @@ class DashboardController extends Controller
         }
 
         $now = Carbon::now();
-        $warningDays = (int) ApplicationSetting::get('warning_days', 30);
+        $warningDays = (int) ApplicationSetting::getValue('warning_days', 30);
         $nearExpiryThreshold = $now->copy()->addDays($warningDays);
 
         // Optional date filter (by tanggal_limbah_masuk)

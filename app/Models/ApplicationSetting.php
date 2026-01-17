@@ -2,11 +2,71 @@
 
 namespace App\Models;
 
+use App\Models\AuditLog;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class ApplicationSetting extends Model
 {
+    use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($setting) {
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'update',
+                'table_name' => 'application_settings',
+                'setting_category' => $setting->category,
+                'setting_key' => $setting->key,
+                'record_id' => $setting->id,
+                'old_value' => ['value' => $setting->getOriginal('value')],
+                'new_value' => ['value' => $setting->value],
+                'old_value_text' => $setting->getOriginal('value'),
+                'new_value_text' => $setting->value,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        });
+
+        static::created(function ($setting) {
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'create',
+                'table_name' => 'application_settings',
+                'setting_category' => $setting->category,
+                'setting_key' => $setting->key,
+                'record_id' => $setting->id,
+                'old_value' => null,
+                'new_value' => ['value' => $setting->value],
+                'new_value_text' => $setting->value,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        });
+
+        static::deleted(function ($setting) {
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'delete',
+                'table_name' => 'application_settings',
+                'setting_category' => $setting->category,
+                'setting_key' => $setting->key,
+                'record_id' => $setting->id,
+                'old_value' => ['value' => $setting->value],
+                'new_value' => null,
+                'old_value_text' => $setting->value,
+                'new_value_text' => null,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        });
+    }
+
     protected $fillable = [
         'key',
         'value',
@@ -23,7 +83,10 @@ class ApplicationSetting extends Model
     /**
      * Get setting value by key
      */
-    public static function get(string $key, $default = null)
+    /**
+     * Get setting value by key
+     */
+    public static function getValue(string $key, $default = null)
     {
         $cacheKey = "app_setting_{$key}";
 
@@ -32,7 +95,7 @@ class ApplicationSetting extends Model
                 ->where('is_active', true)
                 ->first();
 
-            if (! $setting) {
+            if (!$setting) {
                 return $default;
             }
 
@@ -43,7 +106,7 @@ class ApplicationSetting extends Model
     /**
      * Set setting value by key
      */
-    public static function set(string $key, $value, string $type = 'string', string $category = 'general', ?string $description = null)
+    public static function setValue(string $key, $value, string $type = 'string', string $category = 'general', ?string $description = null)
     {
         $setting = self::updateOrCreate(
             ['key' => $key],

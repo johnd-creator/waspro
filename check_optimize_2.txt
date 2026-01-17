@@ -1,0 +1,32 @@
+
+   INFO  Caching framework bootstrap, configuration, and metadata.  
+
+  config ............................................ 53.84ms DONE
+  events ............................................. 7.93ms DONE
+  routes ............................................ 57.37ms DONE
+  views ............................................ 118.20ms FAIL
+
+   InvalidArgumentException 
+
+  Unable to locate a class or view for component [slot:footer].
+
+  at vendor/laravel/framework/src/Illuminate/View/Compilers/ComponentTagCompiler.php:315
+    311▕         if (Str::startsWith($component, 'mail::')) {
+    312▕             return $component;
+    313▕         }
+    314▕ 
+  ➜ 315▕         throw new InvalidArgumentException(
+    316▕             "Unable to locate a class or view for component [{$component}]."
+    317▕         );
+    318▕     }
+    319▕
+
+      [2m+2 vendor frames [22m
+
+  3   [internal]:0
+      Illuminate\View\Compilers\ComponentTagCompiler::{closure:Illuminate\View\Compilers\ComponentTagCompiler::compileSelfClosingTags():215}()
+      [2m+7 vendor frames [22m
+
+  11  [internal]:0
+      Illuminate\Foundation\Console\ViewCacheCommand::{closure:Illuminate\Foundation\Console\ViewCacheCommand::compileViews():61}()
+

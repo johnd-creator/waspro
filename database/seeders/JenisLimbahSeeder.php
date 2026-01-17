@@ -3,14 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\JenisLimbah;
-use App\Models\KarakteristikLimbah;
 use Illuminate\Database\Seeder;
 
 class JenisLimbahSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $jenisLimbah = [
@@ -22,6 +18,10 @@ class JenisLimbahSeeder extends Seeder
                 'waktu_penyimpanan_hari' => 30,
                 'karakteristik' => 'Bersifat Infeksius',
                 'deskripsi_limbah' => 'Limbah medis dari kegiatan perawatan pasien yang mengandung mikroorganisme berbahaya.',
+                'status_aktif' => true,
+                'biaya_pengangkutan_per_kg' => 15000.00,
+                'mulai_berlaku' => '2026-01-01',
+                'akhir_berlaku' => null,
             ],
             [
                 'kode_limbah' => 'A102',
@@ -29,8 +29,12 @@ class JenisLimbahSeeder extends Seeder
                 'kemasan' => 'Drum Plastik',
                 'jumlah_ton_per_tahun' => 12.3,
                 'waktu_penyimpanan_hari' => 90,
-                'karakteristik' => 'Beracun',
-                'deskripsi_limbah' => 'Sisa bahan kimia industri dengan kandungan toksik tinggi.',
+                'karakteristik' => 'Kimia Beracun',
+                'deskripsi_limbah' => 'Limbah kimia beracun dari kegiatan industri dan laboratorium.',
+                'status_aktif' => true,
+                'biaya_pengangkutan_per_kg' => 25000.00,
+                'mulai_berlaku' => '2026-01-01',
+                'akhir_berlaku' => null,
             ],
             [
                 'kode_limbah' => 'A103',
@@ -38,8 +42,12 @@ class JenisLimbahSeeder extends Seeder
                 'kemasan' => 'Kotak Karton',
                 'jumlah_ton_per_tahun' => 3.2,
                 'waktu_penyimpanan_hari' => 60,
-                'karakteristik' => 'Beracun',
+                'karakteristik' => 'Organik',
                 'deskripsi_limbah' => 'Sisa produksi obat kadaluwarsa dan bahan aktif farmasi.',
+                'status_aktif' => true,
+                'biaya_pengangkutan_per_kg' => 3200.00,
+                'mulai_berlaku' => '2026-01-01',
+                'akhir_berlaku' => null,
             ],
             [
                 'kode_limbah' => 'A104',
@@ -47,8 +55,12 @@ class JenisLimbahSeeder extends Seeder
                 'kemasan' => 'Drum Logam',
                 'jumlah_ton_per_tahun' => 25.8,
                 'waktu_penyimpanan_hari' => 180,
-                'karakteristik' => 'Mudah Terbakar',
-                'deskripsi_limbah' => 'Minyak pelumas dan oli bekas dari perawatan mesin.',
+                'karakteristik' => 'Minyak',
+                'deskripsi_limbah' => 'Minyak bekas dan oli bekas dari perawatan mesin dan kendaraan.',
+                'status_aktif' => true,
+                'biaya_pengangkutan_per_kg' => 20000.00,
+                'mulai_berlaku' => '2026-01-01',
+                'akhir_berlaku' => null,
             ],
             [
                 'kode_limbah' => 'A105',
@@ -56,30 +68,27 @@ class JenisLimbahSeeder extends Seeder
                 'kemasan' => 'Palet Kayu',
                 'jumlah_ton_per_tahun' => 8.7,
                 'waktu_penyimpanan_hari' => 120,
-                'karakteristik' => 'Korosif',
-                'deskripsi_limbah' => 'Komponen elektronik usang yang mengandung logam berat.',
+                'karakteristik' => 'Elektronik',
+                'deskripsi_limbah' => 'Komponen elektronik usang yang mengandung logam berbahaya.',
+                'status_aktif' => true,
+                'biaya_pengangkutan_per_kg' => 30000.00,
+                'mulai_berlaku' => '2026-01-01',
+                'akhir_berlaku' => null,
             ],
         ];
 
-        $karakteristikMap = KarakteristikLimbah::pluck('karakteristik_id', 'nama_karakteristik');
-
         foreach ($jenisLimbah as $item) {
-            $karakteristikNama = $item['karakteristik'];
-
-            if (! isset($karakteristikMap[$karakteristikNama])) {
-                $karakteristik = KarakteristikLimbah::firstOrCreate(['nama_karakteristik' => $karakteristikNama]);
-                $karakteristikMap[$karakteristikNama] = $karakteristik->karakteristik_id;
-            }
-
             $payload = [
                 'nama_limbah' => $item['nama_limbah'],
                 'kemasan' => $item['kemasan'],
                 'jumlah_ton_per_tahun' => $item['jumlah_ton_per_tahun'],
                 'waktu_penyimpanan_hari' => $item['waktu_penyimpanan_hari'],
-                'batas_penyimpanan_hari' => $item['waktu_penyimpanan_hari'],
-                'karakteristik_id' => $karakteristikMap[$karakteristikNama],
-                'deskripsi_limbah' => $item['deskripsi_limbah'] ?? null,
+                'karakteristik_id' => 1,
+                'deskripsi_limbah' => $item['deskripsi_limbah'],
                 'status_aktif' => $item['status_aktif'] ?? true,
+                'biaya_pengangkutan_per_kg' => $item['biaya_pengangkutan_per_kg'],
+                'mulai_berlaku' => $item['mulai_berlaku'],
+                'akhir_berlaku' => $item['akhir_berlaku'],
             ];
 
             JenisLimbah::updateOrCreate(

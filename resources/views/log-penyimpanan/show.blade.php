@@ -45,6 +45,16 @@
                                     <span style="color: var(--text-primary);">{{ number_format($logPenyimpanan->jumlah_limbah_masuk, 2) }} Kg</span>
                                 </div>
                                 <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
+                                    <span style="color: var(--text-secondary);" class="font-medium">Uraian Pekerjaan:</span>
+                                    <div style="width: 60%; text-align: right;">
+                                        @if($logPenyimpanan->uraian_pekerjaan)
+                                            <div class="rounded-lg p-3 text-sm" style="background-color: var(--secondary-bg-light);">{{ $logPenyimpanan->uraian_pekerjaan }}</div>
+                                        @else
+                                            <span style="color: var(--text-tertiary);">-</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                     <span style="color: var(--text-secondary);" class="font-medium">Maksimal Penyimpanan:</span>
                                     <span style="color: var(--text-primary);">
                                         @php

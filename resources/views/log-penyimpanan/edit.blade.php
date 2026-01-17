@@ -21,7 +21,7 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
 }
 
 /* Safari specific fixes */
-@supports (-webkit-appearance: none) {
+@@supports (-webkit-appearance: none) {
     select {
         background-color: white;
         border: 1px solid #cbd5e1;
@@ -170,32 +170,22 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                         @enderror
                     </div>
 
-                    <!-- Transport Information -->
-                    <div id="transport-fields" class="{{ old('status_log', $logPenyimpanan->status_log) == 'Diangkut' ? '' : 'hidden' }}">
-                        <div class="my-6 border-t" style="border-color: var(--border-primary);"></div>
-                        <h3 class="mb-4 text-lg font-semibold" style="color: var(--text-primary);">Informasi Pengangkutan</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="tanggal_pengangkutan" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Tanggal Pengangkutan</label>
-                                <input type="date" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tanggal_pengangkutan') border-red-500 @enderror" 
-                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
-                                       id="tanggal_pengangkutan" name="tanggal_pengangkutan" 
-                                       value="{{ old('tanggal_pengangkutan', optional($logPenyimpanan->tanggal_pengangkutan)->format('Y-m-d')) }}">
-                                @error('tanggal_pengangkutan')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label for="jumlah_diangkut" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Jumlah Diangkut (Kg)</label>
-                                <input type="number" step="0.01" min="0" class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jumlah_diangkut') border-red-500 @enderror" 
-                                       style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);" 
-                                       id="jumlah_diangkut" name="jumlah_diangkut" 
-                                       value="{{ old('jumlah_diangkut', $logPenyimpanan->jumlah_diangkut) }}">
-                                @error('jumlah_diangkut')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
+                    <!-- Uraian Pekerjaan Section -->
+                    <div class="mt-6">
+                        <label for="uraian_pekerjaan" class="mb-2 block text-sm font-medium"
+                            style="color: var(--text-primary);">Uraian Pekerjaan</label>
+                        <textarea
+                            class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('uraian_pekerjaan') border-red-500 @enderror"
+                            style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);"
+                            id="uraian_pekerjaan"
+                            name="uraian_pekerjaan" rows="3"
+                            placeholder="Jelaskan asal/usaha pekerjaan limbah ini...">{{ old('uraian_pekerjaan', $logPenyimpanan->uraian_pekerjaan) }}</textarea>
+                        <p class="mt-2 text-sm" style="color: var(--text-tertiary);">
+                            Deskripsikan asal/usaha pekerjaan limbah ini (maksimal 1000 karakter)
+                        </p>
+                        @error('uraian_pekerjaan')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Dokumen Pendukung -->
@@ -208,7 +198,7 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                                         <p class="font-medium" style="color: var(--text-primary);">{{ $logPenyimpanan->dokumen_original_name ?? basename($logPenyimpanan->dokumen_path) }}</p>
                                         <p class="text-xs">Ukuran: {{ number_format(($logPenyimpanan->dokumen_size ?? 0) / 1024, 2) }} KB · Diunggah {{ optional($logPenyimpanan->dokumen_uploaded_at)->diffForHumans() }}</p>
                                     </div>
-                                    <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
+                                    <a href="{{ \Illuminate\Support\Facades\Storage::url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
                                         <i class="fas fa-download mr-1"></i> Unduh
                                     </a>
                                 </div>

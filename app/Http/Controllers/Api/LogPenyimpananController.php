@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\LogPenyimpananResource;
+use App\Models\ApprovalLog;
 use App\Models\JenisLimbah;
 use App\Models\LogPenyimpananLimbah;
 use App\Support\ApiResponse;
@@ -286,5 +287,68 @@ class LogPenyimpananController extends ApiController
         $log->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function approve(Request $request, $id): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->canApproveLogs()) {
+            return ApiResponse::error('Anda tidak memiliki akses untuk menyetujui log limbah.', 403);
+        }
+
+        $log = LogPenyimpananLimbah::findOrFail($id);
+
+        if ($log->approval_status === 'approved') {
+            return ApiResponse::error('Log limbah sudah disetujui.');
+        }
+
+        $log->update([
+            'approval_status' => 'approved',
+            'approved_by' => $user->user_id,
+            'approved_at' => now(),
+        ]);
+
+        ApprovalLog::create([
+            'log_id' => $log->log_id,
+            'approved_by' => $user->user_id,
+            'action' => 'approve',
+            'rejected_reason' => null,
+        ]);
+
+        return ApiResponse::success((new LogPenyimpananResource($log))->toArray(request()), 'Log limbah berhasil disetujui.');
+    }
+
+    public function reject(Request $request, $id): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->canApproveLogs()) {
+            return ApiResponse::error('Anda tidak memiliki akses untuk menolak log limbah.', 403);
+        }
+
+        $log = LogPenyimpananLimbah::findOrFail($id);
+
+        if ($log->approval_status === 'rejected') {
+            return ApiResponse::error('Log limbah sudah ditolak.');
+        }
+
+        $validated = $request->validate([
+            'rejected_reason' => 'required|string|max:1000',
+        ]);
+
+        $log->update([
+            'approval_status' => 'rejected',
+            'rejected_reason' => $validated['rejected_reason'],
+        ]);
+
+        ApprovalLog::create([
+            'log_id' => $log->log_id,
+            'approved_by' => $user->user_id,
+            'action' => 'reject',
+            'rejected_reason' => $validated['rejected_reason'],
+        ]);
+
+        return ApiResponse::success((new LogPenyimpananResource($log))->toArray(request()), 'Log limbah berhasil ditolak.');
     }
 }

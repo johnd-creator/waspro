@@ -143,13 +143,14 @@ return [
     */
 
     'redis' => [
-
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        'client' => 'predis',
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '_database_'),
             'persistent' => env('REDIS_PERSISTENT', false),
+            'read_timeout' => env('REDIS_READ_TIMEOUT', 60),
+            'write_timeout' => env('REDIS_WRITE_TIMEOUT', 60),
         ],
 
         'default' => [
@@ -164,6 +165,8 @@ return [
             'backoff_base' => env('REDIS_BACKOFF_BASE', 100),
             'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
         ],
+
+
 
         'cache' => [
             'url' => env('REDIS_URL'),

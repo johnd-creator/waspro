@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Waste Management System for Occupational Health and Safety</strong>
+  <strong>Waste Management System for Environment Division</strong>
 </p>
 
 <p align="center">
@@ -18,7 +18,9 @@
 
 ## 📋 Tentang WASPRO
 
-WASPRO (Waste Management System for Occupational Health and Safety) adalah sistem informasi berbasis web yang dirancang untuk mengelola siklus hidup limbah industri sesuai standar Keselamatan dan Kesehatan Kerja (K3). Sistem ini membantu perusahaan dalam:
+WASPRO (Waste Management System for Environment Division) adalah sistem informasi berbasis web untuk mengelola siklus hidup limbah industri (pencatatan, penyimpanan, pengangkutan, dan pelaporan) guna mendukung kepatuhan pengelolaan limbah dan kebutuhan monitoring Divisi Lingkungan.
+
+> **Catatan ruang lingkup:** WASPRO **bukan** aplikasi K3/HSE/safety (bukan untuk manajemen insiden, hazard, permit to work, audit K3, dll).
 
 - 📊 **Monitoring Real-time** – Memantau status limbah, stok, dan pipeline pengangkutan
 - 🗂️ **Manajemen Data Limbah** – Pencatatan jenis, karakteristik, dan sumber limbah
@@ -33,7 +35,7 @@ WASPRO (Waste Management System for Occupational Health and Safety) adalah siste
 - 🌐 **API Hardening** – CORS configurable, throttling bawaan (`throttle:api`), dan middleware logging request untuk audit
 - 📄 **Dokumen Limbah** – Upload manifest/bukti angkut per log, tersimpan di storage publik dan dapat diunduh ulang
 - 🔔 **Notifikasi Otomatis** – Event & listener baru mengirim notifikasi database ke Super Admin/Admin saat dokumen diunggah
-- 📜 **API Docs** – Integrasi Scribe/OpenAPI lengkap dengan Postman collection (`docs/postman/k3-api.postman_collection.json`)
+- 📜 **API Docs** – Integrasi Scribe/OpenAPI lengkap dengan Postman collection (`docs/postman/k3-api.postman_collection.json`, *legacy filename*)
 - 🧱 **Dev Experience** – Seeder & factory diperbarui, workflow GitHub Actions menjalankan API test suite otomatis
 
 ## 🚀 Teknologi Utama
@@ -126,7 +128,7 @@ MAIL_PORT=2525
 MAIL_USERNAME=your_username
 MAIL_PASSWORD=your_password
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@k3limbah.com"
+MAIL_FROM_ADDRESS="noreply@waspro.example"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
@@ -147,22 +149,51 @@ API_RATE_LIMIT_DECAY_SECONDS=60
 
 ## 👥 Akun Default
 
-Seeder bawaan menambahkan akun berikut untuk pengujian:
+Aplikasi ini menyediakan beberapa akun demo untuk development dan testing:
 
-| Role | Username | Password |
-|------|----------|----------|
-| Super Admin | superadmin | password |
-| Admin Unit  | admin       | password |
-| Operator    | operator    | password |
+### Development Environment
+
+| Role | Email | Password | Unit |
+|------|-------|----------|-------|
+| Super Admin | superadmin@waspro.com | password123 | Global (NULL) |
+| Administrator | admin.jakarta@waspro.com | password123 | PT Hidayanto Unit |
+| Supervisor | manager.surabaya@waspro.com | password123 | PT Hidayanto Unit |
+| Operator | operator1.jakarta@waspro.com | password123 | PT Hidayanto Unit |
+| Viewer | viewer.jakarta@waspro.com | password123 | PT Hidayanto Unit |
+
+### Catatan Penting:
+
+1. **Super Admin**
+   - Memiliki akses GLOBAL ke semua unit pembangkit
+   - Tidak terikat ke unit manapun (`unit_id = NULL`)
+   - Hanya boleh ada SATU Super Admin di sistem
+   - Tidak bisa dihapus atau dinonaktifkan
+   - Dapat dikelola hanya oleh Super Admin sendiri
+
+2. **Administrator & Role Lainnya**
+   - Terikat ke unit spesifik (`unit_id` wajib diisi)
+   - Hanya bisa melihat dan mengelola data unit sendiri
+   - Administrator tidak bisa membuat Super Admin baru
+
+3. **Konfigurasi Super Admin**
+   - Super Admin dapat dikonfigurasi melalui environment variables:
+     - `SUPERADMIN_EMAIL`: Email default Super Admin
+     - `SUPERADMIN_PASSWORD`: Password default
+     - `SUPERADMIN_NAME`: Nama lengkap default
+   - Jika tidak di-set, akan menggunakan nilai default dari seeder
 
 Gunakan akun ini hanya di lingkungan pengembangan.
 
 ## 📚 Dokumentasi Tambahan
 
-- `docs/user-manual.md` – Panduan pengguna (UI & fitur)
-- `docs/api.md` – Referensi endpoint API
-- `docs/deployment.md` – Panduan deployment produksi
-- `CHANGELOG.md` – Riwayat perilisan (termasuk v0.1.4)
+- `prd_app.md` – PRD (visi, role, dan scope aplikasi)
+- `DEVELOPMENT_STRUCTURE.md` – Struktur project & konvensi pengembangan
+- `docs/api/mobile-guide.md` – Panduan API untuk mobile (Flutter)
+- `docs/openapi/k3-api.yaml` – OpenAPI spec (*legacy filename*)
+- `docs/development/backend.md` – Catatan perubahan backend
+- `docs/development/security.md` – Catatan perubahan security
+- `docs/development/testing.md` – Catatan testing
+- `CHANGELOG.md` – Riwayat perilisan
 
 ## 🔁 Alur Git & Rilis
 
@@ -218,84 +249,5 @@ Proyek ini berlisensi MIT – lihat [LICENSE](LICENSE).
 ---
 
 <p align="center">
-  Made with ❤️ for better waste management and occupational safety
+  Made with ❤️ for better waste management and environmental compliance
 </p>
-
-graph TD
-    %% Definisi Swimlane berdasarkan Role dan Penanggung Jawab (PJ)
-    subgraph Pemicu ["⚡ Pemicu Insiden"]
-        A1[Sistem NMS mendeteksi Anomali]
-        A2[Pengguna melaporkan Gangguan]
-    end
-
-    subgraph NOC ["👤 Role: Staff IT (NOC/Operator) | PJ: Assistant Manager IT"]
-        B1(Monitoring & Deteksi Alert Real-time)
-        B2[Mengirim Alert/Notifikasi]
-    end
-
-    subgraph Helpdesk ["👤 Role: Staff IT (Helpdesk) | PJ: Assistant Manager IT"]
-        C1(Menerima Alert/Laporan & Registrasi Tiket)
-        C2{Klasifikasi & Prioritas?}
-        C3a[Masalah Sederhana / Panduan User]
-        C3b[Teruskan ke Technical Support]
-        C4(Verifikasi dengan Pengguna/NMS)
-        C5{Verifikasi Berhasil?}
-        C6[Dokumentasi ke Knowledge Base & Tutup Tiket]
-    end
-
-    subgraph TechSupport ["👤 Role: Staff IT (Technical Support) | PJ: Assistant Manager IT"]
-        D1(Investigasi & Diagnosis Root Cause)
-        D2[Lakukan Penanganan Awal misal: Restart]
-        D3{Masalah Terselesaikan?}
-        D4[Eskalasi ke Tingkat Lanjut]
-        D5(Resolusi & Pemulihan Sistem)
-    end
-
-    subgraph Specialist ["👤 Role: Officer IT (Senior Specialist)/Vendor | PJ: Manager IT"]
-        E1(Investigasi Mendalam & Penanganan Teknis Rumit)
-        E2{Masalah Terselesaikan?}
-    end
-
-    subgraph Management ["👥 Role: Assistant Manager & Manager IT"]
-        F1(Review Insiden Bulanan & Pembuatan Laporan oleh Ast. Mgr)
-        F2[Review Akhir oleh Manager IT]
-    end
-
-    %% Alur Proses
-    A1 -->|Alert Otomatis| B1
-    B1 --> B2
-    B2 -->|Alert| C1
-    A2 -->|Laporan Langsung| C1
-
-    C1 --> C2
-    C2 -->|Minor/Pertanyaan| C3a
-    C2 -->|Major/Kritis/Teknis| C3b
-    
-    C3a --> C4
-    C3b --> D1
-
-    D1 --> D2
-    D2 --> D3
-    D3 -->|Ya| D5
-    D3 -->|Tidak, Rumit| D4
-
-    D4 --> E1
-    E1 --> E2
-    E2 -->|Ya| D5
-    E2 -->|Tidak| E1
-
-    D5 -->|Sistem Pulih| C4
-    C4 --> C5
-    C5 -->|Ya, Normal| C6
-    C5 -->|Tidak, Masih Bermasalah| D1
-
-    C6 -->|Tiket Ditutup| F1
-    F1 --> F2
-
-    %% Styling untuk kejelasan
-    classDef process fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef decision fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef terminator fill:#9f9,stroke:#333,stroke-width:2px;
-    
-    class C2,D3,C5,E2 decision;
-    class A1,A2,C6,F2 process;

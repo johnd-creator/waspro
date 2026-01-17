@@ -9,47 +9,18 @@ class ApplicationSettingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * 
+     * NOTE: This seeder contains ONLY actively used settings.
+     * Do not add new settings without implementing them in code first.
      */
     public function run(): void
     {
         $settings = [
-            // General Application Settings
+            // =====================================================
+            // SECURITY SETTINGS (Used in LoginController)
+            // =====================================================
             [
-                'key' => 'app.name',
-                'value' => 'WASPRO - Waste Management System',
-                'type' => 'string',
-                'category' => 'general',
-                'description' => 'Nama aplikasi yang ditampilkan di header dan title',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'app.version',
-                'value' => '1.0.0',
-                'type' => 'string',
-                'category' => 'general',
-                'description' => 'Versi aplikasi saat ini',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'app.maintenance_mode',
-                'value' => false,
-                'type' => 'boolean',
-                'category' => 'general',
-                'description' => 'Mode maintenance untuk aplikasi',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'app.timezone',
-                'value' => 'Asia/Jakarta',
-                'type' => 'string',
-                'category' => 'general',
-                'description' => 'Timezone default aplikasi',
-                'is_active' => true,
-            ],
-
-            // User Management Settings
-            [
-                'key' => 'user.max_login_attempts',
+                'key' => 'security.max_login_attempts',
                 'value' => 5,
                 'type' => 'integer',
                 'category' => 'security',
@@ -57,7 +28,7 @@ class ApplicationSettingSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'key' => 'user.lockout_duration',
+                'key' => 'security.lockout_duration_minutes',
                 'value' => 15,
                 'type' => 'integer',
                 'category' => 'security',
@@ -65,25 +36,31 @@ class ApplicationSettingSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'key' => 'user.password_min_length',
+                'key' => 'security.password_min_length',
                 'value' => 8,
                 'type' => 'integer',
                 'category' => 'security',
                 'description' => 'Panjang minimum password',
                 'is_active' => true,
             ],
+
+            // =====================================================
+            // SYSTEM SETTINGS (Used in CheckMaintenanceMode)
+            // =====================================================
             [
-                'key' => 'user.require_email_verification',
-                'value' => true,
+                'key' => 'system.maintenance_mode',
+                'value' => false,
                 'type' => 'boolean',
-                'category' => 'security',
-                'description' => 'Wajibkan verifikasi email untuk pengguna baru',
+                'category' => 'system',
+                'description' => 'Mode maintenance untuk aplikasi',
                 'is_active' => true,
             ],
 
-            // File Upload Settings
+            // =====================================================
+            // UPLOAD SETTINGS (Used in LogPenyimpananLimbahController)
+            // =====================================================
             [
-                'key' => 'upload.max_file_size',
+                'key' => 'upload.max_file_size_kb',
                 'value' => 10240,
                 'type' => 'integer',
                 'category' => 'upload',
@@ -98,96 +75,18 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Ekstensi file yang diizinkan untuk upload',
                 'is_active' => true,
             ],
-
-            // Notification Settings
             [
-                'key' => 'notification.email_enabled',
+                'key' => 'upload.require_document_for_transport',
                 'value' => true,
                 'type' => 'boolean',
-                'category' => 'notification',
-                'description' => 'Aktifkan notifikasi email',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'notification.admin_email',
-                'value' => 'admin@waspro.com',
-                'type' => 'string',
-                'category' => 'notification',
-                'description' => 'Email administrator untuk notifikasi sistem',
+                'category' => 'upload',
+                'description' => 'Wajibkan bukti dokumen saat mengubah status menjadi Diangkut',
                 'is_active' => true,
             ],
 
-            // Data Management Settings
-            [
-                'key' => 'data.pagination_limit',
-                'value' => 15,
-                'type' => 'integer',
-                'category' => 'data',
-                'description' => 'Jumlah data per halaman pada tabel',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'data.export_limit',
-                'value' => 1000,
-                'type' => 'integer',
-                'category' => 'data',
-                'description' => 'Maksimal data yang dapat diekspor sekaligus',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'data.backup_retention_days',
-                'value' => 30,
-                'type' => 'integer',
-                'category' => 'data',
-                'description' => 'Lama penyimpanan backup data dalam hari',
-                'is_active' => true,
-            ],
-
-            // Waste Management Specific Settings
-            [
-                'key' => 'waste.default_unit',
-                'value' => 'kg',
-                'type' => 'string',
-                'category' => 'waste',
-                'description' => 'Unit default untuk pengukuran limbah',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'waste.alert_threshold',
-                'value' => 80,
-                'type' => 'integer',
-                'category' => 'waste',
-                'description' => 'Persentase threshold untuk alert kapasitas limbah',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'waste.categories',
-                'value' => json_encode(['B3', 'Non-B3', 'Organik', 'Anorganik']),
-                'type' => 'json',
-                'category' => 'waste',
-                'description' => 'Kategori limbah yang tersedia',
-                'is_active' => true,
-            ],
-
-            // Report Settings
-            [
-                'key' => 'report.auto_generate',
-                'value' => true,
-                'type' => 'boolean',
-                'category' => 'report',
-                'description' => 'Otomatis generate laporan bulanan',
-                'is_active' => true,
-            ],
-            [
-                'key' => 'report.default_format',
-                'value' => 'pdf',
-                'type' => 'string',
-                'category' => 'report',
-                'description' => 'Format default untuk laporan',
-                'is_active' => true,
-            ],
-
-            // Expiry Settings (unify to application_settings)
+            // =====================================================
+            // EXPIRY SETTINGS (Used in LogPenyimpananLimbah, NotificationController, DashboardController)
+            // =====================================================
             [
                 'key' => 'critical_days',
                 'value' => 7,
@@ -204,6 +103,118 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Jumlah hari untuk status peringatan sebelum kadaluarsa',
                 'is_active' => true,
             ],
+            [
+                'key' => 'expiry.urgent_days',
+                'value' => 3,
+                'type' => 'integer',
+                'category' => 'expiry',
+                'description' => 'Jumlah hari untuk status urgent sebelum kadaluarsa',
+                'is_active' => true,
+            ],
+
+            // =====================================================
+            // WORKFLOW SETTINGS (Used in LogPenyimpananLimbahController, CleanupPendingLogs)
+            // =====================================================
+            [
+                'key' => 'workflow.approval_required',
+                'value' => true,
+                'type' => 'boolean',
+                'category' => 'workflow',
+                'description' => 'Wajibkan persetujuan supervisor untuk log limbah baru',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'workflow.auto_approve_operator',
+                'value' => false,
+                'type' => 'boolean',
+                'category' => 'workflow',
+                'description' => 'Otomatis setujui log dari operator terpercaya',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'workflow.approval_timeout_hours',
+                'value' => 72,
+                'type' => 'integer',
+                'category' => 'workflow',
+                'description' => 'Batasan waktu (jam) sebelum log pending otomatis ditolak',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'workflow.require_rejection_reason',
+                'value' => true,
+                'type' => 'boolean',
+                'category' => 'workflow',
+                'description' => 'Wajibkan alasan penolakan saat menolak log',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'workflow.edit_approved_logs',
+                'value' => false,
+                'type' => 'boolean',
+                'category' => 'workflow',
+                'description' => 'Izinkan pengeditan log yang sudah disetujui',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'workflow.delete_approved_logs',
+                'value' => false,
+                'type' => 'boolean',
+                'category' => 'workflow',
+                'description' => 'Izinkan penghapusan log yang sudah disetujui',
+                'is_active' => true,
+            ],
+
+            // =====================================================
+            // REPORT SETTINGS (Used in MonthlyReportGenerator, LogPenyimpananLimbahController)
+            // =====================================================
+            [
+                'key' => 'report.default_format',
+                'value' => 'pdf',
+                'type' => 'string',
+                'category' => 'report',
+                'description' => 'Format default untuk laporan',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'report.auto_generate_monthly',
+                'value' => true,
+                'type' => 'boolean',
+                'category' => 'report',
+                'description' => 'Otomatis generate laporan bulanan',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'report.monthly_generation_day',
+                'value' => 1,
+                'type' => 'integer',
+                'category' => 'report',
+                'description' => 'Tanggal generate laporan bulanan (1-28)',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'report.max_export_rows',
+                'value' => 10000,
+                'type' => 'integer',
+                'category' => 'report',
+                'description' => 'Maksimal baris data untuk export',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'report.include_charts',
+                'value' => true,
+                'type' => 'boolean',
+                'category' => 'report',
+                'description' => 'Sertakan grafik dalam laporan PDF',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'report.cache_duration_minutes',
+                'value' => 60,
+                'type' => 'integer',
+                'category' => 'report',
+                'description' => 'Durasi cache data laporan (menit)',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {
@@ -212,5 +223,9 @@ class ApplicationSettingSeeder extends Seeder
                 $setting
             );
         }
+
+        // Clean up old/unused settings from previous versions
+        $activeKeys = array_column($settings, 'key');
+        ApplicationSetting::whereNotIn('key', $activeKeys)->delete();
     }
 }

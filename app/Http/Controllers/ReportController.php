@@ -21,7 +21,7 @@ class ReportController extends Controller
      */
     protected function userIsSuperAdmin($user): bool
     {
-        if (! $user) {
+        if (!$user) {
             return false;
         }
 
@@ -44,7 +44,7 @@ class ReportController extends Controller
     public function monthly(Request $request)
     {
         $request->validate([
-            'year' => 'nullable|integer|min:2020|max:'.(date('Y') + 1),
+            'year' => 'nullable|integer|min:2020|max:' . (date('Y') + 1),
             'month' => 'nullable|integer|min:1|max:12',
             'unit_id' => 'nullable|exists:unit_pembangkit,unit_id',
             'format' => 'nullable|in:view,pdf,excel',
@@ -57,7 +57,7 @@ class ReportController extends Controller
         $format = $request->route('format') ?? $request->get('format', 'view');
 
         // Cache key for this report
-        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_".Auth::user()->unit_id;
+        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_" . Auth::user()->unit_id;
 
         $data = Cache::remember($cacheKey, 3600, function () use ($year, $month, $unitId) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
@@ -97,7 +97,7 @@ class ReportController extends Controller
             $topWasteTypes = $logs->groupBy('kode_limbah')
                 ->map(function ($wasteLogs) {
                     return [
-                        'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
+                        'nama_limbah' => $wasteLogs->first()->jenisLimbah?->nama_limbah ?? 'Unknown',
                         'total_quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
                         'total_logs' => $wasteLogs->count(),
                     ];
@@ -110,7 +110,7 @@ class ReportController extends Controller
                 ->groupBy('perusahaan_id')
                 ->map(function ($companyLogs) {
                     return [
-                        'nama_perusahaan' => $companyLogs->first()->perusahaanPenghasil->nama_perusahaan ?? 'Unknown',
+                        'nama_perusahaan' => $companyLogs->first()->perusahaanPenghasil?->nama_perusahaan ?? 'Unknown',
                         'total_quantity' => $companyLogs->sum('jumlah_limbah_masuk'),
                         'total_logs' => $companyLogs->count(),
                     ];
@@ -119,8 +119,15 @@ class ReportController extends Controller
                 ->take(10);
 
             return compact(
-                'totalLogs', 'totalWaste', 'totalTransported', 'wasteStored', 'wasteExpired',
-                'monthlyBreakdown', 'topWasteTypes', 'topCompanies', 'logs'
+                'totalLogs',
+                'totalWaste',
+                'totalTransported',
+                'wasteStored',
+                'wasteExpired',
+                'monthlyBreakdown',
+                'topWasteTypes',
+                'topCompanies',
+                'logs'
             );
         });
 
@@ -139,11 +146,11 @@ class ReportController extends Controller
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.monthly-pdf', $data);
 
-            return $pdf->download('monthly-report-'.($month ? $data['monthName'].'-' : '').$year.'.pdf');
+            return $pdf->download('monthly-report-' . ($month ? $data['monthName'] . '-' : '') . $year . '.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\MonthlyReportExport($data), 'monthly-report-'.($month ? $data['monthName'].'-' : '').$year.'.xlsx');
+            return Excel::download(new \App\Exports\MonthlyReportExport($data), 'monthly-report-' . ($month ? $data['monthName'] . '-' : '') . $year . '.xlsx');
         }
 
         return view('reports.monthly', $data);
@@ -167,7 +174,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "status_report_{$status}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+        $cacheKey = "status_report_{$status}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
 
         $data = Cache::remember($cacheKey, 1800, function () use ($status, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -224,11 +231,11 @@ class ReportController extends Controller
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.status-pdf', $data);
 
-            return $pdf->download('status-report-'.($status ?: 'all').'.pdf');
+            return $pdf->download('status-report-' . ($status ?: 'all') . '.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\StatusReportExport($data), 'status-report-'.($status ?: 'all').'.xlsx');
+            return Excel::download(new \App\Exports\StatusReportExport($data), 'status-report-' . ($status ?: 'all') . '.xlsx');
         }
 
         return view('reports.status', $data);
@@ -252,7 +259,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "waste_type_report_{$jenisLimbahId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+        $cacheKey = "waste_type_report_{$jenisLimbahId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
 
         $data = Cache::remember($cacheKey, 1800, function () use ($jenisLimbahId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -274,7 +281,7 @@ class ReportController extends Controller
             // Waste type distribution
             $wasteTypeDistribution = $logs->groupBy('kode_limbah')->map(function ($group) {
                 return [
-                    'nama_limbah' => $group->first()->jenisLimbah->nama_limbah ?? 'Unknown',
+                    'nama_limbah' => $group->first()->jenisLimbah?->nama_limbah ?? 'Unknown',
                     'total_quantity' => $group->sum('jumlah_limbah_masuk'),
                     'total_logs' => $group->count(),
                 ];
@@ -295,11 +302,11 @@ class ReportController extends Controller
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.waste-type-pdf', $data);
 
-            return $pdf->download('waste-type-report-'.($jenisLimbahId ?: 'all').'.pdf');
+            return $pdf->download('waste-type-report-' . ($jenisLimbahId ?: 'all') . '.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\WasteTypeReportExport($data), 'waste-type-report-'.($jenisLimbahId ?: 'all').'.xlsx');
+            return Excel::download(new \App\Exports\WasteTypeReportExport($data), 'waste-type-report-' . ($jenisLimbahId ?: 'all') . '.xlsx');
         }
 
         return view('reports.waste-type', $data);
@@ -323,7 +330,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "company_report_{$perusahaanId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+        $cacheKey = "company_report_{$perusahaanId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
 
         $data = Cache::remember($cacheKey, 1800, function () use ($perusahaanId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -359,7 +366,7 @@ class ReportController extends Controller
                         })->count()),
                         'waste_types' => $companyLogs->groupBy('kode_limbah')->map(function ($wasteLogs) {
                             return [
-                                'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
+                                'nama_limbah' => $wasteLogs->first()->jenisLimbah?->nama_limbah ?? 'Unknown',
                                 'quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
                                 'logs_count' => $wasteLogs->count(),
                             ];
@@ -384,11 +391,11 @@ class ReportController extends Controller
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.company-pdf', $data);
 
-            return $pdf->download('company-report-'.($perusahaanId ?: 'all').'.pdf');
+            return $pdf->download('company-report-' . ($perusahaanId ?: 'all') . '.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\CompanyReportExport($data), 'company-report-'.($perusahaanId ?: 'all').'.xlsx');
+            return Excel::download(new \App\Exports\CompanyReportExport($data), 'company-report-' . ($perusahaanId ?: 'all') . '.xlsx');
         }
 
         return view('reports.company', $data);
@@ -415,11 +422,11 @@ class ReportController extends Controller
         // Only Super Admin can see all units
         $user = Auth::user();
         $isSuper = $this->userIsSuperAdmin($user);
-        if (! $isSuper && $unitId && $user && $unitId != $user->unit_id) {
+        if (!$isSuper && $unitId && $user && $unitId != $user->unit_id) {
             abort(403, 'Unauthorized access to unit data.');
         }
 
-        $cacheKey = "unit_report_{$unitId}_".md5($dateFrom.$dateTo).'_'.Auth::user()->unit_id;
+        $cacheKey = "unit_report_{$unitId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
 
         $data = Cache::remember($cacheKey, 1800, function () use ($unitId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -457,7 +464,7 @@ class ReportController extends Controller
                         }),
                         'waste_types' => $unitLogs->groupBy('kode_limbah')->map(function ($wasteLogs) {
                             return [
-                                'nama_limbah' => $wasteLogs->first()->jenisLimbah->nama_limbah ?? 'Unknown',
+                                'nama_limbah' => $wasteLogs->first()->jenisLimbah?->nama_limbah ?? 'Unknown',
                                 'quantity' => $wasteLogs->sum('jumlah_limbah_masuk'),
                                 'logs_count' => $wasteLogs->count(),
                             ];
@@ -486,11 +493,11 @@ class ReportController extends Controller
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('reports.unit-pdf', $data);
 
-            return $pdf->download('unit-report-'.($unitId ?: 'all').'.pdf');
+            return $pdf->download('unit-report-' . ($unitId ?: 'all') . '.pdf');
         }
 
         if ($format === 'excel') {
-            return Excel::download(new \App\Exports\UnitReportExport($data), 'unit-report-'.($unitId ?: 'all').'.xlsx');
+            return Excel::download(new \App\Exports\UnitReportExport($data), 'unit-report-' . ($unitId ?: 'all') . '.xlsx');
         }
 
         return view('reports.unit', $data);
@@ -508,14 +515,14 @@ class ReportController extends Controller
         $ok = $this->clearReportCache($unitId, $isSuper);
 
         if ($request->expectsJson()) {
-            if (! $ok) {
+            if (!$ok) {
                 return response()->json(['success' => false, 'error' => 'Store cache tidak mendukung penghapusan parsial, hubungi admin.'], 422);
             }
 
             return response()->json(['success' => true]);
         }
 
-        if (! $ok) {
+        if (!$ok) {
             return redirect()->back()->with('error', 'Gagal menghapus cache: store tidak mendukung penghapusan parsial.');
         }
 
@@ -550,10 +557,10 @@ class ReportController extends Controller
                 // LIKE pattern + optional unit suffix
                 $like = $pattern;
                 if ($unitId !== null) {
-                    $like .= '_'.$unitId; // contoh: monthly_report_%_5
+                    $like .= '_' . $unitId; // contoh: monthly_report_%_5
                 }
                 // Prefix + pattern
-                $likeWithPrefix = $prefix ? $prefix.$like : $like;
+                $likeWithPrefix = $prefix ? $prefix . $like : $like;
                 DB::table($table)->where('key', 'like', $likeWithPrefix)->delete();
             }
 

@@ -33,7 +33,7 @@ class UpdateWasteExpiryStatus extends Command
             // Get all waste logs that are still stored (not transported yet)
             $query = LogPenyimpananLimbah::whereIn('status_log', ['Tersimpan']);
 
-            if (! $this->option('force')) {
+            if (!$this->option('force')) {
                 // Only update records that don't have expiry status set or need recalculation
                 $query->where(function ($q) {
                     $q->whereNull('expiry_status')
@@ -64,7 +64,7 @@ class UpdateWasteExpiryStatus extends Command
                     $updatedCount++;
                 } catch (\Exception $e) {
                     $errorCount++;
-                    Log::error('Failed to update expiry status for waste log ID: '.$wasteLog->log_id, [
+                    Log::error('Failed to update expiry status for waste log ID: ' . $wasteLog->log_id, [
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ]);
@@ -92,10 +92,13 @@ class UpdateWasteExpiryStatus extends Command
                 'forced' => $this->option('force'),
             ]);
 
+            // Update last run timestamp for scheduler frequency control
+            \Illuminate\Support\Facades\Cache::put('expiry_check_last_run', now());
+
             return Command::SUCCESS;
 
         } catch (\Exception $e) {
-            $this->error('Failed to update waste expiry status: '.$e->getMessage());
+            $this->error('Failed to update waste expiry status: ' . $e->getMessage());
             Log::error('Waste expiry status update failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),

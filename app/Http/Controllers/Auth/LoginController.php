@@ -29,6 +29,26 @@ class LoginController extends Controller
     protected $redirectTo = '/home';
 
     /**
+     * Get the maximum number of attempts to allow.
+     *
+     * @return int
+     */
+    public function maxAttempts()
+    {
+        return \App\Models\ApplicationSetting::getValue('security.max_login_attempts', 5);
+    }
+
+    /**
+     * Get the number of minutes to throttle for.
+     *
+     * @return int
+     */
+    public function decayMinutes()
+    {
+        return \App\Models\ApplicationSetting::getValue('security.lockout_duration_minutes', 15);
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -70,7 +90,8 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {
         return $this->guard()->attempt(
-            $this->credentials($request), $request->boolean('remember')
+            $this->credentials($request),
+            $request->boolean('remember')
         );
     }
 

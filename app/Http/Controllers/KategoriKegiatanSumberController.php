@@ -12,15 +12,14 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function index()
     {
-        $kategoriKegiatanSumber = KategoriKegiatanSumber::withCount('logPenyimpananLimbah')
-            ->orderBy('nama_kategori')
+        $kategoriKegiatanSumber = KategoriKegiatanSumber::orderBy('nama_kategori')
             ->paginate(15);
 
         return view('kategori-kegiatan-sumber.index', compact('kategoriKegiatanSumber'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
@@ -47,13 +46,11 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function show(KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
-        $kategoriKegiatanSumber->load('logPenyimpananLimbah');
-
         return view('kategori-kegiatan-sumber.show', compact('kategoriKegiatanSumber'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing the specified resource.
      */
     public function edit(KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
@@ -80,12 +77,6 @@ class KategoriKegiatanSumberController extends Controller
      */
     public function destroy(KategoriKegiatanSumber $kategoriKegiatanSumber)
     {
-        // Check if this category is being used by any log penyimpanan
-        if ($kategoriKegiatanSumber->logPenyimpananLimbah()->count() > 0) {
-            return redirect()->route('kategori-kegiatan-sumber.index')
-                ->with('error', 'Kategori kegiatan sumber tidak dapat dihapus karena masih digunakan dalam log penyimpanan limbah.');
-        }
-
         $kategoriKegiatanSumber->delete();
 
         return redirect()->route('kategori-kegiatan-sumber.index')

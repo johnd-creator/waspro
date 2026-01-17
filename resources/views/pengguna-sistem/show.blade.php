@@ -46,7 +46,16 @@
                             <i class="fas fa-envelope text-sm mr-2"></i>{{ $penggunaSistem->email_address }}
                         </p>
                         <p style="color: var(--text-secondary);" class="flex items-center justify-center md:justify-start">
-                            <i class="fas fa-building text-sm mr-2"></i>{{ $penggunaSistem->unitPembangkit->nama_unit ?? 'N/A' }}
+                            @if($penggunaSistem->unit_id === null && $penggunaSistem->peranPengguna()->where('nama_peran', 'Super Admin')->exists())
+                                <i class="fas fa-globe text-sm mr-2" style="color: var(--accent-primary);"></i>
+                                <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                    Global (Super Admin)
+                                </span>
+                            @elseif($penggunaSistem->unitPembangkit)
+                                <i class="fas fa-building text-sm mr-2"></i>{{ $penggunaSistem->unitPembangkit->nama_unit }}
+                            @else
+                                <i class="fas fa-building text-sm mr-2"></i>N/A
+                            @endif
                         </p>
                     </div>
                     
@@ -97,7 +106,17 @@
                         </div>
                         <div class="detail-row">
                             <div class="detail-label">Unit Pembangkit</div>
-                            <div class="detail-value">{{ $penggunaSistem->unitPembangkit->nama_unit ?? 'N/A' }}</div>
+                            <div class="detail-value">
+                                @if($penggunaSistem->unit_id === null && $penggunaSistem->peranPengguna()->where('nama_peran', 'Super Admin')->exists())
+                                    <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                        <i class="fas fa-globe mr-1"></i>Global (Super Admin)
+                                    </span>
+                                @elseif($penggunaSistem->unitPembangkit)
+                                    {{ $penggunaSistem->unitPembangkit->nama_unit }}
+                                @else
+                                    N/A
+                                @endif
+                            </div>
                         </div>
                         <div class="detail-row">
                             <div class="detail-label">Alamat Unit</div>

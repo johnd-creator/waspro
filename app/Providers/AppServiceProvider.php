@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Password;
+use App\Models\ApplicationSetting;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -32,6 +36,17 @@ class AppServiceProvider extends ServiceProvider
             WasteDocumentUploaded::class,
             [SendWasteDocumentNotification::class, 'handle']
         );
+
+        if (Schema::hasTable('application_settings')) {
+            try {
+                $minLength = ApplicationSetting::getValue('security.password_min_length', 8);
+                Password::defaults(function () use ($minLength) {
+                    return Password::min($minLength);
+                });
+            } catch (\Throwable $e) {
+                // Fail silently during setup/migrations
+            }
+        }
     }
 
     /**

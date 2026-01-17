@@ -16,7 +16,7 @@ class PeranPenggunaController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(Request $request)
     {
@@ -26,7 +26,7 @@ class PeranPenggunaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
@@ -53,9 +53,8 @@ class PeranPenggunaController extends Controller
 
         $validated = $this->validateRequest($request, $rules, $messages);
 
-        // Jika validateRequest mengembalikan response redirect (HTML) atau JSON error array, kembalikan apa adanya
         if (! is_array($validated)) {
-            return $validated; // redirect response pada mode web
+            return $validated;
         }
         if ($request->expectsJson() && array_key_exists('success', $validated) && $validated['success'] === false) {
             return response()->json($validated, 422);
@@ -76,34 +75,28 @@ class PeranPenggunaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display specified resource.
      */
-    public function show($peran_id)
+    public function show(PeranPengguna $peranPengguna)
     {
-        $peranPengguna = PeranPengguna::findOrFail($peran_id);
-
         return view('peran-pengguna.show', compact('peranPengguna'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing specified resource.
      */
-    public function edit($peran_id)
+    public function edit(PeranPengguna $peranPengguna)
     {
-        $peranPengguna = PeranPengguna::findOrFail($peran_id);
-
         return view('peran-pengguna.edit', compact('peranPengguna'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update specified resource in storage.
      */
-    public function update(Request $request, $peran_id)
+    public function update(Request $request, PeranPengguna $peranPengguna)
     {
-        $peranPengguna = PeranPengguna::findOrFail($peran_id);
-
         $rules = [
-            'nama_peran' => 'required|string|max:255|unique:peran_pengguna,nama_peran,'.$peran_id.',peran_id',
+            'nama_peran' => 'required|string|max:255|unique:peran_pengguna,nama_peran,'.$peranPengguna->peran_id.',peran_id',
             'deskripsi' => 'nullable|string|max:1000',
             'is_active' => 'boolean',
         ];
@@ -117,9 +110,8 @@ class PeranPenggunaController extends Controller
 
         $validated = $this->validateRequest($request, $rules, $messages);
 
-        // Jika validateRequest mengembalikan response redirect (HTML) atau JSON error array, kembalikan apa adanya
         if (! is_array($validated)) {
-            return $validated; // redirect response pada mode web
+            return $validated;
         }
         if ($request->expectsJson() && array_key_exists('success', $validated) && $validated['success'] === false) {
             return response()->json($validated, 422);
@@ -140,13 +132,10 @@ class PeranPenggunaController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove specified resource from storage.
      */
-    public function destroy($peran_id)
+    public function destroy(PeranPengguna $peranPengguna)
     {
-        $peranPengguna = PeranPengguna::findOrFail($peran_id);
-
-        // Check if role is being used by users
         if ($peranPengguna->penggunaSistem()->count() > 0) {
             return $this->errorResponse(
                 'Peran pengguna tidak dapat dihapus karena masih digunakan oleh pengguna.',
@@ -165,11 +154,10 @@ class PeranPenggunaController extends Controller
     }
 
     /**
-     * Toggle the active status of the role.
+     * Toggle active status of role.
      */
-    public function toggleStatus($peran_id)
+    public function toggleStatus(PeranPengguna $peranPengguna)
     {
-        $peranPengguna = PeranPengguna::findOrFail($peran_id);
         $peranPengguna->toggleStatus();
 
         $status = $peranPengguna->is_active ? 'diaktifkan' : 'dinonaktifkan';

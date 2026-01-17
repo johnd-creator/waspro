@@ -8,15 +8,16 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api: __DIR__.'/../routes/api.php',
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
+        api: __DIR__ . '/../routes/api.php',
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Global middleware
         $middleware->web(append: [
             \App\Http\Middleware\LogRequests::class,
+            \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
 
         $middleware->api(
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'unit.access' => \App\Http\Middleware\UnitAccessMiddleware::class,
             'log.requests' => \App\Http\Middleware\LogRequests::class,
+            'maintenance' => \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

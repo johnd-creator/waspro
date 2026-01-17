@@ -126,11 +126,11 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="unit_id" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Unit Pembangkit <span style="color: var(--danger-primary);">*</span></label>
-                            <select class="form-select @error('unit_id') is-invalid @enderror"
-                                    id="unit_id" name="unit_id" required
-                                    style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
+                            <div class="col-md-6 mb-3" id="unit-field">
+                                <label for="unit_id" style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Unit Pembangkit <span id="unit-required" style="color: var(--danger-primary);">*</span></label>
+                                <select class="form-select @error('unit_id') is-invalid @enderror"
+                                        id="unit_id" name="unit_id" required
+                                        style="background: var(--input-bg); border: 1px solid var(--border-primary); color: var(--input-text); border-radius: 0.5rem; padding: 0.75rem;">
                                 <option value="">Pilih Unit Pembangkit</option>
                                 @foreach($unitList as $unit)
                                     <option value="{{ $unit->unit_id }}"
@@ -149,9 +149,10 @@
                                 <div style="border: 1px solid var(--border-primary); border-radius: 0.5rem; padding: 0.75rem; background: var(--input-bg);" class="@error('peran_ids') border-danger @enderror">
                                     @foreach($peranList as $peran)
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input peran-checkbox" type="checkbox"
                                                    id="peran_{{ $peran->peran_id }}"
                                                    name="peran_ids[]" value="{{ $peran->peran_id }}"
+                                                   data-peran="{{ $peran->nama_peran }}"
                                                    {{ in_array($peran->peran_id, old('peran_ids', $userPeranIds)) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="peran_{{ $peran->peran_id }}" style="color: var(--text-primary);">
                                                 <strong>{{ $peran->nama_peran }}</strong>
@@ -284,6 +285,40 @@ function togglePassword(fieldId) {
         icon.classList.add('fa-eye');
     }
 }
+
+function handleSuperAdminRole() {
+    const checkboxes = document.querySelectorAll('.peran-checkbox');
+    const unitField = document.getElementById('unit-field');
+    const unitRequired = document.getElementById('unit-required');
+    const unitInput = document.getElementById('unit_id');
+    let isSuperAdmin = false;
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked && checkbox.dataset.peran === 'Super Admin') {
+            isSuperAdmin = true;
+        }
+    });
+
+    if (isSuperAdmin) {
+        unitField.style.display = 'none';
+        unitInput.removeAttribute('required');
+        unitRequired.classList.add('d-none');
+        unitInput.value = '';
+    } else {
+        unitField.style.display = 'block';
+        unitInput.setAttribute('required', 'required');
+        unitRequired.classList.remove('d-none');
+    }
+}
+
+// Handle Super Admin role on page load and change
+document.addEventListener('DOMContentLoaded', function() {
+    handleSuperAdminRole();
+});
+
+document.querySelectorAll('.peran-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', handleSuperAdminRole);
+});
 
 // Validasi form sebelum submit
 document.querySelector('form').addEventListener('submit', function(e) {

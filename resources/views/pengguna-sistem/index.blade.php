@@ -76,7 +76,14 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium" style="color: var(--text-primary);">
-                                @if($user->unitPembangkit)
+                                @if($user->unit_id === null && $user->peranPengguna()->where('nama_peran', 'Super Admin')->exists())
+                                    <div class="flex items-center">
+                                        <i class="fas fa-globe mr-2" style="color: var(--accent-primary);"></i>
+                                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                            Global (Super Admin)
+                                        </span>
+                                    </div>
+                                @elseif($user->unitPembangkit)
                                     <div class="flex items-center">
                                         <i class="fas fa-building mr-2" style="color: var(--text-tertiary);"></i>
                                         {{ $user->unitPembangkit->nama_unit }}

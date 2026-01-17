@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class AppSetting extends Model
 {
+    use AuditTrait;
+
     protected $fillable = [
         'key',
         'value',

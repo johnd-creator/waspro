@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             KategoriKegiatanSumberSeeder::class,
             PerusahaanPenghasilSeeder::class,
             JenisLimbahSeeder::class,
+            JenisLimbahFakeSeeder::class,
             LogPenyimpananLimbahSeeder::class,
             ApplicationSettingSeeder::class,
         ]);

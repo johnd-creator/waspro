@@ -19,10 +19,10 @@ class KategoriKegiatanSumber extends Model
     ];
 
     /**
-     * Get all log penyimpanan limbah for this kategori
+     * Get all jenis limbah for this kategori
      */
-    public function logPenyimpananLimbah(): HasMany
+    public function jenisLimbah(): HasMany
     {
-        return $this->hasMany(LogPenyimpananLimbah::class, 'detail_sumber_limbah', 'nama_kategori');
+        return $this->hasMany(JenisLimbah::class, 'kategori_id', 'kategori_id');
     }
 }

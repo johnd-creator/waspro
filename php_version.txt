@@ -1,0 +1,4 @@
+PHP 8.4.16 (cli) (built: Dec 16 2025 16:03:34) (NTS gcc x86_64)
+Copyright (c) The PHP Group
+Built by Fedora Project
+Zend Engine v4.4.16, Copyright (c) Zend Technologies

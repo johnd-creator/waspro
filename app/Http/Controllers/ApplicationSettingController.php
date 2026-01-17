@@ -15,7 +15,8 @@ class ApplicationSettingController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a hub/overview of all settings categories.
+     * This is now a read-only dashboard that links to category-specific pages.
      */
     public function index(Request $request)
     {
@@ -28,48 +29,16 @@ class ApplicationSettingController extends Controller
         // Group settings by category
         $settingsByCategory = $settings->groupBy('category');
 
-        return view('application-settings.index', compact('settingsByCategory'));
-    }
+        // Define category routes for navigation
+        $categoryRoutes = [
+            'workflow' => route('workflow-settings.index'),
+            'upload' => route('upload-settings.index'),
+            'report' => route('report-settings.index'),
+            'expiry' => route('expiry-settings.index'),
+            // Security and System are managed here directly
+        ];
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        Gate::authorize('create', ApplicationSetting::class);
-
-        $categories = ApplicationSetting::distinct()
-            ->pluck('category')
-            ->sort();
-
-        return view('application-settings.create', compact('categories'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        Gate::authorize('create', ApplicationSetting::class);
-
-        $validated = $request->validate([
-            'key' => 'required|string|max:255|unique:application_settings,key',
-            'value' => 'nullable|string',
-            'type' => 'required|in:string,integer,boolean,json,text',
-            'category' => 'required|string|max:50',
-            'description' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-        ]);
-
-        // Validate value based on type
-        $this->validateValueByType($request->value, $request->type);
-
-        $validated['is_active'] = $request->has('is_active');
-
-        ApplicationSetting::create($validated);
-
-        return redirect()->route('application-settings.index')
-            ->with('success', 'Setting berhasil dibuat.');
+        return view('application-settings.index', compact('settingsByCategory', 'categoryRoutes'));
     }
 
     /**
@@ -113,52 +82,23 @@ class ApplicationSettingController extends Controller
         Gate::authorize('update', $applicationSetting);
 
         $validated = $request->validate([
-            'key' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('application_settings', 'key')->ignore($applicationSetting->id),
-            ],
             'value' => 'nullable|string',
-            'type' => 'required|in:string,integer,boolean,json,text',
-            'category' => 'required|string|max:50',
             'description' => 'nullable|string|max:255',
             'is_active' => 'boolean',
         ]);
 
         // Validate value based on type
-        $this->validateValueByType($request->value, $request->type);
+        $this->validateValueByType($request->value, $applicationSetting->type);
 
         $validated['is_active'] = $request->has('is_active');
 
-        // Clear cache for old key if key changed
-        if ($applicationSetting->key !== $validated['key']) {
-            \Illuminate\Support\Facades\Cache::forget("app_setting_{$applicationSetting->key}");
-        }
+        // Clear cache for old key
+        \Illuminate\Support\Facades\Cache::forget("app_setting_{$applicationSetting->key}");
 
         $applicationSetting->update($validated);
 
-        // Clear cache for new key
-        \Illuminate\Support\Facades\Cache::forget("app_setting_{$validated['key']}");
-
         return redirect()->route('application-settings.index')
             ->with('success', 'Setting berhasil diperbarui.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ApplicationSetting $applicationSetting)
-    {
-        Gate::authorize('delete', $applicationSetting);
-
-        // Clear cache
-        \Illuminate\Support\Facades\Cache::forget("app_setting_{$applicationSetting->key}");
-
-        $applicationSetting->delete();
-
-        return redirect()->route('application-settings.index')
-            ->with('success', 'Setting berhasil dihapus.');
     }
 
     /**
@@ -185,14 +125,14 @@ class ApplicationSettingController extends Controller
 
         switch ($type) {
             case 'integer':
-                if (! is_numeric($value)) {
+                if (!is_numeric($value)) {
                     throw \Illuminate\Validation\ValidationException::withMessages([
                         'value' => 'Value harus berupa angka untuk tipe integer.',
                     ]);
                 }
                 break;
             case 'boolean':
-                if (! in_array(strtolower($value), ['true', 'false', '1', '0', 'yes', 'no'])) {
+                if (!in_array(strtolower($value), ['true', 'false', '1', '0', 'yes', 'no'])) {
                     throw \Illuminate\Validation\ValidationException::withMessages([
                         'value' => 'Value harus berupa true/false, 1/0, atau yes/no untuk tipe boolean.',
                     ]);

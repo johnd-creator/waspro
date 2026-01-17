@@ -1,0 +1,47 @@
+PHP Fatal error:  Uncaught ReflectionException: Class "files" does not exist in /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php:1161
+Stack trace:
+#0 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(1161): ReflectionClass->__construct()
+#1 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(972): Illuminate\Container\Container->build()
+#2 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1078): Illuminate\Container\Container->resolve()
+#3 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(903): Illuminate\Foundation\Application->resolve()
+#4 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1058): Illuminate\Container\Container->make()
+#5 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(1856): Illuminate\Foundation\Application->make()
+#6 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1345): Illuminate\Container\Container->offsetGet()
+#7 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/EventServiceProvider.php(107): Illuminate\Foundation\Application->eventsAreCached()
+#8 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/EventServiceProvider.php(58): Illuminate\Foundation\Support\Providers\EventServiceProvider->getEvents()
+#9 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\Foundation\Support\Providers\EventServiceProvider->{closure:Illuminate\Foundation\Support\Providers\EventServiceProvider::register():57}()
+#10 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\Container\BoundMethod::{closure:Illuminate\Container\BoundMethod::call():35}()
+#11 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate\Container\Util::unwrapIfClosure()
+#12 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\Container\BoundMethod::callBoundMethod()
+#13 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(836): Illuminate\Container\BoundMethod::call()
+#14 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Support/ServiceProvider.php(127): Illuminate\Container\Container->call()
+#15 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1148): Illuminate\Support\ServiceProvider->callBootingCallbacks()
+#16 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1132): Illuminate\Foundation\Application->bootProvider()
+#17 [internal function]: Illuminate\Foundation\Application->{closure:Illuminate\Foundation\Application::boot():1131}()
+#18 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1131): array_walk()
+#19 /home/john-d/Documents/waspro/verify_dashboard.php(13): Illuminate\Foundation\Application->boot()
+#20 {main}
+
+Next Illuminate\Contracts\Container\BindingResolutionException: Target class [files] does not exist. in /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php:1163
+Stack trace:
+#0 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(972): Illuminate\Container\Container->build()
+#1 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1078): Illuminate\Container\Container->resolve()
+#2 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(903): Illuminate\Foundation\Application->resolve()
+#3 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1058): Illuminate\Container\Container->make()
+#4 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(1856): Illuminate\Foundation\Application->make()
+#5 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1345): Illuminate\Container\Container->offsetGet()
+#6 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/EventServiceProvider.php(107): Illuminate\Foundation\Application->eventsAreCached()
+#7 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/EventServiceProvider.php(58): Illuminate\Foundation\Support\Providers\EventServiceProvider->getEvents()
+#8 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\Foundation\Support\Providers\EventServiceProvider->{closure:Illuminate\Foundation\Support\Providers\EventServiceProvider::register():57}()
+#9 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\Container\BoundMethod::{closure:Illuminate\Container\BoundMethod::call():35}()
+#10 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate\Container\Util::unwrapIfClosure()
+#11 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\Container\BoundMethod::callBoundMethod()
+#12 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php(836): Illuminate\Container\BoundMethod::call()
+#13 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Support/ServiceProvider.php(127): Illuminate\Container\Container->call()
+#14 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1148): Illuminate\Support\ServiceProvider->callBootingCallbacks()
+#15 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1132): Illuminate\Foundation\Application->bootProvider()
+#16 [internal function]: Illuminate\Foundation\Application->{closure:Illuminate\Foundation\Application::boot():1131}()
+#17 /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1131): array_walk()
+#18 /home/john-d/Documents/waspro/verify_dashboard.php(13): Illuminate\Foundation\Application->boot()
+#19 {main}
+  thrown in /home/john-d/Documents/waspro/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 1163

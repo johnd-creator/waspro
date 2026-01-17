@@ -8,29 +8,35 @@ use Illuminate\Database\Seeder;
 class KategoriKegiatanSumberSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run database seeds.
      */
     public function run(): void
     {
+        echo 'Creating fake Kategori data for testing...'.PHP_EOL;
+
         $kategori = [
             ['nama_kategori' => 'Kegiatan Industri Kimia'],
             ['nama_kategori' => 'Kegiatan Industri Farmasi'],
-            ['nama_kategori' => 'Kegiatan Industri Tekstil'],
-            ['nama_kategori' => 'Kegiatan Industri Logam'],
-            ['nama_kategori' => 'Kegiatan Industri Elektronik'],
-            ['nama_kategori' => 'Kegiatan Industri Otomotif'],
-            ['nama_kategori' => 'Kegiatan Industri Makanan dan Minuman'],
-            ['nama_kategori' => 'Kegiatan Rumah Sakit'],
-            ['nama_kategori' => 'Kegiatan Laboratorium'],
-            ['nama_kategori' => 'Kegiatan Pertambangan'],
-            ['nama_kategori' => 'Kegiatan Migas'],
-            ['nama_kategori' => 'Kegiatan Lainnya'],
+            ['nama_kategori' => 'kegiatanan Industri Tekstil'],
+            ['nama_kategori' => 'kegiatanan Industri Logam'],
+            ['nama_kategori' => 'kegiatanan Industri Elektronik'],
+            ['nama_kategori' => 'kegiatanan Industri Otomotif'],
+            ['nama_kategori' => 'kegiatanan Industri Makanan dan Minuman'],
+            ['nama_kategori' => 'kegiatanan Rumah Sakit'],
+            ['nama_kategori' => 'kegiatanan Laboratorium'],
+            ['nama_kategori' => 'kegiatanan Pertambangan'],
+            ['nama_kategori' => 'kegiatanan Migas'],
         ];
 
+        $count = 0;
         foreach ($kategori as $item) {
             KategoriKegiatanSumber::firstOrCreate(
                 ['nama_kategori' => $item['nama_kategori']]
             );
+            $count++;
         }
+
+        echo "✓ Created {$count} fake kategori records.".PHP_EOL;
+        echo "Seeding completed! Created {$count} kategori kegiatan sumber records.".PHP_EOL;
     }
 }

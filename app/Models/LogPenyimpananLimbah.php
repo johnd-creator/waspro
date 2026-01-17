@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use App\Models\Scopes\UnitScope;
+use App\Models\ApplicationSetting;
+use App\Traits\FieldAuditTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class LogPenyimpananLimbah extends Model
 {
-    use HasFactory;
+    use HasFactory, FieldAuditTrait;
 
     protected $table = 'log_penyimpanan_limbah';
 
@@ -21,6 +24,7 @@ class LogPenyimpananLimbah extends Model
         'kode_identitas',
         'tanggal_limbah_masuk',
         'detail_sumber_limbah',
+        'uraian_pekerjaan',
         'jumlah_limbah_masuk',
         'maksimal_penyimpanan_tanggal',
         'status_log',
@@ -42,6 +46,11 @@ class LogPenyimpananLimbah extends Model
         'created_at_client',
         'updated_at_client',
         'synced_at',
+        // Approval columns
+        'approval_status',
+        'approved_by',
+        'approved_at',
+        'rejected_reason',
     ];
 
     protected $casts = [
@@ -53,10 +62,11 @@ class LogPenyimpananLimbah extends Model
         'created_at_client' => 'datetime',
         'updated_at_client' => 'datetime',
         'synced_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     /**
-     * The "booted" method of the model.
+     * The "booted" method of model.
      */
     protected static function booted(): void
     {
@@ -85,11 +95,11 @@ class LogPenyimpananLimbah extends Model
 
         $sequence = $lastSequence ? intval(substr($lastSequence->kode_identitas, -3)) + 1 : 1;
 
-        return "LMB-{$unitCode}-{$yearMonth}-".str_pad($sequence, 3, '0', STR_PAD_LEFT);
+        return "LMB-{$unitCode}-{$yearMonth}-" . str_pad($sequence, 3, '0', STR_PAD_LEFT);
     }
 
     /**
-     * Get the user that created this log
+     * Get user that created this log
      */
     public function penggunaSistem(): BelongsTo
     {
@@ -97,7 +107,7 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get the jenis limbah for this log
+     * Get jenis limbah for this log
      */
     public function jenisLimbah(): BelongsTo
     {
@@ -105,7 +115,7 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get the perusahaan for this log
+     * Get perusahaan for this log
      */
     public function perusahaan(): BelongsTo
     {
@@ -113,7 +123,7 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get the perusahaan penghasil for this log (alias)
+     * Get perusahaan penghasil for this log (alias)
      */
     public function perusahaanPenghasil(): BelongsTo
     {
@@ -121,7 +131,7 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get the unit for this log
+     * Get unit for this log
      */
     public function unit(): BelongsTo
     {
@@ -129,7 +139,7 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
-     * Get the unit pembangkit for this log (alias)
+     * Get unit pembangkit for this log (alias)
      */
     public function unitPembangkit(): BelongsTo
     {
@@ -137,11 +147,27 @@ class LogPenyimpananLimbah extends Model
     }
 
     /**
+     * Get all approval logs for this log
+     */
+    public function approvalLogs(): HasMany
+    {
+        return $this->hasMany(ApprovalLog::class, 'log_id', 'log_id');
+    }
+
+    /**
+     * Get user who approved this log
+     */
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(PenggunaSistem::class, 'approved_by', 'user_id');
+    }
+
+    /**
      * Calculate expiry date based on entry date and waste type storage days
      */
     public function calculateExpiryDate(): ?Carbon
     {
-        if (! $this->tanggal_limbah_masuk) {
+        if (!$this->tanggal_limbah_masuk) {
             return null;
         }
 
@@ -156,18 +182,22 @@ class LogPenyimpananLimbah extends Model
     public function updateExpiryStatus(): void
     {
         $expiryDate = $this->calculateExpiryDate();
-        if (! $expiryDate) {
+        if (!$expiryDate) {
             return;
         }
 
         $now = Carbon::now();
         $daysUntilExpiry = $now->diffInDays($expiryDate, false);
 
+        // Get dynamic settings
+        $criticalDays = (int) ApplicationSetting::getValue('critical_days', 7);
+        $warningDays = (int) ApplicationSetting::getValue('warning_days', 30);
+
         if ($daysUntilExpiry < 0) {
             $status = 'Expired';
-        } elseif ($daysUntilExpiry <= 3) {
+        } elseif ($daysUntilExpiry <= $criticalDays) {
             $status = 'Critical';
-        } elseif ($daysUntilExpiry <= 7) {
+        } elseif ($daysUntilExpiry <= $warningDays) {
             $status = 'Warning';
         } else {
             $status = 'Safe';
@@ -185,11 +215,11 @@ class LogPenyimpananLimbah extends Model
     public function getDaysUntilExpiry(): ?int
     {
         $expiryDate = $this->tanggal_kadaluarsa ? Carbon::parse($this->tanggal_kadaluarsa) : $this->calculateExpiryDate();
-        if (! $expiryDate) {
+        if (!$expiryDate) {
             return null;
         }
 
-        return Carbon::now()->diffInDays($expiryDate, false);
+        return (int) Carbon::now()->diffInDays($expiryDate, false);
     }
 
     /**

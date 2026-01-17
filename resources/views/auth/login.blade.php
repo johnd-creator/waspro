@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,15 +14,19 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 font-inter">
     <div class="min-h-screen flex items-center justify-center p-4 mx-auto">
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full grid md:grid-cols-2">
 
             <!-- Left Side - Branding -->
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 md:p-12 flex flex-col justify-center relative overflow-hidden">
+            <div
+                class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 md:p-12 flex flex-col justify-center relative overflow-hidden">
                 <!-- Background Pattern -->
                 <div class="absolute inset-0 opacity-10">
-                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 20px 20px;"></div>
+                    <div class="absolute inset-0"
+                        style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0); background-size: 20px 20px;">
+                    </div>
                 </div>
 
                 <!-- Content -->
@@ -39,7 +44,8 @@
                     <!-- Subtitle -->
                     <div class="mb-8 text-center">
                         <h2 class="text-xl font-semibold mb-2">Sistem Manajemen Pengelolaan Limbah</h2>
-                        <p class="text-slate-300 text-sm">Platform terintegrasi untuk pengelolaan limbah yang efisien dan berkelanjutan</p>
+                        <p class="text-slate-300 text-sm">Platform terintegrasi untuk pengelolaan limbah yang efisien
+                            dan berkelanjutan</p>
                     </div>
 
                     <!-- Features -->
@@ -92,7 +98,8 @@
 
                 <!-- PLN Logo -->
                 <div class="mb-4 text-center w-48 h-17 mx-auto flex items-center justify-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="PLN Logo" class="max-w-full max-h-full object-contain transform scale-90">
+                    <img src="{{ asset('images/logo.png') }}" alt="PLN Logo"
+                        class="max-w-full max-h-full object-contain transform scale-90">
                 </div>
 
                 <!-- Welcome Section -->
@@ -122,14 +129,9 @@
                             Alamat Email
                         </label>
                         <input type="email"
-                               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('email_address') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
-                               id="email_address"
-                               name="email_address"
-                               placeholder="nama@contoh.com"
-                               value="{{ old('email_address') }}"
-                               required
-                               autocomplete="email"
-                               autofocus>
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('email_address') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
+                            id="email_address" name="email_address" placeholder="nama@contoh.com"
+                            value="{{ old('email_address') }}" required autocomplete="email" autofocus>
                         @error('email_address')
                             <div class="mt-2 text-sm text-red-600">
                                 <strong>{{ $message }}</strong>
@@ -144,12 +146,9 @@
                             Password
                         </label>
                         <input type="password"
-                               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('password') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
-                               id="password"
-                               name="password"
-                               placeholder="Masukkan password Anda"
-                               required
-                               autocomplete="current-password">
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 @error('password') border-red-300 focus:ring-red-500 focus:border-red-500 @enderror"
+                            id="password" name="password" placeholder="Masukkan password Anda" required
+                            autocomplete="current-password">
                         @error('password')
                             <div class="mt-2 text-sm text-red-600">
                                 <strong>{{ $message }}</strong>
@@ -159,18 +158,17 @@
 
                     <!-- Remember Me -->
                     <div class="flex items-center">
-                        <input class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
-                               type="checkbox"
-                               name="remember"
-                               id="remember"
-                               {{ old('remember') ? 'checked' : '' }}>
+                        <input
+                            class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
+                            type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                         <label class="ml-2 text-sm font-medium text-slate-700" for="remember">
                             Ingat saya
                         </label>
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-lg">
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-lg">
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Masuk
                     </button>
@@ -185,5 +183,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Enter Key Support Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const emailInput = document.getElementById('email_address');
+            const passwordInput = document.getElementById('password');
+            const loginForm = emailInput.closest('form');
+
+            function handleEnterKey(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    loginForm.submit();
+                }
+            }
+
+            // Add event listeners to both input fields
+            emailInput.addEventListener('keydown', handleEnterKey);
+            passwordInput.addEventListener('keydown', handleEnterKey);
+        });
+    </script>
 </body>
+
 </html>

@@ -32,6 +32,7 @@
                 <th>Kode Identitas</th>
                 <th>Tanggal Masuk</th>
                 <th>Jenis Limbah</th>
+                <th>Uraian Pekerjaan</th>
                 <th>Perusahaan</th>
                 <th>Unit</th>
                 <th>Jumlah (Kg)</th>
@@ -48,6 +49,7 @@
                     <td>{{ $log->kode_identitas ?? '-' }}</td>
                     <td>{{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d/m/Y') }}</td>
                     <td>{{ $log->jenisLimbah->nama_limbah ?? 'N/A' }}</td>
+                    <td>{{ Str::limit($log->uraian_pekerjaan ?? '-', 100) }}</td>
                     <td>{{ $log->perusahaanPenghasil->nama_perusahaan ?? 'N/A' }}</td>
                     <td>{{ $log->unitPembangkit->nama_unit ?? 'N/A' }}</td>
                     <td>{{ number_format($log->jumlah_limbah_masuk, 2) }}</td>

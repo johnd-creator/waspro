@@ -39,10 +39,12 @@
                     <tr>
                         <th class="w-16 px-4 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">No</th>
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Kode Limbah</th>
-                        <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Limbah</th>
+                         <th class="min-w-[200px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Nama Limbah</th>
                         <th class="min-w-[150px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Karakteristik</th>
+                        <th class="min-w-[150px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Kategori</th>
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Masa Simpan</th>
                         <th class="min-w-[100px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Status</th>
+                        <th class="min-w-[150px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Biaya Pengangkutan</th>
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold" style="color: var(--text-secondary);">Aksi</th>
                     </tr>
                 </thead>
@@ -60,15 +62,25 @@
                             <td class="px-6 py-4">
                                 <div class="text-sm font-semibold" style="color: var(--text-primary);">{{ $jenis->nama_limbah }}</div>
                             </td>
-                            <td class="px-6 py-4">
-                                @if($jenis->karakteristikLimbah)
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--secondary-bg-light); color: var(--text-secondary);">
-                                        {{ $jenis->karakteristikLimbah->nama_karakteristik }}
-                                    </span>
-                                @else
-                                    <span class="text-xs" style="color: var(--text-tertiary);">-</span>
-                                @endif
-                            </td>
+                             <td class="px-6 py-4">
+                                 @if($jenis->karakteristikLimbah)
+                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--secondary-bg-light); color: var(--text-secondary);">
+                                         {{ $jenis->karakteristikLimbah->nama_karakteristik }}
+                                     </span>
+                                 @else
+                                     <span class="text-xs" style="color: var(--text-tertiary);">-</span>
+                                 @endif
+                             </td>
+                             
+                             <td class="px-6 py-4">
+                                 @if($jenis->kategoriKegiatanSumber)
+                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--accent-bg); color: var(--accent-primary);">
+                                         {{ $jenis->kategoriKegiatanSumber->nama_kategori }}
+                                     </span>
+                                 @else
+                                     <span class="text-xs" style="color: var(--text-tertiary);">-</span>
+                                 @endif
+                             </td>
                             
                             <td class="px-6 py-4">
                                 @if(!empty($jenis->waktu_penyimpanan_hari))
@@ -79,18 +91,29 @@
                                     <span class="text-xs" style="color: var(--text-tertiary);">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
-                                @if($jenis->status_aktif)
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--success-bg); color: var(--success-primary);">
-                                        Aktif
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
-                                        Tidak Aktif
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4">
+                             <td class="px-6 py-4">
+                                 @if($jenis->status_aktif)
+                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--success-bg); color: var(--success-primary);">
+                                         Aktif
+                                     </span>
+                                 @else
+                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style="background-color: var(--danger-bg); color: var(--danger-primary);">
+                                         Tidak Aktif
+                                     </span>
+                                 @endif
+                             </td>
+
+                             <td class="px-6 py-4">
+                                 @if($jenis->biaya_pengangkutan_per_kg)
+                                     <span style="font-size: 0.875rem; color: var(--text-primary);">
+                                         Rp {{ number_format($jenis->biaya_pengangkutan_per_kg, 0, ',', '.') }}/kg
+                                     </span>
+                                 @else
+                                     <span style="font-size: 0.875rem; color: var(--text-tertiary);">-</span>
+                                 @endif
+                             </td>
+
+                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-1">
                                     <a href="{{ route('jenis-limbah.show', $jenis) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors" style="color: var(--accent-primary); background-color: var(--accent-bg);" onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';" onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';" title="Lihat Detail">
                                         <i class="fas fa-eye text-sm"></i>
@@ -110,7 +133,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center">
                                     <i class="fas fa-trash-alt mb-4 text-6xl" style="color: var(--text-tertiary);"></i>
                                     <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Belum ada data jenis limbah</h3>

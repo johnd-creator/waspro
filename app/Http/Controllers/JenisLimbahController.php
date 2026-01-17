@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisLimbah;
 use App\Models\KarakteristikLimbah;
+use App\Models\KategoriKegiatanSumber;
 use Illuminate\Http\Request;
 
 class JenisLimbahController extends Controller
@@ -13,7 +14,7 @@ class JenisLimbahController extends Controller
      */
     public function index()
     {
-        $jenisLimbah = JenisLimbah::with(['karakteristik'])
+        $jenisLimbah = JenisLimbah::with(['karakteristik', 'kategoriKegiatanSumber'])
             ->orderBy('kode_limbah')
             ->paginate(15);
 
@@ -21,13 +22,14 @@ class JenisLimbahController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
         $karakteristikLimbah = KarakteristikLimbah::all();
+        $kategoriKegiatanSumber = KategoriKegiatanSumber::orderBy('nama_kategori')->get();
 
-        return view('jenis-limbah.create', compact('karakteristikLimbah'));
+        return view('jenis-limbah.create', compact('karakteristikLimbah', 'kategoriKegiatanSumber'));
     }
 
     /**
@@ -38,10 +40,17 @@ class JenisLimbahController extends Controller
         $validated = $request->validate([
             'kode_limbah' => 'required|string|max:10|unique:jenis_limbah,kode_limbah',
             'nama_limbah' => 'required|string|max:255',
+            'kemasan' => 'required|string|max:255',
             'deskripsi_limbah' => 'nullable|string|max:500',
             'waktu_penyimpanan_hari' => 'required|integer|min:1|max:365',
-            'karakteristik_id' => 'nullable|exists:karakteristik_limbah,karakteristik_id',
+            'karakteristik_id' => 'required|exists:karakteristik_limbah,karakteristik_id',
+            'kategori_id' => 'required|exists:kategori_kegiatan_sumber,kategori_id',
             'status_aktif' => 'required|boolean',
+            'biaya_pengangkutan_per_kg' => 'nullable|numeric|min:0',
+            'mulai_berlaku' => 'nullable|date|after_or_equal:today',
+            'akhir_berlaku' => 'nullable|date|after:mulai_berlaku',
+            'keterangan_biaya' => 'nullable|array',
+            'batas_penyimpanan_hari' => 'nullable|integer|min:1|max:365',
         ]);
 
         // Sinkronkan waktu_penyimpanan_hari dengan batas_penyimpanan_hari
@@ -58,19 +67,20 @@ class JenisLimbahController extends Controller
      */
     public function show(JenisLimbah $jenisLimbah)
     {
-        $jenisLimbah->load(['karakteristik', 'logPenyimpanan']);
+        $jenisLimbah->load(['karakteristik', 'kategoriKegiatanSumber', 'logPenyimpanan']);
 
         return view('jenis-limbah.show', compact('jenisLimbah'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing specified resource.
      */
     public function edit(JenisLimbah $jenisLimbah)
     {
         $karakteristikLimbah = KarakteristikLimbah::all();
+        $kategoriKegiatanSumber = KategoriKegiatanSumber::orderBy('nama_kategori')->get();
 
-        return view('jenis-limbah.edit', compact('jenisLimbah', 'karakteristikLimbah'));
+        return view('jenis-limbah.edit', compact('jenisLimbah', 'karakteristikLimbah', 'kategoriKegiatanSumber'));
     }
 
     /**
@@ -81,10 +91,16 @@ class JenisLimbahController extends Controller
         $validated = $request->validate([
             'kode_limbah' => 'required|string|max:10|unique:jenis_limbah,kode_limbah,'.$jenisLimbah->kode_limbah.',kode_limbah',
             'nama_limbah' => 'required|string|max:255',
+            'kemasan' => 'required|string|max:255',
             'deskripsi_limbah' => 'nullable|string|max:500',
             'waktu_penyimpanan_hari' => 'required|integer|min:1|max:365',
-            'karakteristik_id' => 'nullable|exists:karakteristik_limbah,karakteristik_id',
+            'karakteristik_id' => 'required|exists:karakteristik_limbah,karakteristik_id',
+            'kategori_id' => 'required|exists:kategori_kegiatan_sumber,kategori_id',
             'status_aktif' => 'required|boolean',
+            'biaya_pengangkutan_per_kg' => 'nullable|numeric|min:0',
+            'mulai_berlaku' => 'nullable|date|after_or_equal:today',
+            'akhir_berlaku' => 'nullable|date|after:mulai_berlaku',
+            'keterangan_biaya' => 'nullable|array',
         ]);
 
         // Sinkronkan waktu_penyimpanan_hari dengan batas_penyimpanan_hari
