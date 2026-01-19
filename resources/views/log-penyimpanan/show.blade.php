@@ -36,7 +36,7 @@
                                 <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                     <span style="color: var(--text-secondary);" class="font-medium">Jenis Limbah:</span>
                                     <div class="text-right">
-                                        <div style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah->nama_limbah ?? 'N/A' }}</div>
+                                    <div style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah?->nama_limbah ?? 'N/A' }}</div>
                                         <small style="color: var(--text-tertiary);">Kode: {{ $logPenyimpanan->kode_limbah }}</small>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                     <span style="color: var(--text-primary);">
                                         @php
                                             $tanggalMasuk = \Carbon\Carbon::parse($logPenyimpanan->tanggal_limbah_masuk);
-                                            $waktuPenyimpanan = $logPenyimpanan->jenisLimbah->waktu_penyimpanan_hari ?? 0;
+                                            $waktuPenyimpanan = $logPenyimpanan->jenisLimbah?->waktu_penyimpanan_hari ?? 0;
                                             $maksimalPenyimpanan = $tanggalMasuk->addDays($waktuPenyimpanan);
                                         @endphp
                                         {{ $maksimalPenyimpanan->format('Y-m-d H:i:s') }}
@@ -121,7 +121,7 @@
                                                 <p class="font-medium" style="color: var(--text-primary);">{{ $logPenyimpanan->dokumen_original_name ?? basename($logPenyimpanan->dokumen_path) }}</p>
                                                 <p class="text-xs" style="color: var(--text-secondary);">Ukuran: {{ number_format(($logPenyimpanan->dokumen_size ?? 0) / 1024, 2) }} KB · Diunggah {{ optional($logPenyimpanan->dokumen_uploaded_at)->diffForHumans() }}</p>
                                             </div>
-                                            <a href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::url($logPenyimpanan->dokumen_path) }}" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1 text-xs font-medium transition-all duration-200" style="border-color: var(--border-primary); color: var(--text-primary);">
                                                 <i class="fas fa-download mr-1"></i> Unduh
                                             </a>
                                         </div>
@@ -153,6 +153,48 @@
                                 <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                     <span style="color: var(--text-secondary);" class="font-medium">Waktu Input:</span>
                                     <span style="color: var(--text-primary);">{{ $logPenyimpanan->created_at }}</span>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                     
+                     <div class="mt-8">
+                        <h5 style="color: var(--text-primary);" class="text-lg font-semibold mb-4">Informasi Biaya</h5>
+                        <div style="background: linear-gradient(135deg, var(--accent-bg) 0%, rgba(251, 191, 36, 0.1) 100%); border: 1px solid var(--border-secondary);" class="rounded-xl">
+                            <div class="p-5">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <i class="fas fa-coins text-amber-500 text-lg"></i>
+                                    <span style="color: var(--text-secondary);" class="text-sm font-medium">Perkiraan Biaya Pengangkutan</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div style="border-right: 1px solid var(--border-secondary);" class="pr-4">
+                                        <span style="color: var(--text-secondary);" class="block text-sm mb-1">Harga per Kg</span>
+                                        <span style="color: var(--text-primary);" class="text-xl font-bold">
+                                            Rp {{ number_format($logPenyimpanan->harga_per_kg ?? 0, 0, ',', '.') }}
+                                        </span>
+                                        <span style="color: var(--text-tertiary);" class="text-xs">/Kg</span>
+                                    </div>
+                                    <div>
+                                        <span style="color: var(--text-secondary);" class="block text-sm mb-1">Total Perkiraan</span>
+                                        <span style="color: var(--accent-primary);" class="text-xl font-bold">
+                                            {{ $logPenyimpanan->biaya_pengangkutan_formatted }}
+                                        </span>
+                                        @if($logPenyimpanan->status_log == 'Tersimpan')
+                                            <span style="color: var(--text-tertiary);" class="text-xs block mt-1">
+                                                <i class="fas fa-info-circle"></i> Estimasi biaya untuk {{ number_format($logPenyimpanan->jumlah_limbah_masuk, 2) }} Kg
+                                            </span>
+                                        @elseif($logPenyimpanan->status_log == 'Diangkut')
+                                            <span style="color: var(--text-tertiary);" class="text-xs block mt-1">
+                                                <i class="fas fa-check-circle text-green-500"></i> Biaya sudah terkunci
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-secondary);">
+                                    <div style="color: var(--text-tertiary);" class="text-xs flex items-center gap-2">
+                                        <i class="fas fa-calculator"></i>
+                                        <span>Perhitungan: {{ number_format($logPenyimpanan->jumlah_limbah_masuk, 2) }} Kg × Rp {{ number_format($logPenyimpanan->harga_per_kg ?? 0, 0, ',', '.') }}/Kg</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -189,19 +231,19 @@
                         <div class="space-y-4">
                             <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                 <span style="color: var(--text-secondary);" class="font-medium">Nama Limbah:</span>
-                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah->nama_limbah }}</span>
+                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah?->nama_limbah ?? 'N/A' }}</span>
                             </div>
                             <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                 <span style="color: var(--text-secondary);" class="font-medium">Kemasan:</span>
-                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah->kemasan }}</span>
+                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah?->kemasan ?? 'N/A' }}</span>
                             </div>
                             <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                 <span style="color: var(--text-secondary);" class="font-medium">Waktu Penyimpanan:</span>
-                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah->waktu_penyimpanan_hari }} hari</span>
+                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah?->waktu_penyimpanan_hari ?? '-' }} hari</span>
                             </div>
                             <div style="border-bottom: 1px solid var(--border-secondary);" class="flex justify-between py-2">
                                 <span style="color: var(--text-secondary);" class="font-medium">Karakteristik:</span>
-                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah->karakteristik->nama_karakteristik ?? 'N/A' }}</span>
+                                <span style="color: var(--text-primary);">{{ $logPenyimpanan->jenisLimbah?->karakteristik?->nama_karakteristik ?? 'N/A' }}</span>
                             </div>
 
                         </div>

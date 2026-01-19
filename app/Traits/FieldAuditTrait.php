@@ -36,8 +36,13 @@ trait FieldAuditTrait
             return;
         }
 
+        $userId = Auth::id();
+        if ($userId && !is_numeric($userId)) {
+            $userId = Auth::guard('web')->user()?->user_id;
+        }
+
         AuditLog::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'action' => 'create',
             'table_name' => $model->getTable(),
             'record_id' => $model->getKey(),
@@ -68,6 +73,11 @@ trait FieldAuditTrait
             return;
         }
 
+        $userId = Auth::id();
+        if ($userId && !is_numeric($userId)) {
+            $userId = Auth::guard('web')->user()?->user_id;
+        }
+
         // Log each field change separately for field-level tracking
         foreach ($changes as $field => $newValue) {
             $oldValue = $model->getOriginal($field);
@@ -78,7 +88,7 @@ trait FieldAuditTrait
             }
 
             AuditLog::create([
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
                 'action' => 'update',
                 'table_name' => $model->getTable(),
                 'field_name' => $field,
@@ -105,8 +115,13 @@ trait FieldAuditTrait
             return;
         }
 
+        $userId = Auth::id();
+        if ($userId && !is_numeric($userId)) {
+            $userId = Auth::guard('web')->user()?->user_id;
+        }
+
         AuditLog::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'action' => 'delete',
             'table_name' => $model->getTable(),
             'record_id' => $model->getKey(),
@@ -235,8 +250,13 @@ trait FieldAuditTrait
      */
     public static function logBusinessEvent(string $action, string $table, int $recordId, array $data = []): AuditLog
     {
+        $userId = Auth::id();
+        if ($userId && !is_numeric($userId)) {
+            $userId = Auth::guard('web')->user()?->user_id;
+        }
+
         return AuditLog::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'action' => $action,
             'table_name' => $table,
             'record_id' => $recordId,

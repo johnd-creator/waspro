@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.1.13",
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "sweetalert2": "^11.26.17"
     }
 }

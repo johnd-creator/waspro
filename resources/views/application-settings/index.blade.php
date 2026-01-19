@@ -76,21 +76,37 @@
             </a>
             @endisset
 
-            @isset($categoryRoutes['expiry'])
-            <a href="{{ $categoryRoutes['expiry'] }}" class="block p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-200" style="background-color: var(--card-bg); border-color: var(--border-primary);">
-                <div class="flex items-center">
-                    <div class="p-3 bg-orange-100 rounded-lg">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Expiry Settings</h3>
-                        <p class="text-sm" style="color: var(--text-secondary);">Kadaluarsa & notifikasi</p>
-                    </div>
-                </div>
-            </a>
-            @endisset
+             @isset($categoryRoutes['expiry'])
+             <a href="{{ $categoryRoutes['expiry'] }}" class="block p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-200" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+                 <div class="flex items-center">
+                     <div class="p-3 bg-orange-100 rounded-lg">
+                         <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6 0l-3 3m0 6l-3 3m6 0m6 0v6"></path>
+                         </svg>
+                     </div>
+                     <div class="ml-4">
+                         <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Expiry Settings</h3>
+                         <p class="text-sm" style="color: var(--text-secondary);">Kadaluarsa & notifikasi</p>
+                     </div>
+                 </div>
+             </a>
+             @endisset
+
+              @isset($categoryRoutes['audit'])
+              <a href="{{ $categoryRoutes['audit'] }}" class="block p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-200" style="background-color: var(--card-bg); border-color: var(--border-primary);">
+                  <div class="flex items-center">
+                      <div class="p-3 bg-red-100 rounded-lg">
+                          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          </svg>
+                      </div>
+                      <div class="ml-4">
+                          <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Audit Trail</h3>
+                          <p class="text-sm" style="color: var(--text-secondary);">Lihat semua jejak aktivitas sistem</p>
+                      </div>
+                  </div>
+              </a>
+               @endisset
         </div>
 
         <!-- Settings Overview Table -->

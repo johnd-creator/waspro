@@ -14,7 +14,6 @@
         </div>
     @endif
 
-    <!-- Header Section -->
     <div class="mb-6 rounded-2xl border shadow-sm"
         style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
@@ -22,19 +21,15 @@
                 <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Log Penyimpanan Limbah</h1>
                 <p style="color: var(--text-secondary);">Kelola dan pantau data penyimpanan limbah dengan mudah</p>
             </div>
-            <div>
-                <a href="{{ route('log-penyimpanan.create') }}"
-                    class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
-                    <i class="fas fa-plus-circle mr-2"></i>
-                    <span>Tambah Log</span>
-                </a>
-            </div>
+            <a href="{{ route('log-penyimpanan.create') }}"
+                class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
+                <i class="fas fa-plus-circle mr-2"></i>
+                <span>Tambah Log</span>
+            </a>
         </div>
-        <!-- Search & Filter Section -->
         <div class="px-6 py-6">
             <form method="GET" action="{{ route('log-penyimpanan.index') }}" class="flex flex-col gap-4">
                 <div class="flex flex-col gap-4 md:flex-row items-center">
-                    <!-- Unified Search Bar -->
                     <div class="relative flex-1">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                             <i class="fas fa-search" style="color: var(--text-tertiary);"></i>
@@ -68,7 +63,6 @@
                         </div>
                     @endif
 
-                    <!-- Action Buttons -->
                     <div class="flex gap-3">
                         <button type="submit"
                             class="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700">
@@ -84,7 +78,6 @@
                     </div>
                 </div>
 
-                <!-- Quick status tabs -->
                 <div class="flex flex-wrap gap-2">
                     @php($baseQuery = request()->except('page', 'search_status'))
                     <a href="{{ route('log-penyimpanan.index', array_merge($baseQuery, ['search_status' => ''])) }}"
@@ -112,7 +105,6 @@
         </div>
     </div>
 
-    <!-- Tabel Log Penyimpanan -->
     <div class="overflow-hidden rounded-2xl border shadow-sm"
         style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="overflow-x-auto">
@@ -127,7 +119,6 @@
                             style="color: var(--text-secondary);">Jenis Limbah</th>
                         <th class="min-w-[180px] px-6 py-4 text-left text-sm font-semibold"
                             style="color: var(--text-secondary);">Uraian Pekerjaan</th>
-
                         <th class="min-w-[120px] px-6 py-4 text-left text-sm font-semibold"
                             style="color: var(--text-secondary);">Jumlah (Kg)</th>
                         <th class="min-w-[100px] px-6 py-4 text-left text-sm font-semibold"
@@ -159,22 +150,12 @@
                                 {{ Str::limit($log->uraian_pekerjaan ?? '-', 50) }}
                             </div>
                         </td>
-
                         <td class="px-6 py-4 text-right text-sm font-bold" style="color: var(--text-primary);">
                             <span class="rounded-lg px-3 py-1"
                                 style="background-color: var(--accent-bg); color: var(--accent-primary);">{{ number_format($log->jumlah_limbah_masuk, 2) }}</span>
                         </td>
                         <td class="px-6 py-4">
-                            @if($log->status_log == 'Tersimpan')
-                                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                    style="background-color: var(--accent-bg); color: var(--accent-primary);">{{ $log->status_log }}</span>
-                            @elseif($log->status_log == 'Diangkut')
-                                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                    style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">{{ $log->status_log }}</span>
-                            @else
-                                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                    style="background-color: var(--danger-bg); color: var(--danger-primary);">{{ $log->status_log }}</span>
-                            @endif
+                            <x-status-badge :status="$log->status_log" />
                         </td>
                         <td class="px-6 py-4">
                             @php($daysLeft = $log->getDaysUntilExpiry())
@@ -197,53 +178,20 @@
                                     style="background-color: var(--card-secondary-bg); color: var(--text-secondary);">-</span>
                             @endif
                         </td>
-
                         <td class="px-6 py-4">
-                            <div class="flex items-center space-x-1">
-                                <a href="{{ route('log-penyimpanan.show', $log) }}"
-                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
-                                    style="color: var(--accent-primary); background-color: var(--accent-bg);"
-                                    onmouseover="this.style.backgroundColor='var(--accent-primary)'; this.style.color='white';"
-                                    onmouseout="this.style.backgroundColor='var(--accent-bg)'; this.style.color='var(--accent-primary)';"
-                                    title="Lihat Detail">
-                                    <i class="fas fa-eye text-sm"></i>
-                                </a>
-                                <a href="{{ route('log-penyimpanan.edit', $log) }}"
-                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
-                                    style="color: var(--accent-secondary); background-color: var(--accent-bg-secondary);"
-                                    onmouseover="this.style.backgroundColor='var(--accent-secondary)'; this.style.color='white';"
-                                    onmouseout="this.style.backgroundColor='var(--accent-bg-secondary)'; this.style.color='var(--accent-secondary)';"
-                                    title="Edit">
-                                    <i class="fas fa-edit text-sm"></i>
-                                </a>
-                                <form action="{{ route('log-penyimpanan.destroy', $log) }}" method="POST"
-                                    class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
-                                        style="color: var(--danger-primary); background-color: var(--danger-bg);"
-                                        onmouseover="this.style.backgroundColor='var(--danger-primary)'; this.style.color='white';"
-                                        onmouseout="this.style.backgroundColor='var(--danger-bg)'; this.style.color='var(--danger-primary)';"
-                                        title="Hapus" onclick="return confirm('Anda yakin ingin menghapus log ini?')">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </form>
-                            </div>
+                            <x-action-buttons
+                                :view-route="route('log-penyimpanan.show', $log)"
+                                :edit-route="route('log-penyimpanan.edit', $log)"
+                                :delete-route="route('log-penyimpanan.destroy', $log)"
+                                delete-message="Anda yakin ingin menghapus log ini?"
+                                :item-title="$log->jenisLimbah->nama_limbah ?? ''" />
                         </td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="8" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center">
-                                <i class="fas fa-clipboard-list mb-4 text-6xl" style="color: var(--text-tertiary);"></i>
-                                <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Belum ada data
-                                </h3>
-                                <p style="color: var(--text-secondary);">Tidak ada data log penyimpanan limbah yang
-                                    tersedia saat ini.</p>
-                            </div>
-                        </td>
-                    </tr>
+                        <x-empty-state
+                            icon="fas fa-clipboard-list"
+                            title="Belum ada data"
+                            description="Tidak ada data log penyimpanan limbah yang tersedia saat ini." />
                     @endforelse
                 </tbody>
             </table>

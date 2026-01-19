@@ -238,12 +238,50 @@
                 background-repeat: no-repeat !important;
                 background-position: right 0.7rem center !important;
                 background-size: 0.65rem auto !important;
-                padding-right: 2.5rem !important;
-                min-height: 2.5rem !important;
-                line-height: 1.5 !important;
-            }
-        }
-    </style>
+                 padding-right: 2.5rem !important;
+                 min-height: 2.5rem !important;
+                 line-height: 1.5 !important;
+             }
+         }
+         
+         /* Custom SweetAlert for Dark Mode Support */
+         .swal2-container {
+             z-index: 9999 !important;
+         }
+
+         .swal2-popup.swal2-modal {
+             background-color: var(--card-secondary-bg) !important;
+             color: var(--text-primary) !important;
+         }
+
+         .swal2-popup.swal2-toast {
+             background-color: var(--card-secondary-bg) !important;
+             color: var(--text-primary) !important;
+             border: 1px solid var(--border-secondary) !important;
+             border-radius: 0.75rem !important;
+             box-shadow: var(--shadow-primary) !important;
+         }
+
+         .swal2-title {
+             color: var(--text-primary) !important;
+             font-weight: 600 !important;
+         }
+
+         .swal2-icon.swal2-success {
+             border-color: #22c55e !important;
+             color: #22c55e !important;
+         }
+
+         .swal2-icon.swal2-error {
+             border-color: #dc2626 !important;
+             color: #dc2626 !important;
+         }
+
+         .swal2-icon.swal2-warning {
+             border-color: #f59e0b !important;
+             color: #f59e0b !important;
+         }
+     </style>
     @stack('styles')
 
     <!-- Scripts -->
@@ -473,7 +511,7 @@
                                             class="w-6 h-6 bg-slate-700/50 rounded-md flex items-center justify-center mr-2 group-hover:bg-orange-500/50 transition-colors duration-200">
                                             <i class="fas fa-list text-xs"></i>
                                         </div>
-                                        <span class="text-sm font-medium">Kategori Kegiatan Limbah</span>
+                                        <span class="text-sm font-medium">Kategori Kegiatan</span>
                                     </a>
                                 </div>
                             </div>
@@ -805,39 +843,53 @@
                     </div>
                 </nav>
 
-                <!-- Main Content for Guests -->
-                <main class="py-6">
-                    @if(session('success'))
-                        <div class="px-4 mb-4">
-                            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between"
-                                role="alert">
-                                <div class="flex items-center">
-                                    <i class="fas fa-check-circle mr-2"></i>
-                                    {{ session('success') }}
-                                </div>
-                                <button type="button" class="text-green-600 hover:text-green-800 focus:outline-none"
-                                    onclick="this.parentElement.parentElement.remove()">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="px-4 mb-4">
-                            <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between"
-                                role="alert">
-                                <div class="flex items-center">
-                                    <i class="fas fa-exclamation-circle mr-2"></i>
-                                    {{ session('error') }}
-                                </div>
-                                <button type="button" class="text-red-600 hover:text-red-800 focus:outline-none"
-                                    onclick="this.parentElement.parentElement.remove()">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                    @endif
+                 <!-- Main Content for Guests -->
+                 <main class="py-6">
+                     @if(session('success'))
+                         <script>
+                             Swal.fire({
+                                 title: 'Berhasil',
+                                 text: '{{ addslashes(session('success')) }}',
+                                 icon: 'success',
+                                 toast: true,
+                                 position: 'top-end',
+                                 timer: 2000,
+                                 timerProgressBar: true,
+                                 showConfirmButton: false,
+                                 customClass: {
+                                     container: 'swal2-container',
+                                     popup: 'swal2-popup swal2-toast swal2-modal swal2-show swal2-noanimation',
+                                     title: 'swal2-title',
+                                     icon: 'swal2-icon'
+                                 },
+                                 background: 'var(--bg-primary)',
+                                 color: 'var(--text-primary)'
+                             });
+                         </script>
+                     @endif
+ 
+                     @if(session('error'))
+                         <script>
+                             Swal.fire({
+                                 title: 'Gagal',
+                                 text: '{{ addslashes(session('error')) }}',
+                                 icon: 'error',
+                                 toast: true,
+                                 position: 'top-end',
+                                 timer: 3000,
+                                 timerProgressBar: true,
+                                 showConfirmButton: false,
+                                 customClass: {
+                                     container: 'swal2-container',
+                                     popup: 'swal2-popup swal2-toast swal2-modal swal2-show swal2-noanimation',
+                                     title: 'swal2-title',
+                                     icon: 'swal2-icon'
+                                 },
+                                 background: 'var(--bg-primary)',
+                                 color: 'var(--text-primary)'
+                             });
+                         </script>
+                     @endif
 
                     @yield('content')
                 </main>

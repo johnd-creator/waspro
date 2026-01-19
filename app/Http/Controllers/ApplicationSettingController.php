@@ -35,7 +35,7 @@ class ApplicationSettingController extends Controller
             'upload' => route('upload-settings.index'),
             'report' => route('report-settings.index'),
             'expiry' => route('expiry-settings.index'),
-            // Security and System are managed here directly
+            'audit' => route('settings.audit.index'),
         ];
 
         return view('application-settings.index', compact('settingsByCategory', 'categoryRoutes'));

@@ -16,7 +16,6 @@
         </div>
     @endif
 
-    <!-- Header & Filters -->
     <div class="mb-6 rounded-2xl border shadow-sm"
         style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <div class="flex items-center justify-between border-b px-6 py-6" style="border-color: var(--border-primary);">
@@ -24,15 +23,12 @@
                 <h1 class="mb-2 text-2xl font-bold" style="color: var(--text-primary);">Pengangkutan Limbah</h1>
                 <p style="color: var(--text-secondary);">Kelola proses pengangkutan limbah dengan mudah</p>
             </div>
-            <div>
-                <a href="{{ route('pengangkutan-limbah.diangkut') }}"
-                    class="inline-flex items-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
-                    <i class="fas fa-truck mr-2"></i>
-                    <span>Limbah Diangkut</span>
-                </a>
-            </div>
+            <a href="{{ route('pengangkutan-limbah.diangkut') }}"
+                class="inline-flex items-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700">
+                <i class="fas fa-truck mr-2"></i>
+                <span>Limbah Diangkut</span>
+            </a>
         </div>
-        <!-- Filter -->
         <div class="px-6 py-6">
             <form method="GET" action="{{ route('pengangkutan-limbah.index') }}"
                 class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -52,10 +48,8 @@
                         class="w-full rounded-xl border px-3 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                         style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
                         <option value="">Semua Status</option>
-                        <option value="0" {{ request('status_diangkut') == '0' ? 'selected' : '' }}>Belum Diangkut
-                        </option>
-                        <option value="1" {{ request('status_diangkut') == '1' ? 'selected' : '' }}>Sudah Diangkut
-                        </option>
+                        <option value="0" {{ request('status_diangkut') == '0' ? 'selected' : '' }}>Belum Diangkut</option>
+                        <option value="1" {{ request('status_diangkut') == '1' ? 'selected' : '' }}>Sudah Diangkut</option>
                     </select>
                 </div>
                 <div class="flex items-stretch gap-3">
@@ -75,7 +69,6 @@
         </div>
     </div>
 
-    <!-- Data Table -->
     <div class="overflow-hidden rounded-2xl border shadow-sm"
         style="background-color: var(--card-bg); border-color: var(--border-primary);">
         <form id="bulk-angkut-form" method="POST" action="{{ route('pengangkutan-limbah.bulk-approve') }}">
@@ -136,12 +129,10 @@
                             <td class="px-6 py-3">
                                 @if(strtolower($log->status_log) === 'diangkut')
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                        style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">Sudah
-                                        Diangkut</span>
+                                        style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">Sudah Diangkut</span>
                                 @else
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                        style="background-color: var(--danger-bg); color: var(--danger-primary);">Belum
-                                        Diangkut</span>
+                                        style="background-color: var(--danger-bg); color: var(--danger-primary);">Belum Diangkut</span>
                                 @endif
                             </td>
                             <td class="px-6 py-3">
@@ -168,7 +159,7 @@
                             <td class="px-6 py-3">
                                 @if(strtolower($log->status_log) !== 'diangkut')
                                     <button type="button"
-                                        class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 angkut-btn"
+                                        class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 angkut-btn transition-colors"
                                         data-id="{{ $log->log_id ?? $log->id }}">
                                         <i class="fas fa-truck mr-2"></i> Angkut
                                     </button>
@@ -178,13 +169,14 @@
                         @empty
                         <tr>
                             <td colspan="9" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center">
-                                    <i class="fas fa-truck-loading mb-4 text-6xl"
-                                        style="color: var(--text-tertiary);"></i>
-                                    <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Tidak ada
-                                        data</h3>
-                                    <p style="color: var(--text-secondary);">Tidak ada data pengangkutan limbah yang
-                                        tersedia.</p>
+                                <div class="flex flex-col items-center justify-center">
+                                    <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full"
+                                         style="background-color: var(--hover-bg);">
+                                        <i class="fas fa-truck-loading text-4xl"
+                                           style="color: var(--text-tertiary);"></i>
+                                    </div>
+                                    <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Tidak ada data</h3>
+                                    <p class="text-sm" style="color: var(--text-secondary);">Tidak ada data pengangkutan limbah yang tersedia.</p>
                                 </div>
                             </td>
                         </tr>
@@ -195,7 +187,7 @@
             <div class="flex items-center justify-between gap-3 p-4"
                 style="background-color: var(--card-bg); border-top: 1px solid var(--border-primary);">
                 <button type="submit"
-                    class="inline-flex items-center rounded-lg bg-emerald-600 px-5 py-2.5 font-medium text-white hover:bg-emerald-700"
+                    class="inline-flex items-center rounded-lg bg-emerald-600 px-5 py-2.5 font-medium text-white hover:bg-emerald-700 transition-colors"
                     id="bulk-angkut-btn">
                     <i class="fas fa-check mr-2"></i> Angkut Terpilih
                 </button>

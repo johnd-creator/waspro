@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('jenis_limbah', function (Blueprint $table) {
-            //
-        });
+        if (! Schema::hasColumn('jenis_limbah', 'kategori_id')) {
+            Schema::table('jenis_limbah', function (Blueprint $table) {
+                $table->unsignedBigInteger('kategori_id')->nullable()->after('karakteristik_id');
+                $table->foreign('kategori_id')
+                    ->references('kategori_id')
+                    ->on('kategori_kegiatan_sumber')
+                    ->onDelete('set null');
+            });
+        }
     }
 
     /**
@@ -21,8 +27,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('jenis_limbah', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('jenis_limbah', 'kategori_id')) {
+            Schema::table('jenis_limbah', function (Blueprint $table) {
+                $table->dropForeign(['kategori_id']);
+                $table->dropColumn('kategori_id');
+            });
+        }
     }
 };

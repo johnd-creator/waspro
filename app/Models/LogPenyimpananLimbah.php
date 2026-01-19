@@ -154,6 +154,12 @@ class LogPenyimpananLimbah extends Model
         return $this->hasMany(ApprovalLog::class, 'log_id', 'log_id');
     }
 
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class, 'record_id', 'log_id')
+            ->where('table_name', $this->getTable());
+    }
+
     /**
      * Get user who approved this log
      */
@@ -330,5 +336,35 @@ class LogPenyimpananLimbah extends Model
             'Expired' => 'Kadaluarsa',
             default => 'Unknown',
         };
+    }
+
+    /**
+     * Calculate estimated transportation cost (dynamic)
+     * Based on waste type's cost per kg and current amount stored
+     */
+    public function getBiayaPengangkutanAttribute(): float
+    {
+        if (!$this->jenisLimbah || !$this->jenisLimbah->biaya_pengangkutan_per_kg) {
+            return 0.0;
+        }
+
+        return (float) $this->jumlah_limbah_masuk * $this->jenisLimbah->biaya_pengangkutan_per_kg;
+    }
+
+    /**
+     * Get cost per kg from waste type
+     */
+    public function getHargaPerKgAttribute(): ?float
+    {
+        return $this->jenisLimbah?->biaya_pengangkutan_per_kg;
+    }
+
+    /**
+     * Get formatted cost string
+     */
+    public function getBiayaPengangkutanFormattedAttribute(): string
+    {
+        $cost = $this->biaya_pengangkutan;
+        return 'Rp ' . number_format($cost, 0, ',', '.');
     }
 }

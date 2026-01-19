@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PerusahaanPenghasil extends Model
 {
-    use HasFactory;
+    use AuditTrait, HasFactory;
 
     protected $table = 'perusahaan_penghasil';
 

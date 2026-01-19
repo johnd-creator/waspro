@@ -45,7 +45,7 @@ class LogPenyimpananLimbahFactory extends Factory
         }
 
         $now = Carbon::now();
-        $expiryStatus = Arr::random(['Normal', 'Warning', 'Critical', 'Expired']);
+        $expiryStatus = Arr::random(['Safe', 'Warning', 'Critical', 'Expired']);
 
         $tanggalKadaluarsa = match ($expiryStatus) {
             'Warning' => $now->copy()->addDays($this->faker->numberBetween(4, 7)),

@@ -152,17 +152,66 @@ function clearReportCache() {
                 throw new Error(msg);
             }
 
-            // Sukses
-            if (resp && (resp.success === true || resp.status === 'ok')) {
-                alert('Cache laporan berhasil dihapus');
-                window.location.reload();
-            } else {
-                // Jika tidak ada payload JSON, asumsikan sukses saat status OK
-                alert('Cache laporan berhasil dihapus');
-                window.location.reload();
-            }
+             // Sukses
+             if (resp && (resp.success === true || resp.status === 'ok')) {
+                 Swal.fire({
+                     title: 'Berhasil',
+                     text: 'Cache laporan berhasil dihapus',
+                     icon: 'success',
+                     toast: true,
+                     position: 'top-end',
+                     timer: 2000,
+                     timerProgressBar: true,
+                     showConfirmButton: false,
+                     customClass: {
+                         container: 'swal2-container',
+                         popup: 'swal2-popup swal2-toast'
+                     },
+                     background: 'var(--bg-primary)',
+                     color: 'var(--text-primary)'
+                 }).then(() => {
+                     window.location.reload();
+                 });
+             } else {
+                 // Jika tidak ada payload JSON, asumsikan sukses saat status OK
+                 Swal.fire({
+                     title: 'Berhasil',
+                     text: 'Cache laporan berhasil dihapus',
+                     icon: 'success',
+                     toast: true,
+                     position: 'top-end',
+                     timer: 2000,
+                     timerProgressBar: true,
+                     showConfirmButton: false,
+                     customClass: {
+                         container: 'swal2-container',
+                         popup: 'swal2-popup swal2-toast'
+                     },
+                     background: 'var(--bg-primary)',
+                     color: 'var(--text-primary)'
+                 }).then(() => {
+                     window.location.reload();
+                 });
+             }
         })
-        .catch((err) => alert(err && err.message ? err.message : 'Terjadi kesalahan saat menghapus cache'));
+         .catch((err) => {
+             Swal.fire({
+                 title: 'Gagal',
+                 text: err && err.message ? err.message : 'Terjadi kesalahan saat menghapus cache',
+                 icon: 'error',
+                 toast: true,
+                 position: 'top-end',
+                 timer: 3000,
+                 timerProgressBar: true,
+                 showConfirmButton: false,
+                 customClass: {
+                     container: 'swal2-container',
+                     popup: 'swal2-popup swal2-toast'
+                 },
+                 background: 'var(--bg-primary)',
+                 color: 'var(--text-primary)'
+             });
+         });
     }
 }
 

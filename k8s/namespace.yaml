@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: k3-waste-management
-  labels:
-    name: k3-waste-management
-    app: k3-app

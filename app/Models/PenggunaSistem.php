@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrait;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,7 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
-    use CanResetPasswordTrait, HasApiTokens, HasFactory, Notifiable;
+    use AuditTrait, CanResetPasswordTrait, HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'pengguna_sistem';
 

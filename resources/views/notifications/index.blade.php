@@ -485,17 +485,29 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
-                        // Show success message
-                        if (typeof toastr !== 'undefined') {
-                            toastr.success(response.message || 'Semua notifikasi telah ditandai sebagai sudah dibaca');
-                        }
+                     success: function (response) {
+                         Swal.fire({
+                             title: 'Berhasil',
+                             text: response.message || 'Semua notifikasi telah ditandai sebagai sudah dibaca',
+                             icon: 'success',
+                             toast: true,
+                             position: 'top-end',
+                             timer: 2000,
+                             timerProgressBar: true,
+                             showConfirmButton: false,
+                             customClass: {
+                                 container: 'swal2-container',
+                                 popup: 'swal2-popup swal2-toast'
+                             },
+                             background: 'var(--bg-primary)',
+                             color: 'var(--text-primary)'
+                         });
 
-                        setTimeout(function () {
-                            $icon.removeClass('fa-spin');
-                            $btn.prop('disabled', false);
-                        }, 500);
-                    },
+                         setTimeout(function () {
+                             $icon.removeClass('fa-spin');
+                             $btn.prop('disabled', false);
+                         }, 500);
+                     },
                     error: function () {
                         showError('Gagal menandai notifikasi sebagai sudah dibaca');
                         setTimeout(function () {
@@ -507,9 +519,24 @@
             };
 
             // Show error message
-            function showError(message) {
-                toastr.error(message);
-            }
+             function showError(message) {
+                 Swal.fire({
+                     title: 'Gagal',
+                     text: message,
+                     icon: 'error',
+                     toast: true,
+                     position: 'top-end',
+                     timer: 3000,
+                     timerProgressBar: true,
+                     showConfirmButton: false,
+                     customClass: {
+                         container: 'swal2-container',
+                         popup: 'swal2-popup swal2-toast'
+                     },
+                     background: 'var(--bg-primary)',
+                     color: 'var(--text-primary)'
+                 });
+             }
         });
     </script>
 @endpush

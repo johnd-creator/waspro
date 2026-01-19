@@ -121,6 +121,28 @@ select, input[type="text"], input[type="number"], input[type="date"], textarea {
                         </div>
                     </div>
 
+                    @if($requiresUnitSelection ?? false)
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label for="unit_id" class="mb-2 block text-sm font-medium" style="color: var(--text-primary);">Unit Pembangkit <span class="text-red-500">*</span></label>
+                            <select
+                                class="w-full rounded-lg border px-3 py-2 shadow-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('unit_id') border-red-500 @enderror"
+                                style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);"
+                                id="unit_id" name="unit_id" required>
+                                <option value="">-- Pilih Unit Pembangkit --</option>
+                                @foreach($unitPembangkit as $unit)
+                                    <option value="{{ $unit->unit_id }}" {{ old('unit_id', $logPenyimpanan->unit_id) == $unit->unit_id ? 'selected' : '' }}>
+                                        {{ $unit->nama_unit }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('unit_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Row 3: Perusahaan Penghasil -->
                     <div class="grid grid-cols-1 gap-6">
                         <div>

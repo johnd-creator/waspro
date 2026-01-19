@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApprovalLog;
 use App\Models\JenisLimbah;
 use App\Models\LogPenyimpananLimbah;
 use App\Models\PenggunaSistem;
 use App\Models\PerusahaanPenghasil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PengangkutanLimbahController extends Controller
 {
@@ -77,8 +79,8 @@ class PengangkutanLimbahController extends Controller
         $logPenyimpanan = $query->orderBy('tanggal_limbah_masuk', 'desc')->paginate(15);
 
         // Data untuk filter dropdown
-        $jenisLimbah = JenisLimbah::where('is_active', true)->get();
-        $perusahaan = PerusahaanPenghasil::where('is_active', true)->get();
+        $jenisLimbah = JenisLimbah::where('status_aktif', true)->get();
+        $perusahaan = PerusahaanPenghasil::where('status_aktif', true)->get();
         $statusOptions = ['Tersimpan', 'Kadaluarsa', 'Hampir Kadaluarsa'];
 
         return view('pengangkutan-limbah.index', compact(
@@ -144,8 +146,8 @@ class PengangkutanLimbahController extends Controller
         $logPenyimpanan = $query->orderBy('tanggal_pengangkutan', 'desc')->paginate(15);
 
         // Data untuk filter dropdown
-        $jenisLimbah = JenisLimbah::where('is_active', true)->get();
-        $perusahaan = PerusahaanPenghasil::where('is_active', true)->get();
+        $jenisLimbah = JenisLimbah::where('status_aktif', true)->get();
+        $perusahaan = PerusahaanPenghasil::where('status_aktif', true)->get();
 
         return view('pengangkutan-limbah.diangkut', compact(
             'logPenyimpanan',
@@ -203,17 +205,29 @@ class PengangkutanLimbahController extends Controller
         ]);
 
         $logs = LogPenyimpananLimbah::whereIn('log_id', $request->selected_logs)
-            ->whereRaw("LOWER(status_log) != 'diangkut'")
+            ->where('status_log', '!=', 'Diangkut')
             ->get();
 
-        $approvedCount = 0;
-        foreach ($logs as $log) {
-            $log->update([
+        $approvedCount = LogPenyimpananLimbah::whereIn('log_id', $request->selected_logs)
+            ->where('status_log', '!=', 'Diangkut')
+            ->update([
                 'status_log' => 'Diangkut',
                 'tanggal_pengangkutan' => now(),
-                'jumlah_diangkut' => $log->jumlah_limbah_masuk,
+                'jumlah_diangkut' => DB::raw('jumlah_limbah_masuk')
             ]);
-            $approvedCount++;
+
+        if ($approvedCount > 0 && auth()->check()) {
+            ApprovalLog::insert(
+                collect($logs)->map(fn($log) => [
+                    'log_id' => $log->log_id,
+                    'peran_id' => auth()->user()->peranPengguna()->first()->peran_id ?? null,
+                    'action' => 'approve',
+                    'approval_status' => 'approved',
+                    'approved_by' => auth()->id(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])->toArray()
+            );
         }
 
         return redirect()->back()->with('success', "Berhasil menyetujui pengangkutan {$approvedCount} limbah.");
@@ -233,8 +247,8 @@ class PengangkutanLimbahController extends Controller
         }
 
         // Data untuk dropdown
-        $jenisLimbah = JenisLimbah::where('is_active', true)->get();
-        $perusahaan = PerusahaanPenghasil::where('is_active', true)->get();
+        $jenisLimbah = JenisLimbah::where('status_aktif', true)->get();
+        $perusahaan = PerusahaanPenghasil::where('status_aktif', true)->get();
 
         return view('pengangkutan-limbah.create', compact(
             'jenisLimbah',

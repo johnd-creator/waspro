@@ -2,7 +2,12 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\JenisLimbah;
+use App\Models\LogPenyimpananLimbah;
+use App\Models\PerusahaanPenghasil;
+use App\Models\PenggunaSistem;
+use App\Models\UnitPembangkit;
+use App\Models\KategoriKegiatanSumber;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,9 +25,6 @@ class DatabaseSeeder extends Seeder
             KategoriKegiatanSumberSeeder::class,
             PerusahaanPenghasilSeeder::class,
             JenisLimbahSeeder::class,
-            JenisLimbahFakeSeeder::class,
-            LogPenyimpananLimbahSeeder::class,
-            ApplicationSettingSeeder::class,
         ]);
     }
 }

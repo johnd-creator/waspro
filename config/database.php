@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mariadb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -43,28 +43,30 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
-        'mysql' => [
-            'driver' => 'mysql',
+        'mariadb' => [
+            'driver' => 'mariadb',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => env('DB_DATABASE', 'waspro'),
+            'username' => env('DB_USERNAME', 'fauzi'),
+            'password' => env('DB_PASSWORD', 'M0n$ter888'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"',
+                PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
-        'mariadb' => [
-            'driver' => 'mariadb',
+        'mysql' => [
+            'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
@@ -109,7 +111,7 @@ return [
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            //             'encrypt' => env('DB_ENCRYPT', 'yes')
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 

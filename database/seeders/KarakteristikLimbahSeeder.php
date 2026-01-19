@@ -7,26 +7,26 @@ use Illuminate\Database\Seeder;
 
 class KarakteristikLimbahSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $karakteristik = [
-            ['nama_karakteristik' => 'Mudah Meledak'],
-            ['nama_karakteristik' => 'Pengoksidasi'],
-            ['nama_karakteristik' => 'Mudah Terbakar'],
-            ['nama_karakteristik' => 'Beracun'],
-            ['nama_karakteristik' => 'Berbahaya Bagi Lingkungan'],
-            ['nama_karakteristik' => 'Korosif'],
-            ['nama_karakteristik' => 'Bersifat Infeksius'],
-            ['nama_karakteristik' => 'Reaktif'],
+            'B3 Berbahaya',
+            'B3 Mudah Terbakar',
+            'B3 Reaktif',
+            'B3 Korosif',
+            'B3 Infeksius',
+            'Non B3',
+            'Radioaktif',
+            'B3 Toksik',
         ];
 
-        foreach ($karakteristik as $item) {
-            KarakteristikLimbah::firstOrCreate(
-                ['nama_karakteristik' => $item['nama_karakteristik']]
-            );
+        foreach ($karakteristik as $nama) {
+            KarakteristikLimbah::create([
+                'nama_karakteristik' => $nama,
+                'status_aktif' => true,
+            ]);
         }
+
+        $this->command->info('✓ '.count($karakteristik).' karakteristik limbah berhasil dibuat');
     }
 }
