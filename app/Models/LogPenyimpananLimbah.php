@@ -58,6 +58,7 @@ class LogPenyimpananLimbah extends Model
         'maksimal_penyimpanan_tanggal' => 'datetime',
         'tanggal_pengangkutan' => 'datetime',
         'tanggal_kadaluarsa' => 'datetime',
+        'status_log' => \App\Enums\LogStatus::class,
         'dokumen_uploaded_at' => 'datetime',
         'created_at_client' => 'datetime',
         'updated_at_client' => 'datetime',

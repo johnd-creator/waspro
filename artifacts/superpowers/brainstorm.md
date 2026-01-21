@@ -1,42 +1,42 @@
-# Brainstorm: GitHub API Test Failure
+# Superpowers Brainstorm
+
+## Task
+Brainstorm for this task: **Fix "many errors" (CSP violations) reported by user after recent Content Security Policy implementation.**
 
 ## Goal
-Resolve the "API Tests / test (push)" failure reported on GitHub Actions.
+Eliminate console errors and restore application functionality by refining the `ContentSecurityPolicy` middleware to whitelisting necessary external resources (CDNs, Vite) while maintaining security best practices.
 
 ## Constraints
-- **Environment**: GitHub Actions uses `ubuntu-latest`, PHP 8.3, `sqlite` (memory), and a fresh `.env` from `.env.example`.
-- **Access**: We cannot see the *exact* GitHub error log from the screenshot (it only shows "Failing"), so we must infer or reproduce it.
-- **Time**: User reported failure "after 18s", suggesting a quick failure (bootstrap or early test).
+- **Security**: Do not remove CSP entirely; refine it.
+- **Environment**: Must support local development (Vite HMR often uses port 5173 and websockets).
+- **Legitimate Resources**: Must allow libraries currently used in Blade/JS (likely jQuery, Chart.js, AOS, Google Fonts).
 
 ## Known context
-- **Workflow**: `.github/workflows/api-tests.yml` runs `php artisan test --testsuite=Feature --filter=Api`.
-- **Tests**: There are 5 API test files in `tests/Feature/Api/`.
-- **Local Status**: Local execution attempts returned empty output (indeterministic), but the codebase recently underwent significant changes (DashboardService).
-- **Recent Changes**: Refactored `DashboardService::getUnits` (Collection return) and `isSuperAdmin` key. These changes *should not* affect API tests unless they rely on DashboardService (unlikely for `JenisLimbahApiTest`).
-- **Potential Cause**: The GitHub workflow uses `.env.example`. If `.env.example` has missing keys or invalid defaults compared to the local `.env`, tests will fail.
+- Recently added `ContentSecurityPolicy` middleware.
+- User screenshot (likely) shows blocked resources.
+- Application uses:
+    - Laravel 11/12
+    - Vite (for asset bundling/serving)
+    - Older libraries likely via CDN (jQuery, AOS, Chart.js).
 
 ## Risks
-- **Ignored Regressions**: Disabling the test hides actual API bugs.
-- **False Positives**: The test might be verifying a feature not fully configured in the `.env.example`.
-- **Deployment Block**: If the repo has branch protection rules, this failure prevents merging.
+- **Broken UI**: If we miss a font or style CDN, the UI looks broken.
+- **Broken Interactivity**: If we miss a script CDN (like jQuery or Alpine), buttons/modals won't work.
+- **Development Friction**: If Vite HMR is blocked, developer experience suffers.
 
 ## Options
-1.  **Debug & Fix (Recommended)**:
-    - Attempt to reproduce locally with `APP_ENV=testing` and `.env.example` settings.
-    - If reproducible, fix the code or the test.
-    - If environment related, update `.env.example`.
-2.  **Disable Workflow (Temporary)**:
-    - Comment out or delete `.github/workflows/api-tests.yml`.
-    - **Pros**: Unblocks deployment immediately.
-    - **Cons**: Loses CI coverage for APIs.
-3.  **Ignore**:
-    - Tell user it's fine if they don't use API features.
-    - **Cons**: Bad practice; leaves "red" CI status.
+1.  **Relaxed Policy (Whitelist All Common CDNs)**: Add `*.jquery.com`, `*.jsdelivr.net`, `unpkg.com`, `*.googleapis.com`, `*.gstatic.com` to appropriate directives.
+2.  **Dev-Aware Policy**: Explicitly check `app()->isLocal()` or `config('app.debug')` and allow `ws:` and `connect-src` for Vite (`localhost:5173`, `[::1]:5173`) specifically in dev mode.
+3.  **Report-Only Mode**: Switch to `Content-Security-Policy-Report-Only` header temporarily to stop blocking while logging errors.
 
 ## Recommendation
-**Option 1 (Debug & Fix)**.
-We should try to run the tests locally with the *exact* command used in CI to identify the error. If it's a simple configuration miss (e.g. missing API key in `.env.example`), it's an easy fix.
+**Option 2 (Dev-Aware + Whitelist)**.
+This addresses the root causes:
+1.  **Vite**: Allow `http://localhost:5173`, `http://[::1]:5173`, and `ws://localhost:5173` for `connect-src`, `script-src`, `style-src`.
+2.  **CDNs**: Broaden the whitelist to include `code.jquery.com`, `unpkg.com` (often used for AOS/libraries), and ensure `cdn.jsdelivr.net` is allowed for styles/scripts.
+3.  **Fonts**: Ensure `fonts.gstatic.com` and `fonts.googleapis.com` are allowed.
 
 ## Acceptance criteria
-- The `php artisan test --testsuite=Feature --filter=Api` command passes locally.
-- (Implicit) The Fix is pushed and GitHub Actions turns Green.
+- [ ] User confirms console errors are gone.
+- [ ] Styles and Scripts load correctly.
+- [ ] Vite HMR works in development.

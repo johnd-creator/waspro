@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class ContentSecurityPolicy
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $response = $next($request);
+
+        // -- Base Allowed Domains --
+        $scripts = [
+            "'self'",
+            "'unsafe-inline'",
+            "'unsafe-eval'", // Needed for some JS libraries/charts
+            "https://cdn.jsdelivr.net",
+            "https://code.jquery.com",
+            "https://unpkg.com",
+            "https://cdnjs.cloudflare.com",
+        ];
+
+        $styles = [
+            "'self'",
+            "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://cdn.jsdelivr.net",
+            "https://unpkg.com",
+            "https://cdnjs.cloudflare.com",
+        ];
+
+        $fonts = [
+            "'self'",
+            "https://fonts.gstatic.com",
+            "https://cdnjs.cloudflare.com",
+            "data:",
+        ];
+
+        $images = [
+            "'self'",
+            "data:",
+            "https://ui-avatars.com",
+        ];
+
+        $connect = [
+            "'self'",
+            "https://cdn.jsdelivr.net", // Sometimes charts load maps/configs
+        ];
+
+        // -- Development Environment (Vite) --
+        if (app()->isLocal()) {
+            $devUrls = [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "ws://localhost:5173",
+                "ws://127.0.0.1:5173",
+            ];
+
+            // Add Vite URLs to relevant directives
+            $scripts = array_merge($scripts, $devUrls);
+            $styles = array_merge($styles, $devUrls);
+            $connect = array_merge($connect, $devUrls);
+            // Vite sometimes loads assets/images from the dev server
+            $images = array_merge($images, $devUrls);
+        }
+
+        // -- Build Policy String --
+        $policy = [
+            "default-src 'self'",
+            "script-src " . implode(' ', $scripts),
+            "style-src " . implode(' ', $styles),
+            "font-src " . implode(' ', $fonts),
+            "img-src " . implode(' ', $images),
+            "connect-src " . implode(' ', $connect),
+            "frame-src 'self'",
+            "object-src 'none'",
+        ];
+
+        $response->headers->set('Content-Security-Policy', implode('; ', $policy) . ';');
+
+        return $response;
+    }
+}

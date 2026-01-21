@@ -44,7 +44,7 @@ class LogPenyimpananServiceTest extends TestCase
         $this->assertEquals('Pekerjaan uji', $log->uraian_pekerjaan);
         $this->assertEquals(10.5, (float) $log->jumlah_limbah_masuk);
         $this->assertEquals($jenis->kode_limbah, $log->kode_limbah);
-        $this->assertEquals('Tersimpan', $log->status_log);
+        $this->assertEquals(\App\Enums\LogStatus::Tersimpan, $log->status_log);
     }
 
     public function test_create_log_sets_expiry_dates_from_jenis_limbah()

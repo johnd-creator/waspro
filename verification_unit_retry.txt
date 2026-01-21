@@ -1,0 +1,43 @@
+
+   PASS  Tests\Unit\ApprovalWorkflowTest
+  ✓ supervisor can approve pending log                                   0.56s  
+  ✓ supervisor can reject log with reason                                0.04s  
+  ✓ operator cannot approve own log                                      0.04s  
+  ✓ approval creates audit log entry                                     0.04s  
+  ✓ approved log cannot be edited                                        0.06s  
+  ✓ rejected log cannot be edited                                        0.08s  
+  ✓ approval status updates correctly                                    0.08s  
+  ✓ approval log records approver id                                     0.06s  
+  ✓ multiple approvals tracked separately                                0.07s  
+
+   PASS  Tests\Unit\CleanupPendingLogsTest
+  ✓ cleanup pending logs transaction success                             0.08s  
+  ✓ cleanup pending logs rollback on failure                             0.06s  
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    0.01s  
+
+   PASS  Tests\Unit\LogPenyimpananLimbahModelTest
+  ✓ calculate expiry date uses jenis limbah days                         0.03s  
+  ✓ get days until expiry returns integer                                0.03s  
+
+   PASS  Tests\Unit\LogPenyimpananServiceTest
+  ✓ create log sets core fields correctly                                0.04s  
+  ✓ create log sets expiry dates from jenis limbah                       0.04s  
+  ✓ update log returns false when status diangkut                        0.03s  
+  ✓ update log updates allowed fields and recalculates expiry            0.03s  
+
+   PASS  Tests\Unit\SuperAdminUnitIdTest
+  ✓ super admin can be created with null unit id                         0.05s  
+  ✓ non super admin must have unit id                                    0.04s  
+  ✓ only one super admin allowed                                         0.04s  
+  ✓ super admin can see all units data                                   0.05s  
+  ✓ non admin cannot have null unit id                                   0.04s  
+  ✓ is super admin returns true                                          0.04s  
+
+   PASS  Tests\Unit\UpdateWasteExpiryStatusTest
+  ✓ update waste expiry avoids n plus one query                          0.11s  
+
+  Tests:    25 passed (63 assertions)
+  Duration: 1.86s
+

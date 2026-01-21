@@ -1,28 +1,44 @@
-# Plan: Fix GitHub API Test Failure (Phase 2)
+# Plan: Fix CSP Errors (Dev-Aware + CDNs)
 
 ## Goal
-Resolve the continuing "API Tests" failure in GitHub Actions.
-**Root Cause Hypothesis**: The `ApiTestCase.php` file defines a **hardcoded database schema** (`refreshTestingSchema`) instead of using Laravel's standard `RefreshDatabase` (which runs actual migrations). This hardcoded schema is likely out-of-sync with recent changes (e.g., `kategori_id` or other fields), causing tests to fail with "Column not found" errors in the CI environment (SQLite).
+Resolve console errors caused by strict Content Security Policy (CSP) blocking external libraries (jQuery, AOS, Chart.js) and Vite's Hot Module Replacement (HMR) during local development.
 
-## Proposed Changes
-### Tests
-#### [MODIFY] [tests/Feature/Api/ApiTestCase.php](file:///home/john-d/Documents/waspro/tests/Feature/Api/ApiTestCase.php)
-- Compare the `Schema::create` definitions in this file against the actual `database/migrations` files.
-- Add any missing columns or tables (e.g., ensure `jenis_limbah`, `unit_pembangkit`, etc., match model expectations).
-- Alternatively, if feasible, refactor to use `use RefreshDatabase;` and delete the manual schema logic to preventing future desyncs (preferred if tests are standard).
+## Assumptions
+- Environment is Local/Dev (`app()->isLocal()` is true).
+- Vite runs on default port `5173`.
+- External libraries identified from logs: jQuery, AOS (unpkg), Chart.js (jsdelivr), Google Fonts.
 
-## Verification
-1.  **Reproduction**:
-    - Run `php artisan test --testsuite=Feature --filter=Api` locally.
-    - If it passes locally with MySQL but fails in CI, force SQLite execution locally:
-      ```bash
-      DB_CONNECTION=sqlite DB_DATABASE=:memory: php artisan test --filter=Api
-      ```
-    - Confirm this fails locally (reproducing the CI issue).
-2.  **Fix Verification**:
-    - Apply schema updates.
-    - Run the SQLite command again.
-    - Result must be GREEN.
+## Plan
 
-## Dependencies
-None.
+### Phase 1: Update CSP Middleware
+#### [MODIFY] [app/Http/Middleware/ContentSecurityPolicy.php](file:///home/john-d/Documents/waspro/app/Http/Middleware/ContentSecurityPolicy.php)
+-   Refactor `handle` method to build the CSP string dynamically.
+-   **Base Policy**: Allow `self`, `data:`, `https://ui-avatars.com`.
+-   **CDNs**: Add:
+    -   `https://code.jquery.com`
+    -   `https://cdn.jsdelivr.net`
+    -   `https://unpkg.com`
+    -   `https://fonts.googleapis.com` (Style)
+    -   `https://fonts.gstatic.com` (Font)
+-   **Dev-Specific**: If `app()->isLocal()`, add:
+    -   `http://localhost:5173`
+    -   `http://[::1]:5173` (IPv6 localhost)
+    -   `ws://localhost:5173` (Websockets for HMR)
+    -   `wss://localhost:5173`
+
+### Phase 2: Verification
+#### [VERIFY]
+-   Run `php -l app/Http/Middleware/ContentSecurityPolicy.php` to ensure no syntax errors.
+-   (Manual) User loads Dashboard in browser:
+    -   Console should be clear of redness.
+    -   Vite "connected" message should appear (or at least not fail silent).
+    -   Charts and Animations (AOS) should work.
+
+## Risks & mitigations
+-   **Security**: Whitelisting `unpkg.com` and `jsdelivr.net` is broad.
+    -   *Mitigation*: Necessary trade-off for using CDN-based architecture. In production build, we might want to narrow this if possible, but for now, functionality is priority.
+-   **Vite Port**: If user runs Vite on a different port (e.g. 5174), it will still block.
+    -   *Mitigation*: Add common ranges or sticky port if needed. For now 5173 is standard.
+
+## Rollback plan
+-   Revert `app/Http/Middleware/ContentSecurityPolicy.php` to previous state (or purely comment out header setting).

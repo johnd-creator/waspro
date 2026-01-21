@@ -157,13 +157,13 @@ class LogPenyimpananLimbahController extends Controller
     {
         $user = Auth::user();
 
-        if ($logPenyimpanan->status_log === 'Diangkut') {
+        if ($logPenyimpanan->status_log === \App\Enums\LogStatus::Diangkut) {
             return back()->with('error', 'Log yang sudah diangkut tidak dapat diedit.');
         }
 
         $canEditLogs = \App\Models\ApplicationSetting::getValue('workflow.can_edit_logs', true);
 
-        if (!$canEditLogs && $logPenyimpanan->status_log === 'Tersimpan') {
+        if (!$canEditLogs && $logPenyimpanan->status_log === \App\Enums\LogStatus::Tersimpan) {
             $userRole = $user->peranPengguna->first()->nama_peran ?? 'User';
             $canApprove = in_array($userRole, ['Super Admin', 'Administrator']);
 
@@ -202,7 +202,7 @@ class LogPenyimpananLimbahController extends Controller
 
         $canEditLogs = \App\Models\ApplicationSetting::getValue('workflow.can_edit_logs', true);
 
-        if (!$canEditLogs && $logPenyimpanan->status_log !== 'Kadaluarsa') {
+        if (!$canEditLogs && $logPenyimpanan->status_log !== \App\Enums\LogStatus::Kadaluarsa) {
             return back()->with('error', 'Log yang sudah disetujui tidak dapat diedit (Pengaturan Workflow).');
         }
 
@@ -257,7 +257,7 @@ class LogPenyimpananLimbahController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk menghapus log ini.');
         }
 
-        if ($logPenyimpanan->status_log === 'Diangkut') {
+        if ($logPenyimpanan->status_log === \App\Enums\LogStatus::Diangkut) {
             return back()->with('error', 'Log yang sudah diangkut tidak dapat dihapus.');
         }
 
@@ -319,9 +319,9 @@ class LogPenyimpananLimbahController extends Controller
         }
 
         return new JsonResponse([
-            'tersimpan' => $query->where('status_log', 'Tersimpan')->count(),
-            'diangkut' => $query->where('status_log', 'Diangkut')->count(),
-            'kadaluarsa' => $query->where('status_log', 'Kadaluarsa')->count(),
+            'tersimpan' => $query->where('status_log', \App\Enums\LogStatus::Tersimpan)->count(),
+            'diangkut' => $query->where('status_log', \App\Enums\LogStatus::Diangkut)->count(),
+            'kadaluarsa' => $query->where('status_log', \App\Enums\LogStatus::Kadaluarsa)->count(),
         ]);
     }
 
@@ -334,7 +334,7 @@ class LogPenyimpananLimbahController extends Controller
             return back()->with('error', 'Anda tidak memiliki izin untuk menyetujui log.');
         }
 
-        if ($log->status_log !== 'Tersimpan') {
+        if ($log->status_log !== \App\Enums\LogStatus::Tersimpan) {
             return back()->with('error', 'Hanya log dengan status Tersimpan yang dapat disetujui.');
         }
 
@@ -347,7 +347,7 @@ class LogPenyimpananLimbahController extends Controller
         ]);
 
         $log->update([
-            'status_log' => 'Diangkut',
+            'status_log' => \App\Enums\LogStatus::Diangkut,
             'approval_status' => 'approved',
             'approved_at' => now(),
         ]);
@@ -379,7 +379,7 @@ class LogPenyimpananLimbahController extends Controller
         ]);
 
         $log->update([
-            'status_log' => 'Kadaluarsa',
+            'status_log' => \App\Enums\LogStatus::Kadaluarsa,
             'approval_status' => 'rejected',
         ]);
 
@@ -408,7 +408,7 @@ class LogPenyimpananLimbahController extends Controller
         }
 
         $logs = LogPenyimpananLimbah::whereIn('log_id', $logIds)
-            ->where('status_log', 'Tersimpan')
+            ->where('status_log', \App\Enums\LogStatus::Tersimpan)
             ->get();
 
         foreach ($logs as $log) {
@@ -421,7 +421,7 @@ class LogPenyimpananLimbahController extends Controller
             ]);
 
             $log->update([
-                'status_log' => 'Diangkut',
+                'status_log' => \App\Enums\LogStatus::Diangkut,
                 'approval_status' => 'approved',
                 'approved_at' => now(),
             ]);

@@ -1,0 +1,38 @@
+
+   PASS  Tests\Feature\Api\Auth\LoginLogoutTest
+  ✓ user can login with valid credentials                                0.55s  
+  ✓ login fails with invalid credentials                                 0.03s  
+  ✓ inactive user cannot login                                           0.03s  
+  ✓ authenticated user can logout                                        0.03s  
+
+   PASS  Tests\Feature\Api\JenisLimbahApiTest
+  ✓ index returns filtered paginated results                             0.05s  
+  ✓ show returns single resource                                         0.03s  
+
+   PASS  Tests\Feature\Api\KarakteristikLimbahApiTest
+  ✓ index supports search and status filters                             0.04s  
+  ✓ show returns single karakteristik                                    0.03s  
+
+   PASS  Tests\Feature\Api\KategoriKegiatanSumberApiTest
+  ✓ index supports search and pagination                                 0.06s  
+  ✓ show returns single kategori                                         0.03s  
+
+   PASS  Tests\Feature\Api\PerusahaanPenghasilApiTest
+  ✓ super admin can create perusahaan                                    0.04s  
+  ✓ administrator can update perusahaan                                  0.03s  
+  ✓ operator cannot update perusahaan                                    0.04s  
+  ✓ super admin can delete perusahaan                                    0.03s  
+
+   PASS  Tests\Feature\Api\UnitPembangkitApiTest
+  ✓ super admin can create unit                                          0.04s  
+  ✓ administrator cannot create unit                                     0.03s  
+  ✓ administrator can update own unit                                    0.04s  
+  ✓ operator cannot update unit                                          0.03s  
+  ✓ super admin can delete unit                                          0.04s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response                        0.03s  
+
+  Tests:    20 passed (68 assertions)
+  Duration: 1.37s
+
