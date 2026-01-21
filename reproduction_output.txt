@@ -1,0 +1,23 @@
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [1045] Access denied for user ''@'localhost' (using password: NO) (Connection: mysql, SQL: select exists (select 1 from information_schema.tables where table_schema = schema() and table_name = 'application_settings' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:824
+    820▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    821▕                 );
+    822▕             }
+    823▕ 
+  ➜ 824▕             throw new QueryException(
+    825▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826▕             );
+    827▕         }
+    828▕     }
+
+  1   [internal]:0
+      Illuminate\Foundation\Application::{closure:Illuminate\Foundation\Application::boot():1131}()
+      [2m+20 vendor frames [22m
+
+  22  app/Providers/AppServiceProvider.php:40
+      Illuminate\Support\Facades\Facade::__callStatic()
+

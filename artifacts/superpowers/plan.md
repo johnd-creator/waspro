@@ -1,26 +1,27 @@
-# Plan: Restore Dashboard Filter
+# Plan: Fix GitHub API Test Failure
 
 ## Goal
-Restore the "Super Admin Unit Filter" on the Dashboard which failed validation due to:
-1.  Data Type Mismatch (Array vs Object) - **Fixed**.
-2.  Variable Name Mismatch (`is_super_admin` vs `$isSuperAdmin`) - **Pending**.
+Resolve the "API Tests / test (push)" failure in GitHub Actions by identifying and fixing the environment mismatch between local development and CI.
 
 ## Proposed Changes
-### Backend
-#### [MODIFY] [DashboardService.php](file:///home/john-d/Documents/waspro/app/Services/DashboardService.php)
-- Method: `getUnits()`
-    - (Done) Remove `->toArray()` to return an Eloquent Collection.
-- Method: `getDashboardData(array $filters): array`
-    - Change key `'is_super_admin'` to `'isSuperAdmin'` to match blade variable naming convention.
+### Configuration
+#### [MODIFY] [.env.example](file:///home/john-d/Documents/waspro/.env.example)
+- Update to include missing keys or correct defaults required for API tests to pass (e.g., `APP_KEY`, specific database configs, or third-party service mocks).
+
+### Tests
+#### [MODIFY] [tests/Feature/Api/JenisLimbahApiTest.php](file:///home/john-d/Documents/waspro/tests/Feature/Api/JenisLimbahApiTest.php) (If needed)
+- Robustness improvements if tests are flaky.
 
 ## Verification
-1.  **Manual Verification**:
-    - Open Dashboard `/dashboard` as Super Admin.
-    - Verify the "Unit Filter" dropdown appears.
-    - Verify `isset($isSuperAdmin)` passes in View.
-2.  **Code Verification**:
-    - Created `verify_dashboard_units.php` (for Step 1).
-    - Will verify key change via code inspection.
+1.  **Simulation**:
+    - Backup current `.env`.
+    - Copy `.env.example` to `.env`.
+    - Run `php artisan key:generate` (mimic CI).
+    - Run `php artisan test --testsuite=Feature --filter=Api`.
+2.  **Success Criteria**:
+    - The tests must pass using the *example* environment configuration.
+3.  **Restoration**:
+    - Restore original `.env` after verification.
 
 ## Dependencies
 None.

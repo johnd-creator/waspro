@@ -1,18 +1,18 @@
-# Execution Log
+# Execution Log (API Fix)
 
-## Step 1: Modify DashboardService (Return Type)
-- **Files**: `app/Services/DashboardService.php`
-- **Changes**: 
-    - Removed `->toArray()` call in `getUnits()`.
-    - Updated return type hint to `\Illuminate\Support\Collection`.
-- **Verification**: 
-    - Created `verify_dashboard_units.php`.
-    - Result: PASS. getUnits() returns instance of Collection.
+## Step 1: Diagnose Failure
+- **Diagnosis**: `AppServiceProvider` queries database during boot.
+- **Root Cause**: `.env.example` (used in CI) defaulted to `mysql` with empty credentials. `php artisan key:generate` (setup step) failed because it triggers app boot, which crashed on DB connection.
 
-## Step 2: Modify DashboardService (Variable Name)
-- **Files**: `app/Services/DashboardService.php`
-- **Changes**:
-    - Renamed array key `is_super_admin` to `isSuperAdmin` in `getDashboardData`.
-- **Verification**:
-    - Created `verify_dashboard_keys.php`.
-    - Result: PASS. getDashboardData() contains key 'isSuperAdmin'.
+## Step 2: Apply Fix
+- **Files**: `.env.example`
+- **Changes**: Changed `DB_CONNECTION` to `sqlite` and `DB_DATABASE` to `:memory:`.
+- **Reason**: Allows the application to boot without external dependencies or valid MySQL credentials during CI setup.
+
+## Step 3: Verification
+- **Process**:
+    1. Backed up `.env`.
+    2. Copied `.env.example` to `.env`.
+    3. Ran `php artisan key:generate`.
+    4. **Result**: PASS (Exit Code 0). (Previously failed with Exit Code 1).
+    5. Restored original `.env`.

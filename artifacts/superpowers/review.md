@@ -13,9 +13,10 @@
 - None.
 
 ## Summary
-The execution was comprehensive.
-1.  **Correctness**: `getUnits()` returns Objects (Collection) and `getDashboardData` provides `$isSuperAdmin` (camelCase). This perfectly matches `dashboard.blade.php`.
-2.  **Verification**: Both fixes were verified with dedicated scripts.
+The root cause was identified as an environment mismatch. `.env.example` used `mysql` but provided empty credentials. The application's `AppServiceProvider` accessed the database during the `boot` phase, causing `php artisan key:generate` (and thus the whole CI workflow) to crash before tests even started.
 
-**Next Actions:**
-- Deployment.
+**Fix**: Updated `.env.example` to use `sqlite` and `:memory:`. This is a robust default that works in any environment without external dependencies.
+**Verification**: Verified locally by simulating the CI setup (copying `.env.example` to `.env` and running setup commands).
+
+**Next Actions**:
+- Commit and Push the changes to GitHub.

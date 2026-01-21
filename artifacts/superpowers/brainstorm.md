@@ -1,34 +1,42 @@
-# Superpowers Brainstorm
+# Brainstorm: GitHub API Test Failure
 
 ## Goal
-Restore the "Super Admin Unit Filter" on the Dashboard which disappeared after recent optimizations, while maintaining the performance improvements (avoiding OOM).
+Resolve the "API Tests / test (push)" failure reported on GitHub Actions.
 
 ## Constraints
-- **Performance**: Must not re-introduce memory leaks or OOM issues. The unit list is small, so fetching it is cheap, but we must ensure we don't accidentally load heavy relationships.
-- **Role-based**: Only Super Admin should see the filter.
-- **UX**: The filter should look and work as it did before (dropdown selection).
+- **Environment**: GitHub Actions uses `ubuntu-latest`, PHP 8.3, `sqlite` (memory), and a fresh `.env` from `.env.example`.
+- **Access**: We cannot see the *exact* GitHub error log from the screenshot (it only shows "Failing"), so we must infer or reproduce it.
+- **Time**: User reported failure "after 18s", suggesting a quick failure (bootstrap or early test).
 
 ## Known context
-- **Bug Location**: `app/Services/DashboardService.php` vs `resources/views/dashboard/index.blade.php`.
-- **Root Cause**: `DashboardService::getUnits()` was changed to return an **array** (using `->toArray()`), but the Blade view expects a **Collection of Objects** (accessing properties via `$unit->unit_id`).
-- **Impact**: PHP likely throws a TypeError or Warning when accessing property on array, causing the view to fail or the section to be skipped if error suppression is active (though usually this results in a 500 error). User reports "filter is gone", implying the UI element is missing.
-- **Current State**: Backend logic for filtering `buildLogQuery` is correctly implemented and respects `unit_id`.
+- **Workflow**: `.github/workflows/api-tests.yml` runs `php artisan test --testsuite=Feature --filter=Api`.
+- **Tests**: There are 5 API test files in `tests/Feature/Api/`.
+- **Local Status**: Local execution attempts returned empty output (indeterministic), but the codebase recently underwent significant changes (DashboardService).
+- **Recent Changes**: Refactored `DashboardService::getUnits` (Collection return) and `isSuperAdmin` key. These changes *should not* affect API tests unless they rely on DashboardService (unlikely for `JenisLimbahApiTest`).
+- **Potential Cause**: The GitHub workflow uses `.env.example`. If `.env.example` has missing keys or invalid defaults compared to the local `.env`, tests will fail.
 
 ## Risks
-- **Data Type Mismatch**: Fixing the view to use array syntax `['unit_id']` works but is less "Laravel-like".
-- **Service Consistency**: Changing the service to return Objects might affect other consumers if they expect arrays (though currently only Controller uses it for the View).
+- **Ignored Regressions**: Disabling the test hides actual API bugs.
+- **False Positives**: The test might be verifying a feature not fully configured in the `.env.example`.
+- **Deployment Block**: If the repo has branch protection rules, this failure prevents merging.
 
-## Options (2–4)
-1.  **Revert to Returning Collection (Recommended)**: Modify `DashboardService::getUnits()` to remove `->toArray()`. This restores compatibility with the existing Blade view (`$unit->unit_id`). Memory impact is negligible for a list of units.
-2.  **Update View to Array Syntax**: Modify `dashboard/index.blade.php` to use `$unit['unit_id']`. This accepts the "optimized" array return but requires changing the frontend code.
-3.  **AJAX Loading**: Load the units list via a separate API call. (Overkill, usage is simple).
+## Options
+1.  **Debug & Fix (Recommended)**:
+    - Attempt to reproduce locally with `APP_ENV=testing` and `.env.example` settings.
+    - If reproducible, fix the code or the test.
+    - If environment related, update `.env.example`.
+2.  **Disable Workflow (Temporary)**:
+    - Comment out or delete `.github/workflows/api-tests.yml`.
+    - **Pros**: Unblocks deployment immediately.
+    - **Cons**: Loses CI coverage for APIs.
+3.  **Ignore**:
+    - Tell user it's fine if they don't use API features.
+    - **Cons**: Bad practice; leaves "red" CI status.
 
 ## Recommendation
-**Option 1: Revert to Returning Collection**.
-It is the standard Laravel way to pass Eloquent Collections to views. The memory overhead of a few dozen Unit objects is trivial compared to the thousands of Log objects that caused the OOM. The OOM fix was primarily about *Logs* (thousands of rows), not *Units* (reference data).
+**Option 1 (Debug & Fix)**.
+We should try to run the tests locally with the *exact* command used in CI to identify the error. If it's a simple configuration miss (e.g. missing API key in `.env.example`), it's an easy fix.
 
 ## Acceptance criteria
-- [ ] `DashboardService::getUnits()` returns a Collection (or array of objects).
-- [ ] Dashboard View renders the Unit Filter dropdown for Super Admin.
-- [ ] Selecting a unit and submitting the form filters the dashboard data correctly (Log counts update).
-- [ ] No 500 errors on Dashboard load.
+- The `php artisan test --testsuite=Feature --filter=Api` command passes locally.
+- (Implicit) The Fix is pushed and GitHub Actions turns Green.
