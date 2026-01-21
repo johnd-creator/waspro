@@ -152,7 +152,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
     {
         $currentUser = Auth::user();
 
-        if ($currentUser && ! $this->isUserAdmin($currentUser)) {
+        if ($currentUser && !$this->isUserAdmin($currentUser)) {
             return $query->where('unit_id', $currentUser->unit_id);
         }
 
@@ -233,7 +233,7 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
      */
     public static function isUserAdmin($user)
     {
-        if (! $user) {
+        if (!$user) {
             return false;
         }
 
@@ -252,6 +252,14 @@ class PenggunaSistem extends Authenticatable implements CanResetPassword, MustVe
 
         // User biasa hanya dapat mengakses unit sendiri
         return $this->unit_id == $unitId;
+    }
+
+    /**
+     * Cek apakah user dapat menyetujui log
+     */
+    public function canApproveLogs()
+    {
+        return $this->peranPengguna()->whereIn('peran_pengguna.nama_peran', ['Super Admin', 'Administrator', 'Supervisor'])->exists();
     }
 
     /**

@@ -174,4 +174,18 @@ class K3Logger
             Log::channel('k3_audit')->warning('Slow Operation', $logData);
         }
     }
+
+    /**
+     * Log generic info
+     */
+    public static function info(string $message, array $context = []): void
+    {
+        $user = Auth::user();
+        $context['user_id'] = $user?->id;
+        $context['user_name'] = $user?->nama_lengkap ?? 'System';
+        $context['ip_address'] = request()?->ip();
+        $context['timestamp'] = now()->toISOString();
+
+        Log::channel('k3_audit')->info($message, $context);
+    }
 }

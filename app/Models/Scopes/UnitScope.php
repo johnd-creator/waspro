@@ -14,17 +14,17 @@ class UnitScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $user = Auth::guard('web')->user();
+        $user = Auth::user();
 
         // Jika user login dan bukan Super Admin, filter berdasarkan unit
         // Super Admin ditandai dengan unit_id = NULL
-        if ($user && ! $this->isSuperAdmin($user) && $user->unit_id) {
-            $builder->where($model->getTable().'.unit_id', $user->unit_id);
+        if ($user && !$this->isSuperAdmin($user) && $user->unit_id) {
+            $builder->where($model->getTable() . '.unit_id', $user->unit_id);
         }
         // Jika user tidak memiliki unit_id atau Super Admin, tampilkan semua data
         // Jika ada user_unit_id di request (dari middleware), gunakan itu
         if (request()->has('user_unit_id')) {
-            $builder->where($model->getTable().'.unit_id', request()->get('user_unit_id'));
+            $builder->where($model->getTable() . '.unit_id', request()->get('user_unit_id'));
         }
     }
 
@@ -42,7 +42,7 @@ class UnitScope implements Scope
     private function isAdmin($user)
     {
         return $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Admin')->exists() ||
-               $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Administrator')->exists() ||
-               $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Super Admin')->exists();
+            $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Administrator')->exists() ||
+            $user->peranPengguna()->where('peran_pengguna.nama_peran', 'Super Admin')->exists();
     }
 }

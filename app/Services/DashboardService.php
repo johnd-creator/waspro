@@ -20,21 +20,21 @@ class DashboardService
     public function getDashboardData(array $filters): array
     {
         $this->initializeSettings();
-        
+
         return [
             'statistics' => $this->getStatistics($filters),
             'charts' => $this->getChartData($filters),
             'recentLogs' => $this->getRecentLogs($filters),
             'expiryWarnings' => $this->getExpiryWarnings($filters),
             'lite_mode' => $this->isLiteMode,
-            'is_super_admin' => $this->isSuperAdmin(),
+            'isSuperAdmin' => $this->isSuperAdmin(),
         ];
     }
 
     protected function initializeSettings(): void
     {
         $this->dashboardWindowMonths = (int) ApplicationSetting::getValue('dashboard_window_months', 6);
-        
+
         $totalLogsCount = LogPenyimpananLimbah::count();
         $liteModeThreshold = (int) ApplicationSetting::getValue('dashboard_lite_mode_threshold', 10000);
         $this->isLiteMode = $totalLogsCount > $liteModeThreshold;
@@ -43,10 +43,10 @@ class DashboardService
     protected function getStatistics(array $filters): array
     {
         $cacheKey = $this->getCacheKey('statistics', $filters);
-        
+
         return Cache::remember($cacheKey, $this->cacheTTL, function () use ($filters) {
             $logQuery = $this->buildLogQuery($filters);
-            
+
             $logStats = $logQuery->leftJoin('jenis_limbah', 'jenis_limbah.kode_limbah', '=', 'log_penyimpanan_limbah.kode_limbah')
                 ->selectRaw('
                     COUNT(*) as total_logs,
@@ -57,7 +57,7 @@ class DashboardService
                     SUM(CASE WHEN status_log = "Tersimpan" THEN (jumlah_limbah_masuk * COALESCE(jenis_limbah.biaya_pengangkutan_per_kg, 0)) ELSE 0 END) as estimated_cost,
                     SUM(CASE WHEN status_log = "Diangkut" THEN (jumlah_limbah_masuk * COALESCE(jenis_limbah.biaya_pengangkutan_per_kg, 0)) ELSE 0 END) as transported_cost
                 ')->first();
-            
+
             return [
                 'total_logs' => (int) $logStats->total_logs,
                 'stored_logs' => (int) $logStats->stored_logs,
@@ -75,7 +75,7 @@ class DashboardService
     protected function getChartData(array $filters): array
     {
         $cacheKey = $this->getCacheKey('charts', $filters);
-        
+
         return Cache::remember($cacheKey, $this->cacheTTL, function () use ($filters) {
             return [
                 'waste_by_type' => $this->getWasteByType($filters),
@@ -88,16 +88,16 @@ class DashboardService
     public function getRecentLogs(array $filters): array
     {
         $cacheKey = $this->getCacheKey('recent_logs', $filters);
-        
+
         return Cache::remember($cacheKey, $this->cacheTTL, function () use ($filters) {
             $query = $this->buildLogQuery($filters)
                 ->with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
                 ->orderBy('tanggal_limbah_masuk', 'desc');
-            
+
             if ($this->isLiteMode) {
                 return $query->limit(10)->get()->toArray();
             }
-            
+
             return $query->limit(20)->get()->toArray();
         });
     }
@@ -105,7 +105,7 @@ class DashboardService
     public function getExpiryWarnings(array $filters): array
     {
         $cacheKey = $this->getCacheKey('expiry_warnings', $filters);
-        
+
         return Cache::remember($cacheKey, $this->cacheTTL, function () use ($filters) {
             return $this->buildLogQuery($filters)
                 ->where('status_log', 'Tersimpan')
@@ -124,7 +124,7 @@ class DashboardService
     public function getWasteByType(array $filters): array
     {
         $aggregationStartDate = Carbon::now()->subMonths($this->dashboardWindowMonths);
-        
+
         return $this->buildLogQuery($filters)
             ->where('tanggal_limbah_masuk', '>=', $aggregationStartDate)
             ->selectRaw('
@@ -143,7 +143,7 @@ class DashboardService
     public function getWasteByMonth(array $filters): array
     {
         $aggregationStartDate = Carbon::now()->subMonths($this->dashboardWindowMonths);
-        
+
         return $this->buildLogQuery($filters)
             ->where('tanggal_limbah_masuk', '>=', $aggregationStartDate)
             ->selectRaw('
@@ -160,7 +160,7 @@ class DashboardService
     public function getWasteByCompany(array $filters): array
     {
         $aggregationStartDate = Carbon::now()->subMonths($this->dashboardWindowMonths);
-        
+
         return $this->buildLogQuery($filters)
             ->where('tanggal_limbah_masuk', '>=', $aggregationStartDate)
             ->whereNotNull('log_penyimpanan_limbah.perusahaan_id')
@@ -215,7 +215,7 @@ class DashboardService
     {
         $unitId = $filters['unit_id'] ?? null;
         $suffix = $unitId ? "unit_{$unitId}" : 'global';
-        
+
         return "dashboard_{$type}_{$suffix}";
     }
 
@@ -228,17 +228,16 @@ class DashboardService
     public function clearCache(array $filters = []): void
     {
         $suffix = isset($filters['unit_id']) ? "unit_{$filters['unit_id']}" : 'global';
-        
+
         Cache::forget("dashboard_statistics_{$suffix}");
         Cache::forget("dashboard_charts_{$suffix}");
         Cache::forget("dashboard_recent_logs_{$suffix}");
         Cache::forget("dashboard_expiry_warnings_{$suffix}");
     }
 
-    public function getUnits(): array
+    public function getUnits(): \Illuminate\Support\Collection
     {
         return UnitPembangkit::orderBy('nama_unit')
-            ->get(['unit_id', 'nama_unit'])
-            ->toArray();
+            ->get(['unit_id', 'nama_unit']);
     }
 }

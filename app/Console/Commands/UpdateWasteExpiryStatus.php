@@ -31,7 +31,7 @@ class UpdateWasteExpiryStatus extends Command
 
         try {
             // Get all waste logs that are still stored (not transported yet)
-            $query = LogPenyimpananLimbah::whereIn('status_log', ['Tersimpan']);
+            $query = LogPenyimpananLimbah::with('jenisLimbah')->whereIn('status_log', ['Tersimpan']);
 
             if (!$this->option('force')) {
                 // Only update records that don't have expiry status set or need recalculation

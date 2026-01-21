@@ -593,6 +593,32 @@
                                 </div>
                             </div> -->
 
+                            <!-- Super Admin Unit Filter -->
+                            @if(isset($isSuperAdmin) && $isSuperAdmin && isset($units))
+                                <div class="hidden md:block w-64 mr-2">
+                                    <form action="{{ route('dashboard') }}" method="GET">
+                                        <div class="relative group">
+                                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                <i class="fas fa-building text-blue-500 group-hover:text-blue-600 transition-colors"></i>
+                                            </div>
+                                            <select name="unit_id" onchange="this.form.submit()"
+                                                class="block w-full rounded-xl border-0 py-2 pl-10 pr-8 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 text-sm shadow-sm transition-all cursor-pointer hover:bg-gray-50"
+                                                style="background-color: var(--input-bg); color: var(--input-text);">
+                                                <option value="">Global Data</option>
+                                                @foreach($units as $unit)
+                                                    <option value="{{ $unit->unit_id }}" {{ (isset($selectedUnitId) && $selectedUnitId == $unit->unit_id) ? 'selected' : '' }}>
+                                                        {{ $unit->nama_unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                                <i class="fas fa-chevron-down text-gray-400 group-hover:text-blue-500 transition-colors text-xs"></i>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+
                             <!-- Dark Mode Toggle -->
                             <div class="relative">
                                 <button

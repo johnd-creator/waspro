@@ -15,13 +15,13 @@ class KarakteristikLimbahFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama_karakteristik' => $this->faker->unique()->randomElement(['Korosif', 'Reaktif', 'Berbahaya', 'Beracun']).' '.$this->faker->randomNumber(3),
+            'nama_karakteristik' => $this->faker->randomElement(['Korosif', 'Reaktif', 'Berbahaya', 'Beracun']) . ' ' . $this->faker->randomNumber(3),
             'status_aktif' => true,
         ];
     }
 
     public function inactive(): static
     {
-        return $this->state(fn () => ['status_aktif' => false]);
+        return $this->state(fn() => ['status_aktif' => false]);
     }
 }

@@ -91,6 +91,7 @@ abstract class ApiTestCase extends TestCase
             $table->integer('waktu_penyimpanan_hari')->default(0);
             $table->integer('batas_penyimpanan_hari')->nullable();
             $table->unsignedInteger('karakteristik_id')->nullable();
+            $table->unsignedInteger('kategori_id')->nullable(); // Added missing column
             $table->text('deskripsi_limbah')->nullable();
             $table->boolean('status_aktif')->default(true);
             $table->timestamps();

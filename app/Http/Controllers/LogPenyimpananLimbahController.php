@@ -33,7 +33,7 @@ class LogPenyimpananLimbahController extends Controller
     {
         $filters = $request->only(['search', 'search_unit_id', 'search_status']);
         $logs = $this->logService->getFilteredLogs($filters);
-        
+
         $user = \Illuminate\Support\Facades\Auth::user();
         $isSuperAdmin = method_exists($user, 'isSuperAdmin') ? $user->isSuperAdmin() : false;
         $unitPembangkit = [];
@@ -48,13 +48,20 @@ class LogPenyimpananLimbahController extends Controller
     public function export(Request $request, string $format)
     {
         $filters = $request->only([
-            'search', 'search_jenis', 'search_uraian_pekerjaan',
-            'search_perusahaan', 'search_status', 'search_tanggal',
-            'search_tanggal_mulai', 'search_tanggal_akhir',
-            'search_kode_identitas', 'search_penginput',
-            'expiry_days_min', 'expiry_days_max'
+            'search',
+            'search_jenis',
+            'search_uraian_pekerjaan',
+            'search_perusahaan',
+            'search_status',
+            'search_tanggal',
+            'search_tanggal_mulai',
+            'search_tanggal_akhir',
+            'search_kode_identitas',
+            'search_penginput',
+            'expiry_days_min',
+            'expiry_days_max'
         ]);
-        
+
         $logs = $this->logService->getFilteredLogsForExport($filters, false);
 
         if ($format === 'excel') {
@@ -130,7 +137,7 @@ class LogPenyimpananLimbahController extends Controller
     {
         $user = Auth::user();
 
-        if (! $user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
+        if (!$user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk melihat log ini.');
         }
 
@@ -189,13 +196,13 @@ class LogPenyimpananLimbahController extends Controller
     {
         $user = Auth::user();
 
-        if (! $user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
+        if (!$user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk mengedit log ini.');
         }
 
         $canEditLogs = \App\Models\ApplicationSetting::getValue('workflow.can_edit_logs', true);
 
-        if (! $canEditLogs && $logPenyimpanan->status_log !== 'Kadaluarsa') {
+        if (!$canEditLogs && $logPenyimpanan->status_log !== 'Kadaluarsa') {
             return back()->with('error', 'Log yang sudah disetujui tidak dapat diedit (Pengaturan Workflow).');
         }
 
@@ -217,7 +224,7 @@ class LogPenyimpananLimbahController extends Controller
 
         $updated = $this->logService->updateLog($logPenyimpanan, $validated);
 
-        if (! $updated) {
+        if (!$updated) {
             return back()->with('error', 'Log ini tidak dapat diperbarui.');
         }
 
@@ -246,7 +253,7 @@ class LogPenyimpananLimbahController extends Controller
     {
         $user = Auth::user();
 
-        if (! $user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
+        if (!$user->isSuperAdmin() && $logPenyimpanan->unit_id !== $user->unit_id) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus log ini.');
         }
 
@@ -333,17 +340,21 @@ class LogPenyimpananLimbahController extends Controller
 
         ApprovalLog::create([
             'log_id' => $log->log_id,
-            'user_id' => $user->user_id,
-            'action' => 'approved',
+            'approved_by' => $user->user_id,
+            'action' => 'approve',
             'status_sebelumnya' => $log->status_log,
-            'catatan' => $request->input('catatan'),
+            'rejected_reason' => $request->input('catatan'),
         ]);
 
-        $log->update(['status_log' => 'Diangkut']);
+        $log->update([
+            'status_log' => 'Diangkut',
+            'approval_status' => 'approved',
+            'approved_at' => now(),
+        ]);
 
-            K3Logger::info('Log approved', [
-                'log_id' => $log->log_id,
-                'approved_by' => \Illuminate\Support\Facades\Auth::id(),
+        K3Logger::info('Log approved', [
+            'log_id' => $log->log_id,
+            'approved_by' => \Illuminate\Support\Facades\Auth::id(),
         ]);
 
         return redirect()->route('log-penyimpanan.index')
@@ -361,17 +372,20 @@ class LogPenyimpananLimbahController extends Controller
 
         ApprovalLog::create([
             'log_id' => $log->log_id,
-            'user_id' => $user->user_id,
-            'action' => 'rejected',
+            'approved_by' => $user->user_id,
+            'action' => 'reject',
             'status_sebelumnya' => $log->status_log,
-            'catatan' => $request->input('catatan'),
+            'rejected_reason' => $request->input('catatan'),
         ]);
 
-        $log->update(['status_log' => 'Kadaluarsa']);
+        $log->update([
+            'status_log' => 'Kadaluarsa',
+            'approval_status' => 'rejected',
+        ]);
 
-            K3Logger::info('Log rejected', [
-                'log_id' => $log->log_id,
-                'rejected_by' => \Illuminate\Support\Facades\Auth::id(),
+        K3Logger::info('Log rejected', [
+            'log_id' => $log->log_id,
+            'rejected_by' => \Illuminate\Support\Facades\Auth::id(),
             'reason' => $request->input('catatan'),
         ]);
 
@@ -400,13 +414,17 @@ class LogPenyimpananLimbahController extends Controller
         foreach ($logs as $log) {
             ApprovalLog::create([
                 'log_id' => $log->log_id,
-                'user_id' => $user->user_id,
-                'action' => 'approved',
+                'approved_by' => $user->user_id,
+                'action' => 'approve',
                 'status_sebelumnya' => $log->status_log,
-                'catatan' => $catatan,
+                'rejected_reason' => $catatan,
             ]);
 
-            $log->update(['status_log' => 'Diangkut']);
+            $log->update([
+                'status_log' => 'Diangkut',
+                'approval_status' => 'approved',
+                'approved_at' => now(),
+            ]);
 
             K3Logger::info('Log bulk approved', [
                 'log_id' => $log->log_id,
