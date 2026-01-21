@@ -29,7 +29,7 @@ class LogPenyimpananLimbahController extends Controller
         $this->logService = $logService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\View\View
     {
         $filters = $request->only(['search', 'search_unit_id', 'search_status']);
         $logs = $this->logService->getFilteredLogs($filters);
@@ -81,7 +81,7 @@ class LogPenyimpananLimbahController extends Controller
         abort(404);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): \Illuminate\View\View
     {
         $jenisLimbah = JenisLimbah::all();
         $perusahaanPenghasil = PerusahaanPenghasil::all();
@@ -100,7 +100,7 @@ class LogPenyimpananLimbahController extends Controller
         ));
     }
 
-    public function store(StoreLogPenyimpananRequest $request)
+    public function store(StoreLogPenyimpananRequest $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validated();
         $user = Auth::user();
@@ -133,7 +133,7 @@ class LogPenyimpananLimbahController extends Controller
             ->with('success', 'Log penyimpanan limbah berhasil ditambahkan.');
     }
 
-    public function show(LogPenyimpananLimbah $logPenyimpanan)
+    public function show(LogPenyimpananLimbah $logPenyimpanan): \Illuminate\View\View
     {
         $user = Auth::user();
 
@@ -153,7 +153,7 @@ class LogPenyimpananLimbahController extends Controller
         return view('log-penyimpanan.show', compact('logPenyimpanan'));
     }
 
-    public function edit(Request $request, LogPenyimpananLimbah $logPenyimpanan)
+    public function edit(Request $request, LogPenyimpananLimbah $logPenyimpanan): \Illuminate\View\View|\Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
 
@@ -192,7 +192,7 @@ class LogPenyimpananLimbahController extends Controller
         ));
     }
 
-    public function update(UpdateLogPenyimpananRequest $request, LogPenyimpananLimbah $logPenyimpanan)
+    public function update(UpdateLogPenyimpananRequest $request, LogPenyimpananLimbah $logPenyimpanan): \Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
 
@@ -249,7 +249,7 @@ class LogPenyimpananLimbahController extends Controller
             ->with('success', 'Log penyimpanan limbah berhasil diperbarui.');
     }
 
-    public function destroy(LogPenyimpananLimbah $logPenyimpanan)
+    public function destroy(LogPenyimpananLimbah $logPenyimpanan): \Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
 
@@ -325,115 +325,5 @@ class LogPenyimpananLimbahController extends Controller
         ]);
     }
 
-    public function approve(Request $request, $logId)
-    {
-        $log = LogPenyimpananLimbah::findOrFail($logId);
-        $user = Auth::user();
-
-        if (!$user->canApproveLogs()) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk menyetujui log.');
-        }
-
-        if ($log->status_log !== \App\Enums\LogStatus::Tersimpan) {
-            return back()->with('error', 'Hanya log dengan status Tersimpan yang dapat disetujui.');
-        }
-
-        ApprovalLog::create([
-            'log_id' => $log->log_id,
-            'approved_by' => $user->user_id,
-            'action' => 'approve',
-            'status_sebelumnya' => $log->status_log,
-            'rejected_reason' => $request->input('catatan'),
-        ]);
-
-        $log->update([
-            'status_log' => \App\Enums\LogStatus::Diangkut,
-            'approval_status' => 'approved',
-            'approved_at' => now(),
-        ]);
-
-        K3Logger::info('Log approved', [
-            'log_id' => $log->log_id,
-            'approved_by' => \Illuminate\Support\Facades\Auth::id(),
-        ]);
-
-        return redirect()->route('log-penyimpanan.index')
-            ->with('success', 'Log berhasil disetujui.');
-    }
-
-    public function reject(Request $request, $logId)
-    {
-        $log = LogPenyimpananLimbah::findOrFail($logId);
-        $user = Auth::user();
-
-        if (!$user->canApproveLogs()) {
-            return back()->with('error', 'Anda tidak memiliki izin untuk menolak log.');
-        }
-
-        ApprovalLog::create([
-            'log_id' => $log->log_id,
-            'approved_by' => $user->user_id,
-            'action' => 'reject',
-            'status_sebelumnya' => $log->status_log,
-            'rejected_reason' => $request->input('catatan'),
-        ]);
-
-        $log->update([
-            'status_log' => \App\Enums\LogStatus::Kadaluarsa,
-            'approval_status' => 'rejected',
-        ]);
-
-        K3Logger::info('Log rejected', [
-            'log_id' => $log->log_id,
-            'rejected_by' => \Illuminate\Support\Facades\Auth::id(),
-            'reason' => $request->input('catatan'),
-        ]);
-
-        return redirect()->route('log-penyimpanan.index')
-            ->with('success', 'Log berhasil ditolak.');
-    }
-
-    public function bulkApprove(Request $request)
-    {
-        $logIds = $request->input('log_ids', []);
-        $catatan = $request->input('catatan', '');
-        $user = Auth::user();
-
-        if (!$user->canApproveLogs()) {
-            return new JsonResponse(['error' => 'Anda tidak memiliki izin untuk menyetujui log.'], 403);
-        }
-
-        if (empty($logIds)) {
-            return new JsonResponse(['error' => 'Tidak ada log yang dipilih.'], 400);
-        }
-
-        $logs = LogPenyimpananLimbah::whereIn('log_id', $logIds)
-            ->where('status_log', \App\Enums\LogStatus::Tersimpan)
-            ->get();
-
-        foreach ($logs as $log) {
-            ApprovalLog::create([
-                'log_id' => $log->log_id,
-                'approved_by' => $user->user_id,
-                'action' => 'approve',
-                'status_sebelumnya' => $log->status_log,
-                'rejected_reason' => $catatan,
-            ]);
-
-            $log->update([
-                'status_log' => \App\Enums\LogStatus::Diangkut,
-                'approval_status' => 'approved',
-                'approved_at' => now(),
-            ]);
-
-            K3Logger::info('Log bulk approved', [
-                'log_id' => $log->log_id,
-                'approved_by' => \Illuminate\Support\Facades\Auth::id(),
-            ]);
-        }
-
-        return new JsonResponse([
-            'message' => count($logs) . ' log berhasil disetujui.'
-        ]);
-    }
+    // Approval methods have been moved to LogPenyimpananApprovalController
 }

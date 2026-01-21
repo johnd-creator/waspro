@@ -1,44 +1,53 @@
-# Plan: Fix CSP Errors (Dev-Aware + CDNs)
+# Plan: Final Polish (Minors & Nits)
 
 ## Goal
-Resolve console errors caused by strict Content Security Policy (CSP) blocking external libraries (jQuery, AOS, Chart.js) and Vite's Hot Module Replacement (HMR) during local development.
+Address the remaining 2 Minor and 2 Nit issues from the Codebase Review to achieve a perfect score and easier maintainability.
 
 ## Assumptions
-- Environment is Local/Dev (`app()->isLocal()` is true).
-- Vite runs on default port `5173`.
-- External libraries identified from logs: jQuery, AOS (unpkg), Chart.js (jsdelivr), Google Fonts.
+- `ApprovalStatus` Enum will cover: Pending (`pending`), Approved (`approved`), Rejected (`rejected`).
+- New controller will be named `LogPenyimpananApprovalController` to keep it focused.
 
 ## Plan
 
-### Phase 1: Update CSP Middleware
-#### [MODIFY] [app/Http/Middleware/ContentSecurityPolicy.php](file:///home/john-d/Documents/waspro/app/Http/Middleware/ContentSecurityPolicy.php)
--   Refactor `handle` method to build the CSP string dynamically.
--   **Base Policy**: Allow `self`, `data:`, `https://ui-avatars.com`.
--   **CDNs**: Add:
-    -   `https://code.jquery.com`
-    -   `https://cdn.jsdelivr.net`
-    -   `https://unpkg.com`
-    -   `https://fonts.googleapis.com` (Style)
-    -   `https://fonts.gstatic.com` (Font)
--   **Dev-Specific**: If `app()->isLocal()`, add:
-    -   `http://localhost:5173`
-    -   `http://[::1]:5173` (IPv6 localhost)
-    -   `ws://localhost:5173` (Websockets for HMR)
-    -   `wss://localhost:5173`
+### Phase 1: Enum Rollout (Minor 1)
+#### [NEW] [app/Enums/ApprovalStatus.php](file:///home/john-d/Documents/waspro/app/Enums/ApprovalStatus.php)
+-   Create backed string Enum: `Pending`, `Approved`, `Rejected`.
 
-### Phase 2: Verification
+#### [MODIFY] [app/Models/LogPenyimpananLimbah.php](file:///home/john-d/Documents/waspro/app/Models/LogPenyimpananLimbah.php)
+-   Add cast: `'approval_status' => \App\Enums\ApprovalStatus::class`.
+
+### Phase 2: Logic Extraction (Minor 2)
+#### [NEW] [app/Http/Controllers/LogPenyimpananApprovalController.php](file:///home/john-d/Documents/waspro/app/Http/Controllers/LogPenyimpananApprovalController.php)
+-   Create controller.
+-   Move `approve`, `reject`, `bulkApprove` methods here from `LogPenyimpananLimbahController`.
+-   Use `ApprovalStatus` Enum in logic.
+-   Add Strict Return Types immediately (Addressing Nit 1).
+
+#### [MODIFY] [app/Http/Controllers/LogPenyimpananLimbahController.php](file:///home/john-d/Documents/waspro/app/Http/Controllers/LogPenyimpananLimbahController.php)
+-   Remove moved methods.
+-   Add Strict Return Types to remaining methods (Addressing Nit 1).
+
+#### [MODIFY] [routes/web.php](file:///home/john-d/Documents/waspro/routes/web.php)
+-   Update approval routes to point to `LogPenyimpananApprovalController`.
+
+### Phase 3: CSP Config (Nit 2)
+#### [NEW] [config/csp.php](file:///home/john-d/Documents/waspro/config/csp.php)
+-   Define `scripts`, `styles`, `fonts`, `images`, `connect` arrays here.
+
+#### [MODIFY] [app/Http/Middleware/ContentSecurityPolicy.php](file:///home/john-d/Documents/waspro/app/Http/Middleware/ContentSecurityPolicy.php)
+-   Refactor to pull values from `config('csp')`.
+
+### Phase 4: Verification
 #### [VERIFY]
--   Run `php -l app/Http/Middleware/ContentSecurityPolicy.php` to ensure no syntax errors.
--   (Manual) User loads Dashboard in browser:
-    -   Console should be clear of redness.
-    -   Vite "connected" message should appear (or at least not fail silent).
-    -   Charts and Animations (AOS) should work.
+-   Run `php artisan route:list | grep log-penyimpanan` to verify routes.
+-   Run `php artisan test --filter=LogPenyimpanan` to ensure no regressions in logic.
+-   Manual: Check Dashboard (CSP) and Approval Flow.
 
 ## Risks & mitigations
--   **Security**: Whitelisting `unpkg.com` and `jsdelivr.net` is broad.
-    -   *Mitigation*: Necessary trade-off for using CDN-based architecture. In production build, we might want to narrow this if possible, but for now, functionality is priority.
--   **Vite Port**: If user runs Vite on a different port (e.g. 5174), it will still block.
-    -   *Mitigation*: Add common ranges or sticky port if needed. For now 5173 is standard.
+-   **Risk**: Breaking approval flow if Enum casting conflicts with existing string data in DB.
+    -   *Mitigation*: Ensure Enum values match DB strings exactly (`approved`, `rejected` - lowercase).
+-   **Risk**: Route cache.
+    -   *Mitigation*: Run `php artisan route:clear`.
 
 ## Rollback plan
--   Revert `app/Http/Middleware/ContentSecurityPolicy.php` to previous state (or purely comment out header setting).
+-   Revert changes using git (or restore files from backup if manual).

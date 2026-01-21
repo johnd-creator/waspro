@@ -59,6 +59,7 @@ class LogPenyimpananLimbah extends Model
         'tanggal_pengangkutan' => 'datetime',
         'tanggal_kadaluarsa' => 'datetime',
         'status_log' => \App\Enums\LogStatus::class,
+        'approval_status' => \App\Enums\ApprovalStatus::class,
         'dokumen_uploaded_at' => 'datetime',
         'created_at_client' => 'datetime',
         'updated_at_client' => 'datetime',

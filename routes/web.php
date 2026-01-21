@@ -50,14 +50,14 @@ Route::middleware(['auth', 'unit.access'])->prefix('audit-log')->group(function 
 Route::middleware(['auth', 'unit.access'])->group(function () {
     // Log Penyimpanan Limbah
     Route::resource('log-penyimpanan', App\Http\Controllers\LogPenyimpananLimbahController::class);
-    Route::post('log-penyimpanan/{id}/approve', [App\Http\Controllers\LogPenyimpananLimbahController::class, 'approve'])->name('log-penyimpanan.approve');
-    Route::post('log-penyimpanan/{id}/reject', [App\Http\Controllers\LogPenyimpananLimbahController::class, 'reject'])->name('log-penyimpanan.reject');
+    Route::post('log-penyimpanan/{id}/approve', [App\Http\Controllers\LogPenyimpananApprovalController::class, 'approve'])->name('log-penyimpanan.approve');
+    Route::post('log-penyimpanan/{id}/reject', [App\Http\Controllers\LogPenyimpananApprovalController::class, 'reject'])->name('log-penyimpanan.reject');
     Route::get('log-penyimpanan/export', [App\Http\Controllers\LogPenyimpananLimbahController::class, 'export'])->name('log-penyimpanan.export');
 
     // Pengangkutan Limbah
     Route::resource('pengangkutan-limbah', App\Http\Controllers\PengangkutanLimbahController::class);
     Route::get('pengangkutan-limbah/diangkut', [App\Http\Controllers\PengangkutanLimbahController::class, 'diangkut'])->name('pengangkutan-limbah.diangkut');
-    Route::post('pengangkutan-limbah/bulk-approve', [App\Http\Controllers\PengangkutanLimbahController::class, 'bulkApprove'])->name('pengangkutan-limbah.bulk-approve');
+    Route::post('pengangkutan-limbah/bulk-approve', [App\Http\Controllers\LogPenyimpananApprovalController::class, 'bulkApprove'])->name('pengangkutan-limbah.bulk-approve');
 
     // Reports
     Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');

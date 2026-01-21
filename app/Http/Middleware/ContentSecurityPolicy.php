@@ -12,43 +12,12 @@ class ContentSecurityPolicy
     {
         $response = $next($request);
 
-        // -- Base Allowed Domains --
-        $scripts = [
-            "'self'",
-            "'unsafe-inline'",
-            "'unsafe-eval'", // Needed for some JS libraries/charts
-            "https://cdn.jsdelivr.net",
-            "https://code.jquery.com",
-            "https://unpkg.com",
-            "https://cdnjs.cloudflare.com",
-        ];
-
-        $styles = [
-            "'self'",
-            "'unsafe-inline'",
-            "https://fonts.googleapis.com",
-            "https://cdn.jsdelivr.net",
-            "https://unpkg.com",
-            "https://cdnjs.cloudflare.com",
-        ];
-
-        $fonts = [
-            "'self'",
-            "https://fonts.gstatic.com",
-            "https://cdnjs.cloudflare.com",
-            "data:",
-        ];
-
-        $images = [
-            "'self'",
-            "data:",
-            "https://ui-avatars.com",
-        ];
-
-        $connect = [
-            "'self'",
-            "https://cdn.jsdelivr.net", // Sometimes charts load maps/configs
-        ];
+        // -- Base Allowed Domains from Config --
+        $scripts = config('csp.scripts', []);
+        $styles = config('csp.styles', []);
+        $fonts = config('csp.fonts', []);
+        $images = config('csp.images', []);
+        $connect = config('csp.connect', []);
 
         // -- Development Environment (Vite) --
         if (app()->isLocal()) {
