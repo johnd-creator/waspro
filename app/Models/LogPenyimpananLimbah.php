@@ -293,9 +293,10 @@ class LogPenyimpananLimbah extends Model
      */
     public function getStatusLogBadgeClass(): string
     {
-        return match (strtoupper($this->status_log)) {
-            'TERSIMPAN' => 'bg-blue-100 text-blue-800',
-            'DIANGKUT' => 'bg-purple-100 text-purple-800',
+        return match ($this->status_log) {
+            \App\Enums\LogStatus::Tersimpan => 'bg-blue-100 text-blue-800',
+            \App\Enums\LogStatus::Diangkut => 'bg-purple-100 text-purple-800',
+            \App\Enums\LogStatus::Kadaluarsa => 'bg-red-100 text-red-800', // Added Kadaluarsa support
             default => 'bg-gray-100 text-gray-800',
         };
     }
@@ -305,11 +306,9 @@ class LogPenyimpananLimbah extends Model
      */
     public function getStatusLogText(): string
     {
-        return match (strtoupper($this->status_log)) {
-            'TERSIMPAN' => 'Tersimpan',
-            'DIANGKUT' => 'Diangkut',
-            default => 'Unknown',
-        };
+        return $this->status_log instanceof \App\Enums\LogStatus
+            ? $this->status_log->value
+            : ($this->status_log ?? 'Unknown');
     }
 
     /**
@@ -317,7 +316,10 @@ class LogPenyimpananLimbah extends Model
      */
     public function getExpiryStatusBadgeClass(): string
     {
-        return match (ucfirst(strtolower($this->expiry_status))) {
+        // Expiry status is likely still a string as it's computed, but let's be safe
+        $status = is_string($this->expiry_status) ? ucfirst(strtolower($this->expiry_status)) : $this->expiry_status;
+
+        return match ($status) {
             'Safe' => 'bg-green-100 text-green-800',
             'Warning' => 'bg-yellow-100 text-yellow-800',
             'Critical' => 'bg-orange-100 text-orange-800',
@@ -331,7 +333,9 @@ class LogPenyimpananLimbah extends Model
      */
     public function getExpiryStatusText(): string
     {
-        return match (ucfirst(strtolower($this->expiry_status))) {
+        $status = is_string($this->expiry_status) ? ucfirst(strtolower($this->expiry_status)) : $this->expiry_status;
+
+        return match ($status) {
             'Safe' => 'Aman',
             'Warning' => 'Peringatan',
             'Critical' => 'Kritis',

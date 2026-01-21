@@ -67,3 +67,4 @@ No syntax errors detected in app/Http/Middleware/ContentSecurityPolicy.php
   Tests:    6 passed (26 assertions)
   Duration: 1.29s
 
+- Updated vite.config.js to force host 127.0.0.1

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LogStatus;
 use App\Models\ApprovalLog;
 use App\Models\JenisLimbah;
 use App\Models\LogPenyimpananLimbah;
@@ -28,7 +29,7 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Admin yang bisa mengakses
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             abort(403, 'Unauthorized access');
         }
 
@@ -41,7 +42,7 @@ class PengangkutanLimbahController extends Controller
         ]);
 
         // Filter berdasarkan unit jika bukan Super Admin
-        if (! $user->isAdmin()) {
+        if (!$user->isAdmin()) {
             $query->where('unit_id', $user->unit_id);
         }
 
@@ -73,7 +74,7 @@ class PengangkutanLimbahController extends Controller
 
         // Filter berdasarkan kode identitas jika ada
         if ($request->filled('kode_identitas')) {
-            $query->where('kode_identitas', 'like', '%'.$request->kode_identitas.'%');
+            $query->where('kode_identitas', 'like', '%' . $request->kode_identitas . '%');
         }
 
         $logPenyimpanan = $query->orderBy('tanggal_limbah_masuk', 'desc')->paginate(15);
@@ -100,7 +101,7 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Admin yang bisa mengakses
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             abort(403, 'Unauthorized access');
         }
 
@@ -113,7 +114,7 @@ class PengangkutanLimbahController extends Controller
         ]);
 
         // Filter berdasarkan unit jika bukan Super Admin
-        if (! $user->isAdmin()) {
+        if (!$user->isAdmin()) {
             $query->where('unit_id', $user->unit_id);
         }
 
@@ -140,7 +141,7 @@ class PengangkutanLimbahController extends Controller
 
         // Filter berdasarkan kode identitas jika ada
         if ($request->filled('kode_identitas')) {
-            $query->where('kode_identitas', 'like', '%'.$request->kode_identitas.'%');
+            $query->where('kode_identitas', 'like', '%' . $request->kode_identitas . '%');
         }
 
         $logPenyimpanan = $query->orderBy('tanggal_pengangkutan', 'desc')->paginate(15);
@@ -165,20 +166,20 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Super Admin yang bisa approve
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menyetujui pengangkutan limbah.');
         }
 
         $log = LogPenyimpananLimbah::findOrFail($id);
 
-        // Pastikan limbah belum diangkut (case-insensitive)
-        if (strtolower($log->status_log) === 'diangkut') {
+        // Pastikan limbah belum diangkut
+        if (($log->status_log->value ?? $log->status_log) === LogStatus::Diangkut->value) {
             return redirect()->back()->with('error', 'Limbah sudah dalam status diangkut.');
         }
 
         // Update status menjadi Diangkut
         $log->update([
-            'status_log' => 'Diangkut',
+            'status_log' => LogStatus::Diangkut,
             'tanggal_pengangkutan' => now(),
             'jumlah_diangkut' => $log->jumlah_limbah_masuk,
         ]);
@@ -195,7 +196,7 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Super Admin yang bisa approve
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menyetujui pengangkutan limbah.');
         }
 
@@ -209,9 +210,9 @@ class PengangkutanLimbahController extends Controller
             ->get();
 
         $approvedCount = LogPenyimpananLimbah::whereIn('log_id', $request->selected_logs)
-            ->where('status_log', '!=', 'Diangkut')
+            ->where('status_log', '!=', LogStatus::Diangkut->value)
             ->update([
-                'status_log' => 'Diangkut',
+                'status_log' => LogStatus::Diangkut->value,
                 'tanggal_pengangkutan' => now(),
                 'jumlah_diangkut' => DB::raw('jumlah_limbah_masuk')
             ]);
@@ -242,7 +243,7 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Admin yang bisa mengakses
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             abort(403, 'Unauthorized access');
         }
 
@@ -265,7 +266,7 @@ class PengangkutanLimbahController extends Controller
         $user = Auth::guard('web')->user();
 
         // Hanya Supervisor dan Admin yang bisa mengakses
-        if (! $user || (! $user->isSupervisor() && ! $user->isAdmin())) {
+        if (!$user || (!$user->isSupervisor() && !$user->isAdmin())) {
             abort(403, 'Unauthorized access');
         }
 
@@ -285,11 +286,11 @@ class PengangkutanLimbahController extends Controller
         $log->jumlah_limbah_masuk = $request->jumlah_limbah_masuk;
         $log->tanggal_limbah_masuk = $request->tanggal_limbah_masuk;
         $log->keterangan = $request->keterangan;
-        $log->status_log = 'Diangkut';
+        $log->status_log = LogStatus::Diangkut;
         $log->tanggal_pengangkutan = now();
         $log->jumlah_diangkut = $request->jumlah_limbah_masuk;
         $log->user_id = $user->user_id;
-        $log->kode_identitas = 'ANG-'.date('YmdHis').'-'.rand(1000, 9999);
+        $log->kode_identitas = 'ANG-' . date('YmdHis') . '-' . rand(1000, 9999);
         $log->save();
 
         return redirect()->route('pengangkutan-limbah.diangkut')

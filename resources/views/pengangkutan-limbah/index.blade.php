@@ -48,8 +48,10 @@
                         class="w-full rounded-xl border px-3 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                         style="background-color: var(--input-bg); border-color: var(--border-primary); color: var(--input-text);">
                         <option value="">Semua Status</option>
-                        <option value="0" {{ request('status_diangkut') == '0' ? 'selected' : '' }}>Belum Diangkut</option>
-                        <option value="1" {{ request('status_diangkut') == '1' ? 'selected' : '' }}>Sudah Diangkut</option>
+                        <option value="0" {{ request('status_diangkut') == '0' ? 'selected' : '' }}>Belum Diangkut
+                        </option>
+                        <option value="1" {{ request('status_diangkut') == '1' ? 'selected' : '' }}>Sudah Diangkut
+                        </option>
                     </select>
                 </div>
                 <div class="flex items-stretch gap-3">
@@ -112,11 +114,14 @@
                                     style="background-color: var(--input-bg); border-color: var(--border-secondary);">
                             </td>
                             <td class="px-4 py-3 text-center text-sm font-medium" style="color: var(--text-secondary);">
-                                {{ $logPenyimpanan->firstItem() + $key }}</td>
+                                {{ $logPenyimpanan->firstItem() + $key }}
+                            </td>
                             <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">
-                                {{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}</td>
+                                {{ \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('d M Y') }}
+                            </td>
                             <td class="px-6 py-3 text-sm" style="color: var(--text-secondary);">
-                                {{ $log->jenisLimbah->nama_limbah }}</td>
+                                {{ $log->jenisLimbah->nama_limbah }}
+                            </td>
                             <td class="px-6 py-3 text-sm leading-relaxed" style="color: var(--text-secondary);">
                                 <div class="max-w-[180px]" title="{{ $log->uraian_pekerjaan ?? '-' }}">
                                     {{ Str::limit($log->uraian_pekerjaan ?? '-', 50) }}
@@ -127,17 +132,19 @@
                                     style="background-color: var(--accent-bg); color: var(--accent-primary);">{{ number_format($log->jumlah_limbah_masuk, 2) }}</span>
                             </td>
                             <td class="px-6 py-3">
-                                @if(strtolower($log->status_log) === 'diangkut')
+                                @if(($log->status_log->value ?? $log->status_log) === 'Diangkut')
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                        style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">Sudah Diangkut</span>
+                                        style="background-color: var(--accent-bg-secondary); color: var(--accent-secondary);">Sudah
+                                        Diangkut</span>
                                 @else
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                                        style="background-color: var(--danger-bg); color: var(--danger-primary);">Belum Diangkut</span>
+                                        style="background-color: var(--danger-bg); color: var(--danger-primary);">Belum
+                                        Diangkut</span>
                                 @endif
                             </td>
                             <td class="px-6 py-3">
                                 @php($daysLeft = $log->getDaysUntilExpiry())
-                                @if($log->status_log == 'Tersimpan' && $daysLeft !== null)
+                                @if(($log->status_log->value ?? $log->status_log) == 'Tersimpan' && $daysLeft !== null)
                                     @if($daysLeft <= 0)
                                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                             style="background-color: var(--danger-bg); color: var(--danger-primary);">Kadaluarsa</span>
@@ -148,7 +155,7 @@
                                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                             style="background-color: var(--accent-bg); color: var(--accent-primary);">H-{{ $daysLeft }}</span>
                                     @endif
-                                @elseif($log->status_log == 'Kadaluarsa')
+                                @elseif(($log->status_log->value ?? $log->status_log) == 'Kadaluarsa')
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                         style="background-color: var(--danger-bg); color: var(--danger-primary);">Kadaluarsa</span>
                                 @else
@@ -157,7 +164,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-3">
-                                @if(strtolower($log->status_log) !== 'diangkut')
+                                @if(($log->status_log->value ?? $log->status_log) !== 'Diangkut')
                                     <button type="button"
                                         class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 angkut-btn transition-colors"
                                         data-id="{{ $log->log_id ?? $log->id }}">
@@ -171,12 +178,14 @@
                             <td colspan="9" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full"
-                                         style="background-color: var(--hover-bg);">
+                                        style="background-color: var(--hover-bg);">
                                         <i class="fas fa-truck-loading text-4xl"
-                                           style="color: var(--text-tertiary);"></i>
+                                            style="color: var(--text-tertiary);"></i>
                                     </div>
-                                    <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Tidak ada data</h3>
-                                    <p class="text-sm" style="color: var(--text-secondary);">Tidak ada data pengangkutan limbah yang tersedia.</p>
+                                    <h3 class="mb-2 text-lg font-medium" style="color: var(--text-primary);">Tidak ada
+                                        data</h3>
+                                    <p class="text-sm" style="color: var(--text-secondary);">Tidak ada data pengangkutan
+                                        limbah yang tersedia.</p>
                                 </div>
                             </td>
                         </tr>

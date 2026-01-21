@@ -16,10 +16,10 @@ class ExpiryReportController extends Controller
     public function index(Request $request)
     {
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
-            ->where('status_log', 'Tersimpan');
+            ->where('status_log', \App\Enums\LogStatus::Tersimpan);
 
         // Tampilkan data yang akan kadaluarsa dalam 30 hari ke depan
-        if (! $request->filled('expiry_status') && ! $request->filled('date_from') && ! $request->filled('date_to')) {
+        if (!$request->filled('expiry_status') && !$request->filled('date_from') && !$request->filled('date_to')) {
             $today = Carbon::now();
             $thirtyDaysLater = Carbon::now()->addDays(30);
             $query->where(function ($q) use ($today, $thirtyDaysLater) {
@@ -69,7 +69,7 @@ class ExpiryReportController extends Controller
     public function export(Request $request)
     {
         $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
-            ->where('status_log', 'Tersimpan');
+            ->where('status_log', \App\Enums\LogStatus::Tersimpan);
 
         // Apply same filters as index
         if ($request->filled('expiry_status')) {
@@ -109,17 +109,17 @@ class ExpiryReportController extends Controller
 
             $pdf = Pdf::loadView('expiry-reports-pdf', $data);
 
-            return $pdf->download('laporan-expiry-limbah-'.Carbon::now()->format('Y-m-d-H-i-s').'.pdf');
+            return $pdf->download('laporan-expiry-limbah-' . Carbon::now()->format('Y-m-d-H-i-s') . '.pdf');
         }
 
-        $filename = 'laporan-expiry-limbah-'.Carbon::now()->format('Y-m-d-H-i-s').'.xlsx';
+        $filename = 'laporan-expiry-limbah-' . Carbon::now()->format('Y-m-d-H-i-s') . '.xlsx';
 
         return Excel::download(new ExpiryReportExport($logs), $filename);
     }
 
     private function getExpiryStatistics(Request $request)
     {
-        $query = LogPenyimpananLimbah::where('status_log', 'Tersimpan');
+        $query = LogPenyimpananLimbah::where('status_log', \App\Enums\LogStatus::Tersimpan);
 
         // Apply filters if provided
         if ($request) {

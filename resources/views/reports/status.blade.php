@@ -148,7 +148,8 @@
                             @php
                                 $daysRemaining = null;
                                 $isExpired = false;
-                                if (strtoupper($log->status_log) === 'TERSIMPAN' && $log->maksimal_penyimpanan_tanggal) {
+                                $statusValue = $log->status_log instanceof \App\Enums\LogStatus ? $log->status_log->value : $log->status_log;
+                                if (strtoupper($statusValue) === 'TERSIMPAN' && $log->maksimal_penyimpanan_tanggal) {
                                     $daysRemaining = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($log->maksimal_penyimpanan_tanggal), false);
                                     $isExpired = $daysRemaining < 0;
                                 }
@@ -166,10 +167,9 @@
                                 <td class="px-4 py-3 text-sm" style="color: var(--text-primary);">
                                     {{ number_format($log->jumlah_limbah_masuk, 2) }}</td>
                                 <td class="px-4 py-3">
-                                    @php $isTransported = strtoupper($log->status_log) === 'DIANGKUT'; @endphp
                                     <span
-                                        class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $isTransported ? 'status-pill-secondary' : 'status-pill-danger' }}">
-                                        {{ $log->status_log }}
+                                        class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $log->getStatusLogBadgeClass() }}">
+                                        {{ $log->getStatusLogText() }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-sm" style="color: var(--text-secondary);">

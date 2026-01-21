@@ -159,7 +159,7 @@
                         </td>
                         <td class="px-6 py-4">
                             @php($daysLeft = $log->getDaysUntilExpiry())
-                            @if($log->status_log == 'Tersimpan' && $daysLeft !== null)
+                            @if(($log->status_log->value ?? $log->status_log) == 'Tersimpan' && $daysLeft !== null)
                                 @if($daysLeft <= 0)
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                         style="background-color: var(--danger-bg); color: var(--danger-primary);">Kadaluarsa</span>
@@ -170,7 +170,7 @@
                                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                         style="background-color: var(--accent-bg); color: var(--accent-primary);">H-{{ $daysLeft }}</span>
                                 @endif
-                            @elseif($log->status_log == 'Kadaluarsa')
+                            @elseif(($log->status_log->value ?? $log->status_log) == 'Kadaluarsa')
                                 <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                                     style="background-color: var(--danger-bg); color: var(--danger-primary);">Kadaluarsa</span>
                             @else
@@ -179,8 +179,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <x-action-buttons
-                                :view-route="route('log-penyimpanan.show', $log)"
+                            <x-action-buttons :view-route="route('log-penyimpanan.show', $log)"
                                 :edit-route="route('log-penyimpanan.edit', $log)"
                                 :delete-route="route('log-penyimpanan.destroy', $log)"
                                 delete-message="Anda yakin ingin menghapus log ini?"
@@ -188,10 +187,8 @@
                         </td>
                     </tr>
                     @empty
-                        <x-empty-state
-                            icon="fas fa-clipboard-list"
-                            title="Belum ada data"
-                            description="Tidak ada data log penyimpanan limbah yang tersedia saat ini." />
+                    <x-empty-state icon="fas fa-clipboard-list" title="Belum ada data"
+                        description="Tidak ada data log penyimpanan limbah yang tersedia saat ini." />
                     @endforelse
                 </tbody>
             </table>

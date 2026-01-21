@@ -17,6 +17,7 @@ class ApprovalLog extends Model
         'approved_by',
         'action',
         'rejected_reason',
+        'status_sebelumnya',
     ];
 
     protected $casts = [

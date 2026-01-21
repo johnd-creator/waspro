@@ -5,7 +5,6 @@
     'showIcon' => true,
     'icon' => null
 ])
-
 @php
     $statusConfig = [
         'true' => [
@@ -74,6 +73,10 @@
             'label' => 'Tidak Aktif'
         ],
     ];
+
+    if ($status instanceof \BackedEnum) {
+        $status = $status->value;
+    }
 
     $statusValue = is_bool($status) ? ($status ? 'true' : 'false') : (string) $status;
 

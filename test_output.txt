@@ -1,0 +1,14 @@
+
+   PASS  Tests\Unit\LogPenyimpananLimbahModelTest
+  ✓ calculate expiry date uses jenis limbah days                         0.64s  
+  ✓ get days until expiry returns integer                                0.05s  
+
+   PASS  Tests\Unit\LogPenyimpananServiceTest
+  ✓ create log sets core fields correctly                                0.06s  
+  ✓ create log sets expiry dates from jenis limbah                       0.05s  
+  ✓ update log returns false when status diangkut                        0.05s  
+  ✓ update log updates allowed fields and recalculates expiry            0.04s  
+
+  Tests:    6 passed (26 assertions)
+  Duration: 1.00s
+

@@ -57,7 +57,7 @@ class ReportController extends Controller
         $format = $request->route('format') ?? $request->get('format', 'view');
 
         // Cache key for this report
-        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_" . Auth::user()->unit_id;
+        $cacheKey = "monthly_report_{$year}_{$month}_{$unitId}_" . Auth::user()->unit_id . "_v2";
 
         $data = Cache::remember($cacheKey, 3600, function () use ($year, $month, $unitId) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit'])
@@ -76,20 +76,20 @@ class ReportController extends Controller
             // Statistics
             $totalLogs = $logs->count();
             $totalWaste = $logs->sum('jumlah_limbah_masuk');
-            $totalTransported = $logs->where('status_log', 'Diangkut')->count();
-            $wasteStored = $logs->where('status_log', 'Tersimpan')->count();
-            $wasteExpired = $logs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk');
+            $totalTransported = $logs->where('status_log', \App\Enums\LogStatus::Diangkut)->count();
+            $wasteStored = $logs->where('status_log', \App\Enums\LogStatus::Tersimpan)->count();
+            $wasteExpired = $logs->where('status_log', \App\Enums\LogStatus::Kadaluarsa)->sum('jumlah_limbah_masuk');
 
             // Monthly breakdown
             $monthlyBreakdown = $logs->groupBy(function ($log) {
-                return Carbon::parse($log->tanggal_limbah_masuk)->format('m');
+                return \Carbon\Carbon::parse($log->tanggal_limbah_masuk)->format('m');
             })->map(function ($monthLogs) {
                 return [
                     'total_logs' => $monthLogs->count(),
                     'total_waste' => $monthLogs->sum('jumlah_limbah_masuk'),
-                    'transported' => $monthLogs->where('status_log', 'Diangkut')->count(),
-                    'stored' => $monthLogs->where('status_log', 'Tersimpan')->count(),
-                    'expired' => $monthLogs->where('status_log', 'Kadaluarsa')->sum('jumlah_limbah_masuk'),
+                    'transported' => $monthLogs->where('status_log', \App\Enums\LogStatus::Diangkut)->count(),
+                    'stored' => $monthLogs->where('status_log', \App\Enums\LogStatus::Tersimpan)->count(),
+                    'expired' => $monthLogs->where('status_log', \App\Enums\LogStatus::Kadaluarsa)->sum('jumlah_limbah_masuk'),
                 ];
             });
 
@@ -174,7 +174,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "status_report_{$status}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
+        $cacheKey = "status_report_{$status}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id . "_v2";
 
         $data = Cache::remember($cacheKey, 1800, function () use ($status, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -194,7 +194,9 @@ class ReportController extends Controller
             $logs = $query->get();
 
             // Status distribution
-            $statusDistribution = $logs->groupBy('status_log')->map(function ($group) use ($logs) {
+            $statusDistribution = $logs->groupBy(function ($log) {
+                return $log->status_log instanceof \BackedEnum ? $log->status_log->value : $log->status_log;
+            })->map(function ($group) use ($logs) {
                 $count = $group->count();
                 $totalQuantity = $group->sum('jumlah_limbah_masuk');
 
@@ -213,9 +215,11 @@ class ReportController extends Controller
                         'label' => 'Jumlah Log',
                         'backgroundColor' => ['#f59e0b', '#10b981', '#ef4444'],
                         'data' => [
-                            $statusDistribution['Tersimpan']['count'] ?? 0,
-                            $statusDistribution['Diangkut']['count'] ?? 0,
-                            $statusDistribution['Kadaluarsa']['count'] ?? 0,
+                            'data' => [
+                                $statusDistribution[\App\Enums\LogStatus::Tersimpan->value]['count'] ?? 0,
+                                $statusDistribution[\App\Enums\LogStatus::Diangkut->value]['count'] ?? 0,
+                                $statusDistribution[\App\Enums\LogStatus::Kadaluarsa->value]['count'] ?? 0,
+                            ],
                         ],
                     ],
                 ],
@@ -259,7 +263,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "waste_type_report_{$jenisLimbahId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
+        $cacheKey = "waste_type_report_{$jenisLimbahId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id . "_v2";
 
         $data = Cache::remember($cacheKey, 1800, function () use ($jenisLimbahId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -330,7 +334,7 @@ class ReportController extends Controller
         // Ambil format dari parameter rute jika ada, jika tidak gunakan query
         $format = $request->route('format') ?? $request->get('format', 'view');
 
-        $cacheKey = "company_report_{$perusahaanId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
+        $cacheKey = "company_report_{$perusahaanId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id . "_v2";
 
         $data = Cache::remember($cacheKey, 1800, function () use ($perusahaanId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -371,7 +375,7 @@ class ReportController extends Controller
                                 'logs_count' => $wasteLogs->count(),
                             ];
                         })->sortByDesc('quantity'),
-                        'status_breakdown' => $companyLogs->groupBy('status_log')->map->count(),
+                        'status_breakdown' => $companyLogs->groupBy(fn($log) => $log->status_log instanceof \BackedEnum ? $log->status_log->value : $log->status_log)->map->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity');
@@ -426,7 +430,7 @@ class ReportController extends Controller
             abort(403, 'Unauthorized access to unit data.');
         }
 
-        $cacheKey = "unit_report_{$unitId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id;
+        $cacheKey = "unit_report_{$unitId}_" . md5($dateFrom . $dateTo) . '_' . Auth::user()->unit_id . "_v2";
 
         $data = Cache::remember($cacheKey, 1800, function () use ($unitId, $dateFrom, $dateTo) {
             $query = LogPenyimpananLimbah::with(['jenisLimbah', 'perusahaanPenghasil', 'unitPembangkit']);
@@ -456,7 +460,7 @@ class ReportController extends Controller
                         'lokasi' => $unit->lokasi ?? 'Unknown',
                         'total_logs' => $unitLogs->count(),
                         'total_quantity' => $unitLogs->sum('jumlah_limbah_masuk'),
-                        'efficiency_rate' => $unitLogs->where('status_log', 'Diangkut')->count() / max(1, $unitLogs->count()) * 100,
+                        'efficiency_rate' => $unitLogs->where('status_log', \App\Enums\LogStatus::Diangkut)->count() / max(1, $unitLogs->count()) * 100,
                         'avg_storage_days' => $unitLogs->avg(function ($log) {
                             return Carbon::parse($log->tanggal_limbah_masuk)->diffInDays(
                                 $log->tanggal_pengangkutan ? Carbon::parse($log->tanggal_pengangkutan) : Carbon::now()
@@ -469,7 +473,7 @@ class ReportController extends Controller
                                 'logs_count' => $wasteLogs->count(),
                             ];
                         })->sortByDesc('quantity'),
-                        'status_breakdown' => $unitLogs->groupBy('status_log')->map->count(),
+                        'status_breakdown' => $unitLogs->groupBy(fn($log) => $log->status_log instanceof \BackedEnum ? $log->status_log->value : $log->status_log)->map->count(),
                     ];
                 })
                 ->sortByDesc('total_quantity');

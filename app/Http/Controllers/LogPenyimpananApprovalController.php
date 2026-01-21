@@ -31,7 +31,7 @@ class LogPenyimpananApprovalController extends Controller
             'log_id' => $log->log_id,
             'approved_by' => $user->user_id,
             'action' => 'approve',
-            'status_sebelumnya' => $log->status_log,
+            'status_sebelumnya' => $log->status_log?->value,
             'rejected_reason' => $request->input('catatan'),
         ]);
 
@@ -63,7 +63,7 @@ class LogPenyimpananApprovalController extends Controller
             'log_id' => $log->log_id,
             'approved_by' => $user->user_id,
             'action' => 'reject',
-            'status_sebelumnya' => $log->status_log,
+            'status_sebelumnya' => $log->status_log?->value,
             'rejected_reason' => $request->input('catatan'),
         ]);
 
@@ -105,7 +105,7 @@ class LogPenyimpananApprovalController extends Controller
                 'log_id' => $log->log_id,
                 'approved_by' => $user->user_id,
                 'action' => 'approve',
-                'status_sebelumnya' => $log->status_log,
+                'status_sebelumnya' => $log->status_log?->value,
                 'rejected_reason' => $catatan,
             ]);
 
