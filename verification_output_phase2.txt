@@ -1,0 +1,35 @@
+
+   PASS  Tests\Feature\Api\Auth\LoginLogoutTest
+  ✓ user can login with valid credentials                                0.69s  
+  ✓ login fails with invalid credentials                                 0.05s  
+  ✓ inactive user cannot login                                           0.05s  
+  ✓ authenticated user can logout                                        0.04s  
+
+   PASS  Tests\Feature\Api\JenisLimbahApiTest
+  ✓ index returns filtered paginated results                             0.05s  
+  ✓ show returns single resource                                         0.03s  
+
+   PASS  Tests\Feature\Api\KarakteristikLimbahApiTest
+  ✓ index supports search and status filters                             0.06s  
+  ✓ show returns single karakteristik                                    0.05s  
+
+   PASS  Tests\Feature\Api\KategoriKegiatanSumberApiTest
+  ✓ index supports search and pagination                                 0.05s  
+  ✓ show returns single kategori                                         0.04s  
+
+   PASS  Tests\Feature\Api\PerusahaanPenghasilApiTest
+  ✓ super admin can create perusahaan                                    0.07s  
+  ✓ administrator can update perusahaan                                  0.06s  
+  ✓ operator cannot update perusahaan                                    0.06s  
+  ✓ super admin can delete perusahaan                                    0.05s  
+
+   PASS  Tests\Feature\Api\UnitPembangkitApiTest
+  ✓ super admin can create unit                                          0.04s  
+  ✓ administrator cannot create unit                                     0.03s  
+  ✓ administrator can update own unit                                    0.04s  
+  ✓ operator cannot update unit                                          0.03s  
+  ✓ super admin can delete unit                                          0.03s  
+
+  Tests:    19 passed (67 assertions)
+  Duration: 1.63s
+
